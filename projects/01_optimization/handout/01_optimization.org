@@ -1,0 +1,189 @@
+#+TITLE: Project 1: Evolutionary Optimization Algorithms
+#+SUBTITLE: ME498: Computational modeling and optimization
+#+AUTHOR: Mattia Gazzola
+#+OPTIONS:   H:2 num:t toc:nil date:nil ::t |:t ^:{} -:t f:t *:t <:t
+#+LATEX_HEADER: \usepackage{cleveref}
+
+*Issue Date* : \today
+
+*Submission Date/Time*: /When to submit/
+
+*Teaching Assistant* : Tejaswin Parthasarathy, ~tp5@illinois.edu~
+
+* Guidelines
+  General advice that pertains to all the problems include:
+  1. Pick sensible representation, fitness function, selection and mutation
+     operators and parameters wherever applicable.
+  2. Remember to present (during the project evaluation) the motivation for the
+     algorithmic design choices you have chosen...
+  3. Explore as much as possible---change parameters, selection/mutation
+     operators etc... We want you to learn how the optimizer "thinks" and works.
+  4. We will evaluate your work based on your understanding and findings, and
+     not on the code quality. However since you are learning ~Python~, it is
+     always a good idea to code efficiently. Use canned algorithms in ~numpy~ or
+     ~scipy~ wherever possible.
+  5. You are free to consult any material you want (including but not limited to
+     [[cref:sec:references]]). However you are expected to follow the Student Code
+     on academic integrity---plagiarism will not be tolerated!
+
+* The Knapsack problem
+** Definition
+   Use genetic algorithm and rank-\( \mu \), weighted recombination version of the CMA
+ evolutionary strategy discussed in class to find the solution to the 0/1 variant of
+ the Knapsack problem.
+** Details
+  More details about the 0/1 Knapsack problem are contained in the lecture slides.
+  Alternatively, the [[https://en.wikipedia.org/wiki/Knapsack_problem][Wikipedia]] page also has a lot of information about this
+  problem. Quoting the introductory text,
+#+begin_quote
+" The knapsack problem or rucksack problem is a problem in combinatorial
+optimization: Given a set of items, each with a weight and a value, determine
+the number of each item to include in a collection so that the total weight is
+less than or equal to a given limit and the total value is as large as possible.
+It derives its name from the problem faced by someone who is constrained by a
+fixed-size knapsack and must fill it with the most valuable items. "
+#+end_quote
+
+  Your task is to find an optimal distribution of items to carry, that
+  maximizes the overall value while adhering to the weight limit, using both
+  - GA
+  - CMA
+  and compare the performance of these algorithms on this function. Details about
+  the dataset for this problem is given below in [[cref:sec:data]]. Note that this is a constrained
+  optimization problem and your design choices in the
+  algorithm need to reflect this. As this seems like a problem with integer
+  solutions, consider how you can change CMA to reflect this property. As we are
+  interested in black-box optimization algorithms, we assume we do not know
+  anything about the problem structure. This means that using a randomly generated
+  population around \( \mathbf{x}_0 =\mathbf{0}\)---the vector of zeros---to
+  initialize the algorithm is a good idea.
+
+  Finally, after answering all the questions above and implementing your
+  algorithm, explore the design choices (be it parameters or operators) on the
+  performance of the algorithms.
+** Data
+:PROPERTIES:
+:CUSTOM_ID: sec:data
+:END:
+
+  There are two data sets--A, B. Each data set will be posted on Compass as simple
+  comma delimited text files with the knapsack capacity, number of different
+  items, number of each type of items, and their values + weights. For
+  convenience you can read the information using ~numpy~'s ~loadtxt~ function,
+  shown in the snippet below:
+
+  #+begin_src python :results replace :exports code
+	import numpy as np
+
+	# Load data from txt file
+	my_data = np.loadtxt('file_name.txt', delimiter=',')
+
+	# Data stored as a dictionary
+	# use data however you want
+	bag_capacity = my_data['capacity']
+	'''
+	other possible keys include
+	n_item_types : The number of different item types, integer
+	capacity : Bag capacity, float
+	n_items : Number of each item, a (n_item_types , ) numpy array
+	item_values : Value of each item, a (n_item_types , ) numpy array
+	item_weights : Weight of each item, a (n_item_types , ) numpy array
+	'''
+
+  #+end_src
+
+* Minima of the parabola
+** Definition
+   Use genetic algorithm and rank-\( \mu \), weighted recombination version of the CMA
+ evolutionary strategy discussed in class to find the minima of a simple parabola.
+** Details
+  The one-dimensional parabola is a continuous, convex, unimodal function. We
+  pick the parabola given by the formula
+  \begin{equation}
+  f(x) = 10 \cdot x^2
+  \end{equation}
+
+  Your task is to find the optimum of this function using
+  - GA
+  - CMA
+  and compare the performance of these algorithms on this function.
+  Furthermore, explore the effect of the parameters (particularly in GA) on the
+  performance of the algorithms. Start your search using a randomly initialized population around \(
+ \mathbf{x}_0 = \mathbf{0}\)---the vector of zeros.
+* Minima of the Rotated Hyper-Ellipsoid
+** Definition
+   Use genetic algorithm and rank-\( \mu \), weighted recombination version of the CMA
+ evolutionary strategy discussed in class to find the minima of the
+ two-dimensional rotated ellispoid.
+** Details
+  The two-dimensional Rotated Hyper-Ellipsoid is a continuous, convex, unimodal
+  and non-separable function. We pick the variant that is rotated \(
+  \frac{\pi}{6} \; \si{rad}\) clockwise from the \( x_1 \)-axis and shifted along
+  both axes, given by the formula below:
+
+  \begin{equation}
+  f(\mathbf{x}) = \left( \dfrac{\sqrt{3}}{2} (x_1 - 3) + \dfrac{1}{2} (x_2 - 5) \right)^2 + 5 \cdot \left(  \dfrac{\sqrt{3}}{2} (x_2 - 5) - \dfrac{1}{2} (x_1 - 3)  \right)^2
+  \end{equation}
+
+
+  Graphically, it's contour plot is depicted in [[cref:ellipsoid]] for several
+	values of \( c \).
+  #+ATTR_LATEX: :width 0.5\textwidth
+  #+CAPTION: The rotated hyper-ellipsoid in two dimensions, the horizonal axis corresponds to \( x_1 \) and the vertical to \( x_2 \)
+  #+NAME: ellipsoid
+  [[file:images/ellipsoid.eps]]
+
+  Your task is to find the optimum of this function using
+  - GA
+  - CMA
+  and compare the performance of these algorithms on this function. Furthermore,
+  explore the effect of the parameters on the performance of the algorithms.
+  Start your search using a randomly initialized population around \(
+ \mathbf{x}_0 = \mathbf{0}\)---the vector of zeros.
+
+* Minima of the Rastrigin function
+** Definition
+   Use the rank-\( \mu \), weighted recombination version of the CMA
+ evolutionary strategy discussed in class to find the minima of the shifted
+ /Rastrigin/ function in two and five dimensions.
+
+** Details
+ The (unshifted) Rastrigin function is shown in [[cref:rastr]] for the case of two-dimensions.
+
+ #+ATTR_LATEX: :width 0.7\textwidth
+ #+CAPTION: The (unshifted) Rastrigin function in two dimensions, taken from [[https://stackoverflow.com/a/43112733][this SO thread]]
+ #+NAME: rastr
+ [[file:images/rastrigin.png]]
+
+ It is a multi-modal function with several regularly distributed local minima,
+ and can be generalized to arbitrary dimensions using the analytical formula
+ shown below, for the shifted variant (which you should use as the objective
+ function):
+
+ \begin{equation}
+ f(\mathbf{x}) = 10d + \sum_{i=1}^{d} \left[ (x_i - 2)^2 - 10 \cos\left(2 \pi (x_i - 2) \right) \right]
+ \end{equation}
+ where\( d \) is the number of dimensions.
+
+
+ You need to find the local minima for this function in
+  - two dimensions ( \(d = 2\) )
+  - five dimensions ( \(d = 5\) )
+ using CMA. Start your search using a randomly initialized population around \(
+ \mathbf{x}_0 = \mathbf{0}\), the vector of zeros. Choose sensible/appropriate values for
+ the other CMA parameters (default ones also suffice).
+
+ In both cases, consider what role does the population size play in the
+ /performance/ of the algorithm. Do you notice considerable differences at lower
+ (2) and higher (5) dimensions? Explain.
+
+* The following resouces may prove useful:
+:PROPERTIES:
+:CUSTOM_ID: sec:references
+:END:
+- A short tutorial on the genetic algorithm found [[http://web.cs.ucdavis.edu/~vemuri/classes/ecs271/Genetic%2520Algorithms%2520Short%2520Tutorial.htm][here]]
+- The CMA-ES tutorial @ Arxiv, found [[https://arxiv.org/pdf/1604.00772.pdf][here]]
+- The CMA site maintained by Niko Hansen, found [[http://cma.gforge.inria.fr/index.html][here]]
+- Tutorial on CMA-ES, 2013 by Auger, Anne and Hansen, Nikolaus published in the
+  Proceeding of the fifteenth annual conference companion on Genetic and
+  evolutionary computation conference companion - GECCO ’13 Companion found at http://dx.doi.org/10.1145/2464576.2483910

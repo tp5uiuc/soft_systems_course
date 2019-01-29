@@ -1,0 +1,240 @@
+% Created 2019-01-28 Mon 19:59
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{awesomebox}
+\usepackage{booktabs}
+\usepackage{placeins}
+\usepackage{siunitx}
+\usepackage{minted}
+\usepackage{cleveref}
+\author{Mattia Gazzola}
+\date{}
+\title{Project 1: Evolutionary Optimization Algorithms\\\medskip
+\large ME498: Computational modeling and optimization}
+\hypersetup{
+ pdfauthor={Mattia Gazzola},
+ pdftitle={Project 1: Evolutionary Optimization Algorithms},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.0.50 (Org mode 9.2)},
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\textbf{Issue Date} : \today
+
+\textbf{Submission Date/Time}: \emph{When to submit}
+
+\textbf{Teaching Assistant} : Tejaswin Parthasarathy, \texttt{tp5@illinois.edu}
+
+\section{Guidelines}
+\label{sec:org615e5a1}
+General advice that pertains to all the problems include:
+\begin{enumerate}
+\item Pick sensible representation, fitness function, selection and mutation
+operators and parameters wherever applicable.
+\item Remember to present (during the project evaluation) the motivation for the
+algorithmic design choices you have chosen\ldots{}
+\item Explore as much as possible---change parameters, selection/mutation
+operators etc\ldots{} We want you to learn how the optimizer ``thinks'' and works.
+\item We will evaluate your work based on your understanding and findings, and
+not on the code quality. However since you are learning \texttt{Python}, it is
+always a good idea to code efficiently. Use canned algorithms in \texttt{numpy} or
+\texttt{scipy} wherever possible.
+\item You are free to consult any material you want (including but not limited to
+\cref{sec:references}). However you are expected to follow the Student Code
+on academic integrity---plagiarism will not be tolerated!
+\end{enumerate}
+
+\section{The Knapsack problem}
+\label{sec:orga486aea}
+\subsection{Definition}
+\label{sec:org6f2256a}
+  Use genetic algorithm and rank-\(\mu\), weighted recombination version of the CMA
+evolutionary strategy discussed in class to find the solution to the 0/1 variant of
+the Knapsack problem.
+\subsection{Details}
+\label{sec:orgac0b7b5}
+More details about the 0/1 Knapsack problem are contained in the lecture slides.
+Alternatively, the \href{https://en.wikipedia.org/wiki/Knapsack\_problem}{Wikipedia} page also has a lot of information about this
+problem. Quoting the introductory text,
+\begin{quote}
+`` The knapsack problem or rucksack problem is a problem in combinatorial
+optimization: Given a set of items, each with a weight and a value, determine
+the number of each item to include in a collection so that the total weight is
+less than or equal to a given limit and the total value is as large as possible.
+It derives its name from the problem faced by someone who is constrained by a
+fixed-size knapsack and must fill it with the most valuable items. ''
+\end{quote}
+
+Your task is to find an optimal distribution of items to carry, that
+maximizes the overall value while adhering to the weight limit, using both
+\begin{itemize}
+\item GA
+\item CMA
+\end{itemize}
+and compare the performance of these algorithms on this function. Details about
+the dataset for this problem is given below in \cref{sec:data}. Note that this is a constrained
+optimization problem and your design choices in the
+algorithm need to reflect this. As this seems like a problem with integer
+solutions, consider how you can change CMA to reflect this property. As we are
+interested in black-box optimization algorithms, we assume we do not know
+anything about the problem structure. This means that using a randomly generated
+population around \(\mathbf{x}_0 =\mathbf{0}\)---the vector of zeros---to
+initialize the algorithm is a good idea.
+
+Finally, after answering all the questions above and implementing your
+algorithm, explore the design choices (be it parameters or operators) on the
+performance of the algorithms.
+\subsection{Data}
+\label{sec:data}
+There are two data sets--A, B. Each data set will be posted on Compass as simple
+comma delimited text files with the knapsack capacity, number of different
+items, number of each type of items, and their values + weights. For
+convenience you can read the information using \texttt{numpy}'s \texttt{loadtxt} function,
+shown in the snippet below:
+
+\begin{minted}[]{python}
+import numpy as np
+
+# Load data from txt file
+my_data = np.loadtxt('file_name.txt', delimiter=',')
+
+# Data stored as a dictionary
+# use data however you want
+bag_capacity = my_data['capacity']
+'''
+other possible keys include
+n_item_types : The number of different item types, integer
+capacity : Bag capacity, float
+n_items : Number of each item, a (n_item_types , ) numpy array
+item_values : Value of each item, a (n_item_types , ) numpy array
+item_weights : Weight of each item, a (n_item_types , ) numpy array
+'''
+
+\end{minted}
+
+\section{Minima of the parabola}
+\label{sec:org6a9417c}
+\subsection{Definition}
+\label{sec:orgf0e1dbf}
+  Use genetic algorithm and rank-\(\mu\), weighted recombination version of the CMA
+evolutionary strategy discussed in class to find the minima of a simple parabola.
+\subsection{Details}
+\label{sec:org64283fa}
+The one-dimensional parabola is a continuous, convex, unimodal function. We
+pick the parabola given by the formula
+\begin{equation}
+f(x) = 10 \cdot x^2
+\end{equation}
+
+Your task is to find the optimum of this function using
+\begin{itemize}
+\item GA
+\item CMA
+\end{itemize}
+and compare the performance of these algorithms on this function.
+Furthermore, explore the effect of the parameters (particularly in GA) on the
+performance of the algorithms. Start your search using a randomly initialized population around \(\mathbf{x}_0 = \mathbf{0}\)---the vector of zeros.
+\section{Minima of the Rotated Hyper-Ellipsoid}
+\label{sec:org4cad629}
+\subsection{Definition}
+\label{sec:orgffc7b03}
+  Use genetic algorithm and rank-\(\mu\), weighted recombination version of the CMA
+evolutionary strategy discussed in class to find the minima of the
+two-dimensional rotated ellispoid.
+\subsection{Details}
+\label{sec:org58256b7}
+The two-dimensional Rotated Hyper-Ellipsoid is a continuous, convex, unimodal
+and non-separable function. We pick the variant that is rotated \(\frac{\pi}{6} \; \si{rad}\) clockwise from the \(x_1\)-axis and shifted along
+both axes, given by the formula below:
+
+\begin{equation}
+f(\mathbf{x}) = \left( \dfrac{\sqrt{3}}{2} (x_1 - 3) + \dfrac{1}{2} (x_2 - 5) \right)^2 + 5 \cdot \left(  \dfrac{\sqrt{3}}{2} (x_2 - 5) - \dfrac{1}{2} (x_1 - 3)  \right)^2
+\end{equation}
+
+
+Graphically, it's contour plot is depicted in \cref{ellipsoid} for several
+  values of \(c\).
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.5\textwidth]{images/ellipsoid.eps}
+\caption{\label{ellipsoid}
+The rotated hyper-ellipsoid in two dimensions, the horizonal axis corresponds to \(x_1\) and the vertical to \(x_2\)}
+\end{figure}
+
+Your task is to find the optimum of this function using
+\begin{itemize}
+\item GA
+\item CMA
+\end{itemize}
+and compare the performance of these algorithms on this function. Furthermore,
+explore the effect of the parameters on the performance of the algorithms.
+Start your search using a randomly initialized population around \(\mathbf{x}_0 = \mathbf{0}\)---the vector of zeros.
+
+\section{Minima of the Rastrigin function}
+\label{sec:org8c3ac75}
+\subsection{Definition}
+\label{sec:orgcbad40b}
+  Use the rank-\(\mu\), weighted recombination version of the CMA
+evolutionary strategy discussed in class to find the minima of the shifted
+\emph{Rastrigin} function in two and five dimensions.
+
+\subsection{Details}
+\label{sec:org0a81697}
+The (unshifted) Rastrigin function is shown in \cref{rastr} for the case of two-dimensions.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.7\textwidth]{images/rastrigin.png}
+\caption{\label{rastr}
+The (unshifted) Rastrigin function in two dimensions, taken from \href{https://stackoverflow.com/a/43112733}{this SO thread}}
+\end{figure}
+
+It is a multi-modal function with several regularly distributed local minima,
+and can be generalized to arbitrary dimensions using the analytical formula
+shown below, for the shifted variant (which you should use as the objective
+function):
+
+\begin{equation}
+f(\mathbf{x}) = 10d + \sum_{i=1}^{d} \left[ (x_i - 2)^2 - 10 \cos\left(2 \pi (x_i - 2) \right) \right]
+\end{equation}
+where\(d\) is the number of dimensions.
+
+
+You need to find the local minima for this function in
+\begin{itemize}
+\item two dimensions ( \(d = 2\) )
+\item five dimensions ( \(d = 5\) )
+\end{itemize}
+using CMA. Start your search using a randomly initialized population around \(\mathbf{x}_0 = \mathbf{0}\), the vector of zeros. Choose sensible/appropriate values for
+the other CMA parameters (default ones also suffice).
+
+In both cases, consider what role does the population size play in the
+\emph{performance} of the algorithm. Do you notice considerable differences at lower
+(2) and higher (5) dimensions? Explain.
+
+\section{The following resouces may prove useful:}
+\label{sec:references}
+\begin{itemize}
+\item A short tutorial on the genetic algorithm found \href{http://web.cs.ucdavis.edu/\~vemuri/classes/ecs271/Genetic\%2520Algorithms\%2520Short\%2520Tutorial.htm}{here}
+\item The CMA-ES tutorial @ Arxiv, found \href{https://arxiv.org/pdf/1604.00772.pdf}{here}
+\item The CMA site maintained by Niko Hansen, found \href{http://cma.gforge.inria.fr/index.html}{here}
+\item Tutorial on CMA-ES, 2013 by Auger, Anne and Hansen, Nikolaus published in the
+Proceeding of the fifteenth annual conference companion on Genetic and
+evolutionary computation conference companion - GECCO ’13 Companion found at \url{http://dx.doi.org/10.1145/2464576.2483910}
+\end{itemize}
+\end{document}

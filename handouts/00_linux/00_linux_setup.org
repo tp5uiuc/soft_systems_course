@@ -1,0 +1,251 @@
+#+TITLE: Prerequisities
+#+AUTHOR: /Tejaswin Parthasarathy/, Mattia Gazzola
+#+SUBTITLE: ME498: Comp. modeling & optimization
+#+OPTIONS:   H:1 num:nil toc:nil ::t |:t ^:{} -:t f:t *:t <:t
+#+LATEX_HEADER: \usepackage{hyperref}
+#+LATEX_HEADER: \usepackage{csquotes}
+#+LATEX_HEADER:\setminted[powershell]{fontsize=\footnotesize}
+
+To ensure that the scripts/applications that you will write in this course works
+seamlessly, we need to install few applications/libraries. I have detailed ways
+to do the same for different OS distributions here. The recommended way for your
+OS is also marked.
+
+* Dependencies which we will install
+- A shell runnning =sh= compliant implementation (=bash/zsh/fish=)
+- =Python= 3.x (preferably the latest)
+- ~Jupyter~ for installing notebooks. IMPORTANT: The instructions for installing
+  ~Jupyter~ are attached at the end of this guide and is OS-agnostic.
+
+* OS-agnostic method (Easiest and definitely works)
+We can load a virtual machine in your environment---it's essentially an 'OS' that
+runs inside your 'OS'.
+** Follow the steps [[https://andreask.cs.illinois.edu/ComputeVirtualMachineImages][listed here]] [fn:7]. Download both:
+*** VirtualBox
+*** ComputeImage
+** You should have a working debian installation with your favorite
+~shell~ and ~python3~ already installed
+
+* Ubuntu/Debian (and equivalent distros)
+Try any one of the following methods.
+
+** Method #1 (Recommended, Easiest)
+- Almost works off the shelf! You have access to the shell from the =Terminal= application.
+- ~Python3~ can be installed directly using the ~Conda~ distribution [fn:4]. [[https://www.anaconda.com/download/#linux][Installation of the Anaconda distribution for Linux systems can be found here.]]
+- Enjoy using ~Python~ from the ~Conda~ distribution on the ~Terminal~.
+- To install packages in the current virtual environment (details skipped for
+  brevity) do
+ #+BEGIN_SRC sh :exports code
+	  conda update conda
+	  conda install -c anaconda numpy scipy matplotlib pandas
+ #+END_SRC
+
+** Method #2 (Somewhat harder, not recommended)
+
+- Almost works off the shelf! You have access to the shell from the =Terminal= application.
+- Install the =Spyder IDE= from the Terminal using the following steps. Also
+  gives access to an editing environment which provides useful
+  syntax-highlighting, among other shiny features.
+
+ #+BEGIN_SRC sh :exports code
+	# Fetches up-to-date package information from
+    #the Ubuntu aptitude repository
+	sudo apt-get update
+
+	# Upgrades all packages
+	sudo apt-get upgrade
+
+	# Install Python3, if not already there
+	sudo apt-get install spyder3
+ #+END_SRC
+- You can now use the ~Spyder IDE~ to launch ~Python~ processes.
+
+** Method #3 (Recommended if you want more control)
+ - Almost works off the shelf!
+ - To ensure that all packages are up to date, and that you have the latest
+   ~Python~ installation run the following commands in your ~Terminal~ (type
+   ~terminal~ in the ~Ubuntu~ dash, and enter the following commands)
+
+ #+BEGIN_SRC sh :exports code
+   # Fetches up-to-date package information from the Ubuntu aptitude repository
+   sudo apt-get update
+
+   # Upgrades all packages
+   sudo apt-get upgrade
+
+   # Install Python3, if not already there
+   sudo apt-get install python3-pip
+
+   # See if pip3 installed successfully and is in your path
+   which pip3
+
+   # Install other libraries using pip
+   pip3 install numpy scipy matplotlib pandas
+
+ #+END_SRC
+- You can now type in =python3= in the =Terminal= app prompt and will be taken
+  to the ~python~ environment.
+
+** Method #4 (Not tested and not recommended)
+   - [[https://www.python.org/downloads/source/][Download and build directly from the source code.]] [fn:5]
+** Method #5 (Good practice for independent external installation of software in Ubuntu)
+   - Use an external package manager, the recommended choice being [[https://linuxbrew.sh/][Linuxbrew]]. It
+     is painful to install, especially if you can't navigate your way
+     around the terminal. If you are just getting used to the terminal
+     environment, this option is not for you.
+   - Follow the instructions for building Linuxbrew from their website first.
+   - After successfully installing Linuxbrew, just type installation
+	  #+BEGIN_SRC sh :exports code
+		brew install python3
+	  #+END_SRC
+   - This should also install ~pip3~, which you can use to install ~Python~ packages.
+
+* Windows 10
+- Unfortunately ~Windows~ environment uses a different shell interpreter, which
+  complicates scripting and development. However you can run a ~Linux~ subsystem perfectly within Windows!
+  - This needs Windows build 16215 or later for painless processing (which you
+    most probably have as Microsoft aggressively updates their products).
+  - If you want you can check your build here. [fn:1]
+
+** Enabling access to ~sh~ compliant shell [fn:2][fn:3]
+- Open ~PowerShell~ as Administrator and run:
+
+#+BEGIN_SRC PowerShell :exports code
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+#+END_SRC
+
+- Restart your computer when prompted.
+- Once this is done, you can install the ~Linux~ distro of your choice from the
+  Windows Store.
+  - Open the Microsoft Store and choose your favorite ~Linux~ distribution (say
+    ~Ubuntu~)
+  - From the distro's page, select "Get"
+- Launch the distro from the start menu, like any other app. You can find it at
+  ~<distro_name>~ (in the case of ~Ubuntu~, this will be called ~Ubuntu~)
+  - The first launch will take some time
+- Set the required ~Linux~ username and password (this can be different than you
+  ~Windows~ user name and password)
+- You are now running a ~sh~ compliant shell. Type in the following to update
+  the repository information.
+
+ #+BEGIN_SRC sh :exports code
+   # Fetches up-to-date package information
+   #from the Ubuntu aptitude repository
+   sudo apt-get update
+
+   # Upgrades all packages
+   sudo apt-get upgrade
+ #+END_SRC
+
+** Installing Python
+
+- To get a working installation of ~Python~ within your ~Linux~ subsystem, follow
+  the steps listed in [[ Method #3 (Recommended if you want more control) ]] for the
+  ~Linux~ distros. This will give you everything within your Linux environment.
+- If you need a ~Python~ installation in your Windows environment, you can use
+  Anaconda. [[https://www.anaconda.com/download/#windows][Installation of the Anaconda distribution for Windows systems can be found here.]]
+  - You can then use ~Python~ from the ~Anaconda prompt~ application.
+  - To install packages in the current virtual environment (details skipped for
+	brevity) do
+   #+BEGIN_SRC sh :exports code
+		conda update conda
+		conda install -c anaconda numpy scipy matplotlib pandas
+   #+END_SRC
+- [[https://www.python.org/downloads/windows/][Alternatively you can also download the official Python installer from the source]]. I
+  didn't test this option out. [fn:5]
+
+* MacOS
+Try any one of the following methods.
+
+** Method #1 (Recommended, Easiest)
+- Once again, ~Python3~ can be installed directly using the ~Conda~ distribution [fn:4]. [[https://www.anaconda.com/download/#macos][Installation of the Anaconda distribution for systems running MacOS can be found here.]]
+- Enjoy using ~Python~ from the ~Conda~ distribution on the ~Terminal~.
+- To install packages in the current virtual environment (details skipped for
+  brevity) do
+ #+BEGIN_SRC sh :exports code
+	  conda update conda
+	  conda install -c anaconda numpy scipy matplotlib pandas
+ #+END_SRC
+
+** Method #2
+   - [[https://www.python.org/downloads/mac-osx/][Alternatively, download the Python installer]]. I do not recommend this
+     option. [fn:5]
+
+** Method #3 (Use a package manager)
+   - MacOS sorely misses a package manager for installation of binaries. So you
+     can install the ~Homebrew~ package manager found [[https://brew.sh/][here]].
+   - The installation might seem long drawn (I have listed the time needed
+     below), but will usually proceed without difficulty. You can consult the
+     reference [fn:6] if you face any issues. The steps are given below:
+	 + Download ~Xcode~ from the MacOS App Store [[https://developer.apple.com/xcode/][found here]] and install it, if you have not
+       done so before. You will need an Apple account (can be created for free) to do so. This step will take you some time, as
+       detailed [[https://stackoverflow.com/questions/32701043/how-long-should-xcode-7-installation-take][here]] for example (I remember it taking me 1.5-2 *hours*).
+       Consult [[https://medium.com/@LondonAppBrewery/how-to-download-and-setup-xcode-10-for-ios-development-b63bed1865c][this link]] if you face any difficulties or contact me.
+	 + Next you need to install ~Command Line Tools~ of ~Xcode~. Type in the
+       following in the terminal to see if you have already installed it
+		#+BEGIN_SRC sh :exports code
+           xcode-select -p
+		#+END_SRC
+	   If the output is non-null, you can safely skip to the next step. If not,
+       type in the following in your terminal:
+		#+BEGIN_SRC sh :exports code
+           xcode-select --install
+		#+END_SRC
+	   This usually pops up a display window like [[https://railsapps.github.io/images/installing-mavericks-popup.png][this]]. The instructions in the
+       alert box are confusing. You don’t need to "Get Xcode" from the App
+       Store. Just click "Install" for the Xcode Command Line Tools. If you have
+       a slow Internet connection, this step may take many minutes. After the
+       installation repeat the ~xcode-select -p~  command and this time you will
+       see the path of installation of ~Command Line Tools~ in your terminal prompt.
+	 + Now we can install ~Homebrew~ by typing in the following commands
+		#+BEGIN_SRC powershell :exports code
+           ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+		#+END_SRC
+		Quoting [fn:6],
+
+		  "The script will explain what changes it will make and prompt you before the installation begins."
+
+	 + You should then be able to type in
+		#+BEGIN_SRC sh :exports code
+		  brew install python3
+		#+END_SRC
+       and ~Python3~, along with ~pip~ should be installed.
+
+* Jupyter notebooks
+- *Note*: ~Python3~ is a prerequisite to install ~Jupyter~. You can find all the
+  relevant information in Jupyter's home page [fn:8].
+- If you have your ~Python~ installation done via ~Conda~, you should also have
+  jupyter-notebook installed. To verify this type
+  #+BEGIN_SRC sh :exports code
+	jupyter notebook
+  #+END_SRC
+  in your terminal to see the ~Jupyter~ console up and running in your browser.
+- Alternatively, you can also install ~Jupyter~ quickly via ~pip~. Just type
+  #+BEGIN_SRC sh :exports code
+	#Upgrades pip repository information
+	pip3 install --upgrade pip
+	pip3 install jupyter
+  #+END_SRC
+  in your terminal prompt. You can verify successful installation by typing in
+  your terminal:
+  #+BEGIN_SRC sh :exports code
+	jupyter notebook
+  #+END_SRC
+
+* Footnotes
+
+[fn:8] [[https://jupyter.org/install]]
+
+[fn:7] https://andreask.cs.illinois.edu/ComputeVirtualMachineImages
+
+[fn:6] [[https://docs.python-guide.org/starting/install3/osx/][The Hitchhiker's guide to Python]]
+
+[fn:5] [[https://www.python.org/][Python]]
+
+[fn:4] [[https://www.anaconda.com/download/#linux][Conda Install for Linux]]
+
+[fn:3] [[https://docs.microsoft.com/en-us/windows/wsl/initialize-distro][Initialize your distro]]
+
+[fn:2] [[https://docs.microsoft.com/en-us/windows/wsl/install-win10][Install Linux on Windows]]
+
+[fn:1] [[https://docs.microsoft.com/en-us/windows/wsl/troubleshooting#check-your-build-number][Check your Windows build here]]

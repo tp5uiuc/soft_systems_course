@@ -1,0 +1,1 @@
+I am a file whose contents the class needs to see.

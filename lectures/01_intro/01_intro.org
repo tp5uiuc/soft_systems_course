@@ -1,0 +1,1941 @@
+#+TITLE: Introduction
+#+AUTHOR: /Tejaswin Parthasarathy/, Mattia Gazzola
+#+SUBTITLE: ME498: Comp. modeling & optimization
+#+BEAMER_FRAME_LEVEL: 2
+# #+BEAMER_HEADER: \institute[INST]{Institute\\\url{http://www.institute.edu}}
+# #+BEAMER_HEADER: \titlegraphic{\includegraphics[height=1.5cm]{test}}
+
+#+startup: beamer
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation]
+# #+LATEX_CLASS_OPTIONS: [notes]
+#+LATEX_HEADER:\usetheme[progressbar=frametitle,block=fill]{metropolis}
+#+OPTIONS:   H:2 num:t toc:nil ::t |:t ^:{} -:t f:t *:t <:t
+#+OPTIONS:   tex:t d:nil todo:t pri:nil tags:nil
+#+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col) %8BEAMER_OPT(Opt)
+
+** Logistics
+   * Office hours
+   * Installation instructions up on Compass (Setup -> 00_setup_basics.pdf)
+   * Will keep updating the hands-on lecture notes per module
+* Tentative plan
+** Last class
+  #+NAME: design_workflow
+  #+BEGIN_SRC dot :file images/inverse_design.pdf :exports results
+	digraph G{
+
+	graph [fontname = "Fira Sans"];
+	node [fontname =  "Fira Sans"];
+	edge [fontname =  "Fira Sans"];
+
+	// rankdir=LR
+
+	splines=true;
+	forcelabels=true;
+
+	subgraph cluster_0{
+	// style=filled;
+	node [shape=ellipse];
+	opt [label=" Optimizer "];
+	sim [label=" Simulator "];
+	opt:sw -> sim:nw [dir=forward]
+	sim:ne -> opt:se [dir=backward]
+	label="Compute"
+	}
+	subgraph cluster_1 {
+		style=filled;
+		color=royalblue1;
+		// graph [truecolor bgcolor=royalblue1]
+		node [shape=rectangle, style=filled, color=white];
+		a2 [shape=diamond, label=" Optimal solution "];
+		a4 [label=" Analyzer "];
+		a5 [label=" Profit $$$ "];
+		sim -> a2 -> a4 -> a5;
+		// {rank = same; a1; a3;}
+	  label = "Understand";
+	}
+	}
+  #+END_SRC
+
+*** Workflow                                                          :BMCOL:
+		:PROPERTIES:
+		:BEAMER_opt: c
+		:BEAMER_col: 0.5
+	    :END:
+#+CAPTION: Inverse design cycle
+#+ATTR_LATEX: :width 1\textwidth
+#+RESULTS: design_workflow
+[[file:images/inverse_design.pdf]]
+
+*** Explain                                                           :BMCOL:
+		:PROPERTIES:
+		:BEAMER_opt: c
+		:BEAMER_col: 0.4
+	    :END:
+     - *Compute*: How?
+	 - Analysis: How?
+
+** Content
+   * Motivate the need for/utility of ~Python~ + ~shell~ in comp. modeling
+   * Introduction to ~shell~ (*nix) commands
+   * ~Python~: Setup/Installation
+   * ~Ipython shell~ + ~Jupyter~ notebooks
+   * Programming in ~Python~: Basics to intermediate
+
+** Quick survey
+   - ~Python~?
+   - Scientific computing in ~Python~ / other languages (if so, what)?
+   - Use simulation for research/otherwise?
+   - Familiarity with ~terminal~?
+* Why python?
+** Python is popular [fn:10]
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_col: 0.35
+ 	:END:
+	- Most visited tag on Stack Overflow among high-income nations
+	- Used in
+	  - Finance
+	  - Sciences
+	  - Webops
+	  - Business
+	  - ...
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_col: 0.65
+	:END:
+#+LATEX: \footnotesize
+#+CAPTION: Predictions
+#+ATTR_LATEX: :width 1.0\textwidth
+[[file:images/so-projections.png]]
+
+** Python as a language
+
+   - Free and open-source
+   - Object oriented with sensible data structures
+   - Interactive[fn:1] (and thus extensible)
+   - Open source packages[fn:2] (163,402 as of January 1, 2019)
+   - Widely used as an application/library API[fn:3]
+   - $\therefore$ productivity
+
+** Interactive[fn:7]
+
+   - As a wrapper for other languages!
+     - ~C++~ : ~Cython, SWIG, pybind ...~
+     - ~Fortran~ : ~F2Py, PyFort ...~
+     - ~Java~ : ~Jython, Javabridge ...~
+     - ~Perl~ : ~PyPerl, PyPerlish ...~
+     - ~...~
+   - Enables game/web development, machine learning,
+     HPC ...
+
+** FlappyBird      [fn:4]
+
+*** No disp                                                           :BMCOL:
+		:PROPERTIES:
+		:BEAMER_col: 0.35
+		:BEAMER_opt: c
+        :END:
+#+LATEX: \footnotesize
+#+CAPTION: Flappybird in Python, [[file:images/flappybird.gif][Animation]]
+#+ATTR_LATEX: :width 0.8\textwidth
+ [[file:images/flappybird-0.png]]
+
+#+NAME: dot_workflow
+#+BEGIN_SRC dot :file images/dot_success.pdf :exports results
+  digraph G{
+
+  graph [fontname = "Fira Sans"];
+  node [fontname =  "Fira Sans"];
+  edge [fontname =  "Fira Sans"];
+
+  // rankdir=LR
+
+  splines=true;
+
+  subgraph cluster_0 {
+	  style=filled;
+	  color=royalblue1;
+	  // graph [truecolor bgcolor=royalblue1]
+	  node [shape=rect, style=filled,color=white];
+	  a0 [label=" Game engine "]
+	  a1 [label=" Image processing "]
+	  a2 [label=" Learning "]
+	  a3 [label=" Coordination "]
+
+	  a0 -> a1 -> a2 -> a3;
+	  a3 -> a2 -> a1 -> a0;
+	  label = "Intent";
+  }
+  subgraph cluster_1 {
+	  node [style=filled];
+	  b0 [label=" Pygame "]
+	  b1 [label=" Scikit-image "]
+	  b2 [label=" Keras "]
+	  b3 [label=" Python I/O"]
+
+	  b0 -> b1 -> b2 -> b3 -> b0
+	  label = "Workflow";
+  }
+
+  subgraph cluster_2 {
+	  style=filled;
+	  // graph [truecolor bgcolor=palegreen3]
+	  color=palegreen3;
+	  node [shape=rect,style=filled,color=white];
+
+	  c0 [label="SDL : C/C++"]
+	  c1 [label=" Python, Cython, C "]
+	  c2 [label=" TensorFlow : Python, C++, CUDA "]
+	  c3 [label=" Python "]
+
+	  c0 -> c1 -> c2 -> c3;
+	  label = "Wrap using Python glue";
+  }
+  }
+#+END_SRC
+
+*** Workflow                                                          :BMCOL:
+		:PROPERTIES:
+		:BEAMER_opt: c
+		:BEAMER_col: 0.7
+	    :END:
+#+CAPTION: Workflow
+#+ATTR_LATEX: :width 1\textwidth
+#+RESULTS: dot_workflow
+[[file:images/dot_success.pdf]]
+
+** Comp. modeling with HPC using FOSS packages
+
+*** Fluid dynamics using ~DEDALUS~
+      :PROPERTIES:
+      :BEAMER_env: block
+      :END:
+#+ATTR_LATEX: :width 0.4\textwidth
+[[file:images/kh_swirl.jpg]]
+
+*** Solid mech.	using ~Fenics~                                        :BMCOL:
+		:PROPERTIES:
+		:BEAMER_env: block
+		:BEAMER_col: 0.52
+	    :END:
+#+ATTR_LATEX: :width 0.8\textwidth
+[[file:images/elasticity.png]]
+
+*** MD using ~ESPResSo~                                               :BMCOL:
+		:PROPERTIES:
+		:BEAMER_env: block
+		:BEAMER_col: 0.5
+	    :END:
+#+ATTR_LATEX: :width 0.9\textwidth
+[[file:images/nacl.jpg]]
+
+** Your favorite applications use Python![fn:3]
+
+   - Dropbox
+   - Spotify
+   - Email clients
+   - You name it!
+   - An example close to home : [[file:code/clangformat.cpp][ST3 demo]]
+
+** We will use python for[fn:5][fn:6]
+- Modeling (~numpy~, ~scipy~)
+- Optimization (~numpy~, ~scipy~)
+- File I/O (~os~, ~pandas~, ~cereal~)
+- Visualization (~matplotlib~, ~seaborn~, ~povray~, ~vapory~)
+
+* Introduction to Shell
+** Shell?
+
+    - User interface for access to an operating system's services
+    - You have already used it
+      - Windows (Desktop, Taskbar, Menu)
+      - MacOS (Finder, Dock)
+      - ...
+    - These are GUI shells
+    - We will use CLI (Command line interface) shells here.
+    - Idea: Type in commands to perform desired operations.
+
+** On to your shell
+
+    - MacOS : Find =Terminal= in ~Applications/Utilities/Terminal~ (Spotlight
+      works too)
+    - Ubuntu environments: Type ~terminal~ in the dash and select the app.
+    - Windows : You can either use ~Command Prompt/Powershell~, but neither of
+      these support *nix based shells (~sh/bash/zsh~).
+    - If you can't open a terminal session now, worry not. Go to
+      https://rootnroll.com/d/fish-shell/.
+
+** Shell demo
+
+*** Command line is great for code development, but can be a bit intimidating at first.
+*** Don't worry                                             :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+Let's go through some of the important ones!
+
+*** Design
+	~command [options] argument~
+*** Demo : Navigating through your shell                    :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+    *Demo: Navigating your shell*
+
+If you get stuck:
+- Google is your friend!
+- Use ~whatis <command_name>~ to see a one-line description *Demo*
+- Use ~man <command_name>~ to see all possible options *Demo*
+
+** View current directory
+
+*** Command                                                      :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+
+ #+NAME:rm_showme_block
+ #+begin_src shell :results replace :exports results
+	 [ -e  dont_show_me.txt ] && rm dont_show_me.txt
+ #+end_src
+
+ #+RESULTS: rm_showme_block
+
+
+ #+NAME:ls_block
+ #+begin_src shell :exports both
+	  ls # LiSt directory contents
+	  # tip: -l lists, -a shows all files
+ #+end_src
+
+***                                                       :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+*Output*
+ #+RESULTS: ls_block
+ | 01_intro.org        |
+ | 01_intro.pdf        |
+ | 01_intro.synctex.gz |
+ | 01_intro.tex        |
+ | _minted-01_intro    |
+ | auto                |
+ | code                |
+ | images              |
+
+** My current directory structure?
+*** Command                                                      :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+
+ #+NAME:tree_block
+ #+begin_src fish :exports both
+   tree -d # Visualize directory as a TREE
+ #+end_src
+
+***                                                       :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+*Output*
+ #+LATEX:\tiny
+ #+RESULTS: tree_block
+ |   0 |             |                  |
+ |     | --          | _minted-01_intro |
+ |     | --          | auto             |
+ |     | --          | code             |
+ | `-- | images      |                  |
+ |   4 | directories |                  |
+
+** What's my current directory?
+*** Command                                                      :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+
+ #+NAME: pwd_block
+ #+begin_src shell :exports both
+   pwd # What is the Present Working Directory?
+ #+end_src
+
+***                                                       :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+*Output*
+ #+LATEX:\tiny
+ #+RESULTS: pwd_block
+ : /Users/tp5/Desktop/Masters_Resources/teaching/ME498_CMO/lectures/01_intro
+
+** Navigate to another directory
+*** Command                                                      :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+
+ #+NAME: cd_block
+ #+begin_src shell :exports both
+   cd images # Change Directory
+   echo "Dir:"
+   pwd # What is the Present Working Directory?
+   echo "Contents:"
+   ls # List contents of the `images` directory
+ #+end_src
+
+***                                                       :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+*Output*
+ #+LATEX:\tiny
+ #+RESULTS: cd_block
+ | Dir:                                                                             |
+ | /Users/tp5/Desktop/Masters_Resources/teaching/ME498_CMO/lectures/01_intro/images |
+ | Contents:                                                                        |
+ | dot_success.pdf                                                                  |
+ | elasticity.png                                                                   |
+ | falling_stone.mp4                                                                |
+ | flappybird-0.png                                                                 |
+ | flappybird.gif                                                                   |
+ | kh_swirl.jpg                                                                     |
+ | nacl.jpg                                                                         |
+
+** Navigate back to source directory
+*** Command                                                      :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+
+ #+NAME: parent_block
+ #+begin_src shell :exports both
+	  cd images # Change Directory
+	  cd .. # Change Directory to parent directory
+	  # . is present directory
+	  # .. is previous directory
+	  ls # List contents of the parent directory
+ #+end_src
+
+***                                                       :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+*Output* (Same as a couple of slides before)
+ #+LATEX:\scriptsize
+ #+RESULTS: parent_block
+ | 01_intro.org        |
+ | 01_intro.pdf        |
+ | 01_intro.synctex.gz |
+ | 01_intro.tex        |
+ | _minted-01_intro    |
+ | auto                |
+ | code                |
+ | images              |
+
+** Make a new directory
+*** Command                                                      :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+
+ #+NAME: mkdir_block
+ #+begin_src shell :exports both
+   mkdir MyFolderName # MaKe DIRectory
+   #-p MaKes intermediate DIRs too
+   mkdir -p fx/gx/hx
+   tree -d # List directories as TREE
+ #+end_src
+
+***                                                         :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+*Output* (Same as a couple of slides before)
+ #+LATEX:\tiny
+ #+RESULTS: mkdir_block
+ | 0   |                  |    |
+ | ├── | MyFolderName     |    |
+ | ├── | _minted-01_intro |    |
+ | ├── | auto             |    |
+ | ├── | code             |    |
+ | ├── | fx               |    |
+ | │   | └──              | gx |
+ | │   | └──              | hx |
+ | └── | images           |    |
+ | 8   | directories      |    |
+
+** Remove directories and files
+*** Command                                                      :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+
+ #+NAME: rmdir_block
+ #+begin_src shell :exports both
+   rmdir MyFolderName #ReMove DIRectory
+   rmdir -p fx/gx/hx #same as mkdir
+   # Caveat : Only does it if the DIR is empty
+   tree -d
+ #+end_src
+
+***                                                         :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+*Output* (Same as a couple of slides before)
+ #+LATEX:\tiny
+ #+RESULTS: rmdir_block
+
+** If the directory has files, then
+*** Command                                                      :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+
+ #+NAME: rm_block
+ #+begin_src bash :exports both
+   mkdir MyFolderName
+   # Creates a dummy txt file
+   touch MyFolderName/test.txt
+   # rmdir does not work, as it needs empty DIR
+   # Use rm instead with -r:recursive, -f:force
+   rm -rf MyFolderName
+   tree -d
+ #+end_src
+
+***                                                         :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+*Output* (Same as a couple of slides before)
+ #+LATEX:\tiny
+ #+RESULTS: rm_block
+ | 0   |                  |
+ | ├── | _minted-01_intro |
+ | ├── | auto             |
+ | ├── | code             |
+ | └── | images           |
+ | 4   | directories      |
+
+** See file contents
+*** Command                                                      :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+
+ #+NAME: cat_block
+ #+begin_src sh :exports both
+   # Print out contents of a file
+   cat show_me_to_the_class.txt
+   # Concatenate And prinT
+ #+end_src
+
+***                                                         :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+*Output*
+ #+LATEX:\small
+ #+RESULTS: cat_block
+ : I am a file whose contents the class needs to see.
+
+** Move files around
+*** Command                                                      :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+
+ #+NAME: mv_block
+ #+begin_src sh :exports both
+   # MoVe a file, similar to cut/paste
+   # prototype: mv src target
+   # Can also move into different folders
+   mv show_me_to_the_class.txt dont_show_me.txt
+   ls
+   mv dont_show_me.txt show_me_to_the_class.txt
+ #+end_src
+
+***                                                         :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+*Output*
+ #+LATEX:\tiny
+ #+RESULTS: mv_block
+ | 01_intro.org        |
+ | 01_intro.pdf        |
+ | 01_intro.synctex.gz |
+ | 01_intro.tex        |
+ | _minted-01_intro    |
+ | auto                |
+ | code                |
+ | dont_show_me.txt    |
+ | images              |
+
+** Copy files around
+*** Command                                                      :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+
+ #+NAME: cp_block
+ #+begin_src sh :exports both
+   # CoPy a file, similar to copy/paste
+   # prototype: cp src target
+   # Can also move into different folders
+   cp show_me_to_the_class.txt dont_show_me.txt
+   ls
+ #+end_src
+
+ #+NAME: rm_extrafile_block
+ #+begin_src sh :exports none
+   rm dont_show_me.txt
+ #+end_src
+
+ #+RESULTS: rm_extrafile_block
+
+***                                                         :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+*Output*
+ #+LATEX:\tiny
+ #+RESULTS: cp_block
+ | 01_intro.org             |
+ | 01_intro.pdf             |
+ | 01_intro.synctex.gz      |
+ | 01_intro.tex             |
+ | _minted-01_intro         |
+ | auto                     |
+ | code                     |
+ | dont_show_me.txt         |
+ | images                   |
+ | show_me_to_the_class.txt |
+
+** Launch applications
+*** Command                                                      :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+
+ #+NAME: python_block
+ #+begin_src bash :exports both
+   # Do we have Python?---the which command
+   which python3
+   # Let's launch this python3 from shell
+   python3 -c 'print("Hello_world_from_ME498")'
+   # Full disclosure : Location of the Python
+   # executable has to be in your PATH variable
+ #+end_src
+
+***                                                         :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+*Output*
+#+LATEX:\small
+ #+RESULTS: python_block
+ | /usr/local/bin/python3 |
+ | Hello_world_from_ME498 |
+
+** More about your shell
+
+    - We have just scratched the surface in exploring the capabilities of the
+      shell
+	- Here's a [[http://www.ee.surrey.ac.uk/Teaching/Unix/][highly recommended gentle tutorial ]][fn:8]  to some essential
+      commands
+
+* Introduction to Python
+** Outline[fn:9]
+    - Help you setup ~Python~
+	- Basics of ~Python~ as a programming language
+	  - ~Python~ interactive shell and launching scripts
+	  - Data types and operations: Common types, lists, dicts
+	  - Conditionals and loops, iterators
+	  - Functions and recursion
+	  - Basic I/O
+	  - Classes?
+	  - Modules and packages
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+    - Any cribs/complaints?
+    - How's shell? Finding it hard?
+	- Example for use: https://github.com/ftakie2/echo360Scrapper
+
+** Installation/Setup
+    - Fetch the install instructions at Compass (Setup -> 00_setup_basics.pdf) and follow it.
+    - Even a VirtualMachine (the OS agnostic step in the install instructions) is
+      fine, for the purposes of learning Python.
+	- What is : ~Python~, ~Python3~, ~pip~, ~conda~, ~easy_install~, ~jupyter~
+	- (Logistics) Exercises will be prescribed in the form of ~jupyter~ notebooks
+
+** Python interactive shell
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+  - Ask them if all variable names work... for example 2ducks = 2
+  - ~and, as, assert, break, class, continue, def, del, elif, else, except,
+  exec, finally, for, from, global, if, import, in, is, lambda, not, or,
+  pass, print, raise, return, try, while, with, yield~
+  - Calculation::inexact arithmetic--Python: 0.1+0.2 = 0.3? Show matlab also has the same issue.
+
+  - Python 3: 1/3 = 0.3333. Switch to Python2 gotcha. Show that 1/3 is 0;
+  - Addition of strings "hello" + "wprld"
+  - Multiplication of strings as concatenation "hello"*4
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+  *Demo*
+	- Hello world, ~print("Hello world")~
+	- Quit shell, ~quit()~ or ~Ctrl + D~
+	- Calculator, ~35.9*42.1~
+	- Variables, ~x = 42~
+	- Special variable ~_~
+	- Strings, ~my_str="This is my_str"~
+	- Comments, ~# I am a comment~
+	- Getting help using ~help()~
+** Python scripts
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+  - Imports are a way to "use" the file and definitions inside a file. Similar
+    to #include directives.
+  - Interactive: Make them do the import and see the folder
+  - Explain bytecode of helloworld
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+  *Demo*
+	- Hello world from the file ~hello_world.py~
+	- "Import" ~hello_world.py~
+	- ~__pycache__~?
+
+** Common types and operations
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+  - SKIP---id as a function to see address before copy
+  - type()---say that its a function that helps us see what type a value is
+  - the bin, hex commands for converting ints
+  - Conversion of float into int and int into float
+  - Show +, - , **, / and *** for floats + ints
+  - Additionally show // for ints and floats
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+  *Demo*
+	- ~type()~
+	- Integers, ~x=42~ or ~x=0b101010~
+	- Floating point numbers, ~f=42.12~ or ~f=2.718281828459045~
+	- Complex numbers, ~c=2.06 + 5.23j~
+	- The operations ~+, - , * , /, // and  **~
+	- Copying common types
+
+** Common types and operations contd.
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+  - Interactive: Make sure the indexing is understood [f,l), especially MATLAB users
+  - Demo. Construct the following strings:
+  - ImLearningPythonNow | ningPyth | ningAPyth
+  - a = ImLearningPythonNow
+  - b = ningPyth. The answer is a[6:14]
+  - a.find('n') and a.find('h'). These are methods acting on variables (Use TAB
+    and show them)
+  - c = ningAPyth. The answer
+  - c = a[6:10] + 'A' + a[10:14]. See continuity in loop indexing
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+  *Demo*
+	- Strings, ~x="42"~ or ~x='42'~
+	- Backslash for special characters, ~my_str ='What\'s that?'~
+	- Multiline strings (triple quotes), ~my_str=''' How's that'''~
+	- ~t = "Hello World"~ indexed as
+	[[file:images/helloworld.png]]
+    - $\therefore$ ~t[0] = 'H', t[6]='W', t[-3]='r'~
+	- Operations ~len(), +, *, [], [:]~
+
+** Some more operations
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+    - my_str = 'saudi' ; 'a' in my_str returns True
+	- 2 and 3 returns 3 as 2 evalutes to True (ask people who know Python
+      already)
+    - 0 and 3? returns 0.
+	- Same for 2 or 3 and 0 or 1.
+	- Precedence order! 3 and 5 and 9 or 2 and 4 or 5
+	- Link precendence logically to the practice sheet!
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+  *Demo*
+	- Boolean: ~True, False~
+	- ~in~
+	- ~or, and~
+	- Comparison ~<,>,==~
+
+** Practice
+*** Please attempt                                                  :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	=02_datatypes_strings_numbers_and_variables.ipynb=
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+   - Brief demo on how to access and run notebooks...
+   - ~00_introduction_to_notebooks.ipynb~ will be uploaded, and is not compulsary
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+   - Run keycastr
+   - show command + enter for running scripts
+   - Show ? for doc. Tab for completion. Shift + Tab for online docs
+
+** Sequential types
+   + Strings, *Lists* and *Tuples* (and */sets/*)
+   + Underlying concepts (and hence operations) are the same. So know one
+     \rightarrow know all!
+   + Lists are "an ordered group of items or elements".
+   + Are like arrays in ~C, C++, Java~, but are more powerful*
+   + Tuples are immutable lists
+
+** Lists
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+    - Say that for list, I'll show you examples and code some lists and show
+      operations on lists
+    - Use type to see the object type of the list
+	- Then have a small activity
+    - Say you'll understand why its powerful
+	- Then homework
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+   To create a list:
+   #+begin_src python :exports code
+   my_list = [42, 'kat', 10.24, "meow"]
+   #+end_src
+
+   #+RESULTS:
+   : None
+
+   Features:
+   - Are ordered (Order does not change)
+   - May contain arbitrary objects (See example above)
+   - Elements of a list can be accessed by an index (~my_list[0]=42~)
+   - They are arbitrarily nestable (they can contain other lists as sublists)
+   - Variable size (can add/remove items from lists)
+   - They are mutable (the elements of a list can be changed)
+** Examples of lists
+| List                              | Description           |
+|-----------------------------------+-----------------------|
+| ~[]~                              | An empty list         |
+| ~[1,1,2,3,5,8]~                   | A list of integers    |
+| ~[42, "Whasup?", 3.1415]~         | A list of mixed types |
+| ~["NY", "Philly", "Boston"]~      | A list of Strings     |
+| ~[["Chmp",61820], ["Urb",61801]]~ | A nested list         |
+
+** Operations on lists
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+    - Construct a bigass list. 8 or 9 elements say. Break a string down using
+      split and add using the + operator!
+	- Show len and *. Access one member using a[4] say.
+    - Demo in slicing, negative indices as well, a[2:5], a[2:], a[2:-1], a[-3:]
+    - a[:2:-1] (say)
+    - Construct sublist by using the above composition
+	- Sublist indexing show [0][1]
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+  *Demo*, similar to strings
+	- Operations ~len(), +, *, []~ and ~[:]~ (slicing)
+	- ~seq[begin: end: step]~
+	- ~in, not in~ for checking elements
+	- Comparison
+	- Sublists indexing
+
+** Additional operations on lists
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+    - demo pop(i) to pop at the ith location
+    - pop() at empty list? IndexError (Exceptions...won't get to that)
+	- Motivate need for extend by showing why append fails (append list say)
+	- Insert (index, elem)
+    - remove() if not found? ValueError
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+  *Demo*, unique to lists
+	- ~pop~
+	- ~append~
+	- ~extend~ (for appending any iterable)
+    - ~index~ (find first matching index)
+	- ~insert~ (at any location)
+	- ~remove~ (first found element)
+** Activity
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- str="Python 3 is awesome dude"; a = str.split(); a[1]=float(a[1]);
+	- b=a[0:3]*2; b.pop(); b[-1]=int(b[-1])
+	- c=b.copy(); c.append('?'); c.insert(3,'not')
+	- d=["yes", "it", "is?"]
+	- c.extend(d). Why not +=? Efficiency! extend does it inplace?
+	- c.remove("not")
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+  Give me the following lists, minimal keystroke:
+	- ~a = ['Python', 3.0, 'is', 'awesome', 'dude']~
+	- ~b = ['Python', 3.0, 'is', 'Python', 3]~
+	- ~c = ['Python', 3.0, 'is', 'not', 'Python', 3, '?']~
+	- ~d = ['Yes', 'it', 'is']~
+	- ~c = ['Python', 3.0, 'is', 'not', 'Python', 3, '?', 'Yes, 'it, 'is']~
+	- ~e = ['Python', 3.0, 'is', 'Python', 3, '?', 'Yes, 'it, 'is']~
+  ~[begin: end: step], pop, append, extend, index, insert, remove~
+** Tuples (very briefly)
+   - Immutable list---*cannot be changed in any way once it has been created*
+   - Nice for /constness/ and speed
+   - Create one as follows
+	  #+LATEX:\footnotesize
+	  #+begin_src python :exports code
+	  my_tuple = ("tuples", "are like", "immutable", "lists")
+	  #+end_src
+	  #+RESULTS:
+	  : None
+   # #+LATEX:\normal
+   - *Demo* cannot change/add/remove elements
+** Copies of lists
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- Ask them to do list copy and see whether one can modify another
+    - x,y. y=x. show id(x,y)
+	- Change value of y and show id
+	- Do the same for lists and show id()
+	- Slicing or copy changes id
+	- Deepcopy to do sublists
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+	- *Demo* Understanding copies of variables using ~id()~
+	- ~Python~ creates copies only if we *explicitly demand* it.
+	- *Demo* ~=~ operation on lists
+	- Inplace transforms creates /references/
+	- Use slice / ~copy()~ method as a workaround (Shallow copy)
+	- *Demo* Doesn't work for sublists. Use Deep copy.
+
+** Numerical lists
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+   - Note same concept [forst, last)
+   - You have bunch more of such functions like min and max. To know all about
+     them do practice..
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+
+	- ~range~ can generate numerical lists
+	  #+NAME:numbers_bloc
+	  #+begin_src python :results output :exports both
+		# Store the first ten numbers in a list.
+		numbers = list(range(1,11))
+		print((numbers))
+	  #+end_src
+
+	  #+RESULTS: numbers_bloc
+	  : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+	- ~min(), max(), sum()~ functions
+	  - ~min(numbers)~ prints ~1~
+	  - ~max(numbers)~ prints ~10~
+	  - ~sum(numbers)~ prints ~55~
+** Practice
+*** Please attempt                                                  :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	=03_lists_tuples_and_sets.ipynb=
+
+** Dictionaries
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+   - Use type to see the object type
+   - Ask them to try out immutability of keys---need them!
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+	- ~Python~'s associative arrays---basically has key-value pairs
+	- Initialize dictionary like so:
+	  #+LATEX:\footnotesize
+	  #+NAME: dict_bloc
+	  #+begin_src python :results output :exports both
+		# Create a dictionary
+		food = {"ham" : "yes", "egg" : "yes", "spam" : "no" }
+		print(food)
+		print(food["ham"]) # Returns the value
+		food["spam"] = "yes" # Change the value
+		print(food)
+	  #+end_src
+
+
+    - What about mutability of keys?
+
+    - ---OUTPUT---
+	  #+LATEX: \footnotesize
+	  #+RESULTS: dict_bloc
+	  : {'ham': 'yes', 'egg': 'yes', 'spam': 'no'}
+	  : yes
+	  : {'ham': 'yes', 'egg': 'yes', 'spam': 'yes'}
+
+** Operations on dictionaries
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- Use (key, value) = pop(key) or popitem
+    - Demonstrate empty dict pop
+	- Ask given the knowledge of what happended in list, what do they think will
+      happen in dict? a=d? a.clear(); a? d?
+    - Update()---create only unique! Show example with redundant list. Something
+      like a; b=a.copy(); Change one value in b; a.update(b) updates value.
+    - But if b is different, a.update(b) adds key/value pairs or updates values
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+  *Ans*---Keys need to be immutable.
+
+  *Demo*
+	- ~len()~
+	- ~del d[key]~
+	- ~k in/not in d~
+	- ~pop(key)/popitem~ (Last key removal)
+	- ~copy~ (shallow copy)
+	- ~clear~ (removes all key-value pairs)
+	- ~update~ (Merge dictionaries)
+** Conditional statements
+   - Decisions, decisions, decisions
+   - ~if~, ~if-else~, ~if-elif-else~
+	  #+LATEX:\tiny
+	  #+begin_src python :results output :exports code
+		# Example if
+			# Note you dont need brackets like if(True):
+		if True:
+			print("This block gets executed")
+
+		# Example if-else
+		if 5==5:
+			print("This block gets executed")
+		else:
+			print("This block doesn't get executed")
+
+		# Example if-else-if
+		a = 2
+		if a==2:
+			print("If block")
+			a = 3
+		elif a==3:
+            # Should this block run?
+			print("Elif block")
+		else:
+			print("Else block")
+	  #+end_src
+
+	  #+RESULTS:
+	  : This block gets executed
+	  : This block gets executed
+	  : If block
+
+
+   - Indentation is key in ~Python~ (No {}, [] or variants)
+** Conditional assignments
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+   - Can come in a variety of form and shapes that you can only learn if you do
+     the following ipython notebook
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+   - Assignments are possible using conditionals
+	  #+LATEX:\footnotesize
+	  #+begin_src python :results output :exports code
+		# Max of two numbers
+		a = 4; b = 5;
+		max_ab = a if (a>b) else b
+
+		# Can also use as expression
+		max_ab = (a if (a>b) else b)*3.14 - 2.718
+
+	  #+end_src
+
+	  #+RESULTS:
+
+
+   - Conditional statements can be used as expressions
+** Practice
+*** Please attempt                                                  :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	=04_if_statements.ipynb=
+
+** Loops in ~Python~
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+   - Roughly two types:
+	 - Condition-controlled: Loop repeated until a given condition changes, e.g.
+       changes from True to False. e.g. =while=.
+	 - Collection-controlled: Looping through elements of a "collection" (~list~,
+       ~dict~ or ordered sequence). e.g. =for=.
+   - Example (What's the output?)
+	#+LATEX:\footnotesize
+	#+NAME: while_ctr_block
+	#+begin_src python :results output :exports code
+	  # While example---whats the answer?
+	  counter = 1
+	  while counter <= 100:
+		  counter += 1
+	  print("Counter reaches {}".format(counter))
+	#+end_src
+
+	#+LATEX:\footnotesize
+	#+NAME: for_ctr_block
+	#+begin_src python :results output :exports code
+	  # For example---whats the answer?
+	  counter = 1
+	  for x in range(100):
+		  counter += 1
+	  print("Counter reaches {}".format(counter))
+	#+end_src
+
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- While loop == 101
+ 	#+RESULTS: while_ctr_block
+	: Counter reaches 101
+    - For loop == 101
+	#+RESULTS: for_ctr_block
+	: Counter reaches 101
+	- Say that we have seen range in a different context before and what is it?
+	- Make sure difference between range is known (1-100) and (0-99)
+
+** The ~while~ loop [fn:12]
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_col: 0.48
+ 	:END:
+	#+LATEX:\scriptsize
+	#+NAME: while_block
+	#+begin_src python :results output :exports both
+	  # Print sum of first n numbers
+	  n = 100
+	  s = 0
+	  counter = 1
+	  while counter <= n:
+		  s = s + counter
+		  counter += 1
+	  print("Sum of 1 until %d: %d" % (n,s))
+	#+end_src
+
+	#+RESULTS: while_block
+	: Sum of 1 until 100: 5050
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_col: 0.45
+	:END:
+#+LATEX: \footnotesize
+#+CAPTION: While logic
+#+ATTR_LATEX: :width 0.8\textwidth
+[[file:images/while_loop.png]]
+
+** The ~while-else~ loop? [fn:12]
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_col: 0.48
+ 	:END:
+	#+LATEX:\scriptsize
+	#+NAME: while_else_block
+	#+begin_src python :results output :exports both
+	  # Print sum of first n numbers
+	  n = 100
+	  s = 0
+	  counter = 1
+	  while counter <= n:
+		  s = s + counter
+		  counter += 1
+	  else:
+		  print("Why is this needed?")
+	  print("Sum of 1 until %d: %d" % (n,s))
+	#+end_src
+
+	#+RESULTS: while_else_block
+	: Why is this needed?
+	: Sum of 1 until 100: 5050
+
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_col: 0.45
+	:END:
+#+LATEX: \footnotesize
+#+CAPTION: While-else logic
+#+ATTR_LATEX: :width 0.8\textwidth
+[[file:images/while_loop_with_else.png]]
+
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- else part Always gets executed at the end
+    - Where do you think it is useful? I mean we could have just put it at the
+      end with the rest of the stuff no?
+    - Thats where our friend break comes in!
+** ~break~ statement [fn:12]
+
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_col: 0.48
+ 	:END:
+	#+LATEX:\scriptsize
+	#+NAME: while_break_block
+	#+begin_src python :results output :exports both
+	  # Print sum of first n numbers
+	  # Till 100!
+	  n = 100
+	  s = 0
+	  counter = 1
+	  while counter <= n:
+		  if counter > 50:
+			  break
+		  s = s + counter
+		  counter += 1
+	  else:
+		  print('''Loop ran for
+		  all %d iterations''' % (n))
+	  print('''Sum of 1 until %d: %d'''
+			  % (min((counter-1, n)),s))
+	  # Output below
+    #+end_src
+
+	#+RESULTS: while_break_block
+	: Sum of 1 until 50: 1275
+
+
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_col: 0.45
+	:END:
+#+LATEX: \footnotesize
+#+CAPTION: While-else logic
+#+ATTR_LATEX: :width 0.8\textwidth
+[[file:images/while_loop_with_else_break.png]]
+
+** ~break~ statement contd [fn:12]
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_col: 0.48
+ 	:END:
+	#+LATEX:\scriptsize
+	#+NAME: while_break_block_p2
+	#+begin_src python :results output :exports both
+	# Print sum of first n numbers
+	# Only till 30 now!!!
+	n = 30
+	s = 0
+	counter = 1
+	while counter <= n:
+		if counter > 50:
+			break
+		s = s + counter
+		counter += 1
+	else:
+		print('''Loop ran for
+	all %d iterations''' % (n))
+	print('''Sum of 1 until %d: %d'''
+		% (min((counter-1, n)),s))
+	# Output below
+	#+end_src
+
+	#+RESULTS: while_break_block_p2
+	: Loop ran for
+	: all 30 iterations
+	: Sum of 1 until 30: 465
+
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_col: 0.45
+	:END:
+#+LATEX: \footnotesize
+#+CAPTION: While-else logic
+#+ATTR_LATEX: :width 0.8\textwidth
+[[file:images/while_loop_with_else_break.png]]
+
+** ~for~ loops
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+    - for x in b: print(x)---do for lists
+	- Question: Does it work on tuples and strings and dicsts
+    - Question: But what to do when we wenat index list?  enum?
+	- Question: key-value pairs in Dicts? .items()
+	- range (begin, end, step) (seen earlier)
+	- for x in range(10, 20, 2): print(x)
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+    - Iterator: Loops over elements of a sequence
+    - Syntax:
+	  #+LATEX:\scriptsize
+	  #+begin_src python :exports code :results replace
+	  for <variable> in <sequence>:
+		  <statements>
+	  else:
+		  <statements>
+	  #+end_src
+
+
+    - *Demo* Iterating over lists, dicts, tuples and strings
+	- *Demo* ~Range~ for numbered sequences
+** Activity
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	#+begin_src python :results output :exports none
+	  x = [chr(y) for y in range(ord('a'), ord('z')+1)]
+	  print(x[::2])
+
+	  # Pick and choose
+	  y = x[::4]
+	  z = [temp.upper() for temp in x[2::4]]
+
+	  # List of double size allocate and then modify in place
+	  a = x[::2]
+	  a[::2] = y
+	  a[1::2] = z
+	  print(a)
+
+	  y = x[3::4]
+	  z = [temp.upper() for temp in x[1::4]]
+	  q = x[1::2]
+	  q[::2] = z
+	  q[1::2] = y
+	  print(q)
+	#+end_src
+
+	#+RESULTS:
+	: ['a', 'c', 'e', 'g', 'i', 'k', 'm', 'o', 'q', 's', 'u', 'w', 'y']
+	: ['a', 'C', 'e', 'G', 'i', 'K', 'm', 'O', 'q', 'S', 'u', 'W', 'y']
+	: ['B', 'd', 'F', 'h', 'J', 'l', 'N', 'p', 'R', 't', 'V', 'x', 'Z']
+
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+  Write a script that produces the following strings:
+
+	- ~acegikmoqsuwy~
+	- ~aCeGiKmOqSuWy~
+	- ~BdFhJlNpRtVxZ~
+
+  *Hints*: consider using ~chr()~ and ~ord()~ and ~str.upper()~ / ~str.lower()~
+** ~continue~ statement
+   - In the example below, using a ~break~ quits the for loop
+	#+LATEX:\scriptsize
+	#+NAME: edibles_break_bloc
+	#+begin_src python :results output :exports both
+	  edibles = ["ham", "spam","eggs","nuts"]
+	  for food in edibles:
+		  if food == "spam":
+			  print("No more spam please!")
+			  break
+		  print("Great, delicious " + food)
+	  else:
+		  print("I am so glad: No spam!")
+	  print("Finally, I finished stuffing myself")
+	  # Output below
+	#+end_src
+
+	#+RESULTS: edibles_break_bloc
+	: Great, delicious ham
+	: No more spam please!
+	: Finally, I finished stuffing myself
+
+
+   - But what if our disgust with spam is not so high that we want to stop
+     consuming the other food?
+
+** ~continue~ statement contd.
+   - Simple! Replace ~break~ with ~continue~
+	#+LATEX:\scriptsize
+	#+NAME: edibles_continue_bloc
+	#+begin_src python :results output :exports both
+	  edibles = ["ham", "spam","eggs","nuts"]
+	  for food in edibles:
+		  if food == "spam":
+			  print("No more spam please!")
+			  continue # replaces break
+		  print("Great, delicious " + food)
+	  else:
+		  print("I am so glad: No spam!")
+	  print("Finally, I finished stuffing myself")
+	  # Output below
+	#+end_src
+
+	#+RESULTS: edibles_continue_bloc
+	: Great, delicious ham
+	: No more spam please!
+	: Great, delicious eggs
+	: Great, delicious nuts
+	: I am so glad: No spam!
+	: Finally, I finished stuffing myself
+
+** Practice
+*** Please attempt                                                  :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	=05_while_loops_and_user_input.ipynb=
+	=06_dictionaries.ipynb=
+
+** Towards functions
+
+- ~Functions~ are quintessential to any programming language.
+- Are "structured elements to group a set of statements so they can be utilized more than once"
+- We have already used a function before: ~print()~ !
+*** ~print()~ prototype                                             :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+  ~print(value, ..., sep=' ', end='\n', file=sys.stdout, flush=False)~
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+-  Tip: Type ~print?~ or ~print~ and ~SHIFT+TAB~ to view docs in ~ipython~
+- *DEMO*
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+   - Show multiple arguments: print(a,b,c)
+   - Show searation between: print(a,b,c,sep=':)')
+   - Show end characters: print(a);print(b, end='\t');print("c")
+   - show write to file using file: print
+   - Explain what flush is...but don't go into detail
+
+** Quick detour: How to format output?
+
+  - Always use the ~format()~ method for formatting strings
+  - Positional or keyword params [fn:12]
+#+ATTR_LATEX: :width 0.7\textwidth
+[[file:images/format_method_positional_parameters.png]]
+  - There are many other formatting tools too! [fn:13]
+  - *DEMO*
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+   - Ask people to play around with formatting shown on the screen
+   - Show float and int formatting
+   - Show {:06d}z ero fill
+   - Show {:<20s} < and > for right and left fill and ^ for centered
+
+** Functions
+   - Syntax [fn:14]
+   #+ATTR_LATEX: :width 0.7\textwidth
+   [[file:images/function_def.png]]
+** Skeleton of a function
+*** ~def my_fun(a, b, c="Two"):~                                    :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+    .... ~if (a>2):~
+
+    ........ ~return 1~
+
+    .... ~else:~
+
+	........  ~return (None, 3)~
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+  - *DEMO*
+  - Arguments/Parameters ~my_fun(1,2,"Five")~
+  - Return statements (none/one/many)
+  - Default parameters ~my_fun(10, 12)~
+  - Keyword parameters ~my_fun(4, b=2, c="One")~
+  - Multiple returns through tuples
+  - Arbitrary number of arguments also possible
+** Practice
+*** Please attempt                                                  :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	=07_introduction_to_functions.ipynb=
+	=08_some_more_functions.ipynb=
+** Call by value/reference #1?
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+    What's the output of the following code block?
+	#+LATEX:\footnotesize
+	#+NAME: int_pass_bloc
+	#+begin_src python :results output :exports both
+	  def side_effects(x):
+		  print("x =", x, " id =", id(x))
+		  x = 42.
+		  print("x =", x, " id =", id(x))
+
+	  x = 3.14159
+	  print("First call {0} with value {1}".format(id(x), x))
+	  side_effects(x)
+	  print("Second call {0} with value {1}".format(id(x), x))
+	#+end_src
+*** Output                                                          :B_block:
+	:PROPERTIES:
+	:BEAMER_ACT: <2->
+	:BEAMER_env: block
+	:END:
+	#+LATEX:\footnotesize
+	#+RESULTS: int_pass_bloc
+	: First call 4344488632 with value 3.14159
+	: x = 3.14159  id = 4344488632
+	: x = 42.0  id = 4344488296
+	: Second call 4344488632 with value 3.14159
+** Call by value/reference #2?
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+    What's the output of the following code block?
+	#+LATEX:\footnotesize
+	#+NAME: list_pass_bloc
+	#+begin_src python :results output :exports both
+	  def side_effects(x):
+		  print("x =", x, " id =", id(x))
+		  x = x + ["aero", "civil"]
+		  print("x =", x, " id =", id(x))
+
+	  x = ["cs","mechse","matse"]
+	  print("First call {0} with value {1}".format(id(x), x))
+	  side_effects(x)
+	  print("Second call {0} with value {1}".format(id(x), x))
+	#+end_src
+*** Output                                                          :B_block:
+	:PROPERTIES:
+	:BEAMER_ACT: <2->
+	:BEAMER_env: block
+	:END:
+	#+LATEX:\scriptsize
+	#+RESULTS: list_pass_bloc
+	: First call 4551835464 with value ['cs', 'mechse', 'matse']
+	: x = ['cs', 'mechse', 'matse']  id = 4551835464
+	: x = ['cs', 'mechse', 'matse', 'aero', 'civil']  id = 4553772040
+	: Second call 4551835464 with value ['cs', 'mechse', 'matse']
+** Call by value/reference #3?
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+    What's the output of the following code block?
+	#+LATEX:\footnotesize
+	#+NAME: list_fail_bloc
+	#+begin_src python :results output :exports both
+	  def side_effects(x):
+		  print("x =", x, " id =", id(x))
+		  x += ["aero", "civil"]
+		  print("x =", x, " id =", id(x))
+
+	  x = ["cs","mechse","matse"]
+	  print("First call {0} with value {1}".format(id(x), x))
+	  side_effects(x)
+	  print("Second call {0} with value {1}".format(id(x), x))
+	#+end_src
+*** Output                                                          :B_block:
+	:PROPERTIES:
+	:BEAMER_ACT: <2->
+	:BEAMER_env: block
+	:END:
+	#+LATEX:\scriptsize
+	#+RESULTS: list_fail_bloc
+	: First call 4557680456 with value ['cs', 'mechse', 'matse']
+	: x = ['cs', 'mechse', 'matse']  id = 4557680456
+	: x = ['cs', 'mechse', 'matse', 'aero', 'civil']  id = 4557680456
+	: Second call 4557680456 with value ['cs', 'mechse', 'matse', 'aero', 'civil']
+** Call by value/reference
+*** Take-away                                                  :B_alertblock:
+	:PROPERTIES:
+	:BEAMER_env: alertblock
+	:END:
+	Only mutable structures can be changed with in-place transformations!
+
+** Recursive functions
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- Ask them to do it
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+	- Recursion occurs in a lot of places (e.g. in trees---remember representation?)
+	- Let's calculate factorial of a number
+	\begin{equation}
+	 n! = n \times (n-1) \times (n-2) \times \cdots \times 1
+	\end{equation}
+	\[ 7! = 5040 \]
+
+** Factorial done recursively
+	\begin{equation*}
+	 n! = n \times (n-1) \times (n-2) \times \cdots \times 1
+	\end{equation*}
+
+	#+LATEX:\small
+	#+NAME: recur_factorial
+	#+begin_src python :results output :exports code
+	  def factorial(n):
+			""" Calculates the factorial recursively """
+			n = abs(int(n))
+			if n == 0:
+				  return 1
+			else:
+				  return n * factorial(n-1)
+
+	  print(factorial(7))  #prints(5040)
+	#+end_src
+
+	#+RESULTS: recur_factorial
+	: 120
+
+** Factorial done iteratively
+	\begin{equation*}
+	 n! = n \times (n-1) \times (n-2) \times \cdots \times 1
+	\end{equation*}
+
+	#+LATEX:\small
+	#+NAME: iter_factorial
+	#+begin_src python :results output :exports code
+	  def factorial_iter(n):
+		  """ Calculates the factorial iteratively"""
+		  result = 1
+		  n = abs(int(n))
+		  for i in range(1, n+1):
+			  result *= i
+		  return result
+
+	  print(factorial_iter(7))  #prints(5040)
+	#+end_src
+
+	#+RESULTS: iter_factorial
+	: 120
+
+** Which one is preferable?
+	- Consider generating the Fibonacci sequence
+	\begin{equation*}
+	0, 1 , 1 , 2 , 3 , 5 , 8 , 13 , 21 , \cdots
+	\end{equation*}
+	- Recursive formula is
+	\begin{equation}
+	F_{N} = F_{N-1} + F_{N-2}
+	\end{equation}
+	- *Fibonacci.ipynb*
+** Towers of Hanoi
+*** Prefer iteration when possible                             :B_alertblock:
+	:PROPERTIES:
+	:BEAMER_env: alertblock
+	:END:
+	But not always! Let's solve Towers of Hanoi...
+*** Activity                                                        :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+  Write a ~Python~ script that solves the game "Towers of Hanoi"[fn:15]. Hint:
+  Recursion is key.
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+	#+LATEX: \footnotesize
+	#+CAPTION: Tower of Hanoi
+	#+ATTR_LATEX: :width 0.7\textwidth
+	[[file:images/hanoi.jpeg]]
+** Solution strategy [fn:16]
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_col: 0.5
+	:END:
+    - The fourth step besides is key!
+	- A \( n \)-disk game should have the same step
+	- Recursive solution naturally pops out!
+	- Iterative solution is difficult...
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_col: 0.4
+	:END:
+	 #+CAPTION: Three disk solution
+	 #+ATTR_LATEX: :width 0.7\textwidth
+	 [[file:images/toh_sol.png]]
+
+** Towers of Hanoi
+	#+LATEX:\footnotesize
+	#+NAME: towers_hanoi
+	#+begin_src python :results output :exports code
+	  def hanoi(n, source, helper, target):
+		  if n > 0:
+			  # move tower of size n - 1 to helper:
+			  hanoi(n - 1, source, target, helper)
+			  # move disk from source peg to target peg
+			  if source:
+				  target.append(source.pop())
+			  # move tower of size n-1 from helper to target
+			  hanoi(n - 1, helper, source, target)
+
+	  N_DISKS = 6
+	  source = list(range(N_DISKS, 0, -1))
+	  target = []; helper = [];
+	  hanoi(len(source),source,helper,target)
+	#+end_src
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- Interestingly using tree representation, you can naturally evolve this program!
+
+** Basic I/O
+   - We frequently (but not consciously) manipulate files everyday.
+   - Here's how you do it in ~Python~
+	#+LATEX:\footnotesize
+    #+NAME:open_bloc
+	#+begin_src python :results output :exports both
+	  # 'r' for read mode
+	  fobj = open("show_me_to_the_class.txt", 'r')
+	  for line in fobj:
+		  print(line.rstrip())
+	  fobj.close()
+	#+end_src
+
+   - ---OUTPUT---
+	#+RESULTS: open_bloc
+	: I am a file whose contents the class needs to see.
+
+
+   - Finally remember that ~print~ can also write to files
+   - ~shell~ example of file manipulation using =>>, >=
+** Basic I/O continued
+   - A safer way to do I/O is
+	#+LATEX:\footnotesize
+    #+NAME:open_bloc_safe
+	#+begin_src python :results output :exports both
+	  # 'r' for read mode
+	  with open("show_me_to_the_class.txt", 'r') as fobj:
+		  for line in fobj:
+			  print(line.rstrip())
+	#+end_src
+
+   - ---OUTPUT---
+	#+RESULTS: open_bloc_safe
+	: I am a file whose contents the class needs to see.
+
+
+   - The same mechanism can be used to write to a file
+	#+LATEX:\footnotesize
+	#+begin_src python :results output :exports code
+	  # 'w' for read mode, 'a' for append mode
+	  # 'w' wipes a file clean before it writes
+	  # This creates a file if it doesn't exist
+	  with open("show_me_to_the_class_two.txt", 'w') as fobj:
+		  fobj.write("Are prequels better? \n Obviously! \n")
+	#+end_src
+
+** Basic I/O continued
+   - For smaller files, you can read them completely into a list
+	#+LATEX:\footnotesize
+    #+NAME:read_all_bloc
+	#+begin_src python :results output :exports both
+	  fullfl = open("show_me_to_the_class.txt", 'r').readlines()
+	  print(fullfl)
+	#+end_src
+
+   - ---OUTPUT---
+	#+RESULTS: read_all_bloc
+	: ['I am a file whose contents the class needs to see.']
+
+
+   - ~read()~ instead of ~readlines()~ does the same thing, but with subtle differences
+
+** Basic I/O continued
+   - Later on we will see how to storing matrices and arrays using the ~loadtxt~
+     and ~savetxt~ methods from ~numpy~
+   - Other packages also have many I/O options---for example ~Pandas~ has many
+     ~csv~ manipulations
+   - Serialization (load/store as bytestrings) packages like ~pickle, shelve~
+     also exist
+   - In short, quite a lot of options!
+
+** Counting Words
+*** Activity                                                        :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+  Write a ~Python~ script that reads in a file and print out the number of
+  words
+
+  Download Goldilocks: http://www.textfiles.com/stories/gold3ber.txt
+
+** Modules
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+   - Show obscurity on what function is running
+   - from numpy import \*, from math import \*, sin(3)? Which is called?
+   - Answer: The one corresponding to the last import. That means
+   - from math import \*, from numpy import \*, sin(3)? gives different answers
+
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+   - Modular design \rightarrow modules...
+   - ~import math~ imports a module and its contents to the current program
+   - Selective import using ~from~ : ~from math import sin, cos~
+   - Importing all functions from a module : ~from math import *~
+   - Bad idea! *DEMO*
+   - You can also design your own modules... But it soon becomes painful.
+   - ~Python's~ answer : packages!
+
+** Packages
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+   - Packages: make publicly available modules that other people have written
+   - You installed packages from ~pip~ at the start of the semester!
+   - Packages of our interest : ~numpy~, ~scipy~, ~matplotlib~...
+** Why do we need numpy/ scipy/ matplotlib?
+  - *Jupyter demo* for matrix computation
+  - *numpy* : Basic scientific computing powerhorse
+  - *scipy* : More targeted, /advanced/ algorithms
+  - *matplotlib* : Basic (?!) plotting library
+  - The scientific computing eco-system in ~Python~ [fn:12]
+#+ATTR_LATEX: :width 0.4\textwidth
+[[file:images/python_numerics.png]]
+** Examples                                                          :B_note:
+   :PROPERTIES:
+   :BEAMER_env: note
+   :END:
+
+   - Count number of words in a text files
+   - Play a game of tower of Hanoi
+   - Os module for path and file manipulations
+   - http://hplgit.github.io/INF5620/doc/pub/H14/vib/sphinx/._main_vib001.html
+
+** Packages to be shown                                              :B_note:
+   :PROPERTIES:
+   :BEAMER_env: note
+   :END:
+
+   - Scipy x 2
+   - Matplotlib x 1
+   - Sympy x 1
+   - Pandas x 1
+   - Os module for path and file manipulations x 1
+   - Seaborn x 1
+   - http://hplgit.github.io/INF5620/doc/pub/H14/vib/sphinx/._main_vib001.html
+
+* Footnotes
+
+[fn:16] [[https://www.cs.sfu.ca/~tamaras/recursion/Rules_Towers_Hanoi.html][Computing Science - Simon Fraser University]]
+
+[fn:15] [[https://commons.wikimedia.org/wiki/File:Tower_of_Hanoi.jpeg][Tower of Hanoi, Wikimedia Commons]]
+
+[fn:14] [[http://hcc-cs.weebly.com/functions.html][HCC-CS]]
+
+[fn:13] [[https://www.python-course.eu/python3_formatted_output.php][Formatting output. Python Course]]
+
+[fn:12] Picture credits:[[https://www.python-course.eu/python3_loops.php][ Python Course]]
+
+[fn:11] [[https:https://stackoverflow.blog/2017/09/06/incredible-growth-python/][Growth in Python]]
+
+[fn:10] Slide credits: [[https://github.com/williamgrimes/teach_python_in_notebooks/blob/master/python_course.pdf][William Grimes @ Github]]
+
+[fn:9] https://www.python-course.eu/python3_course.php
+
+[fn:8] http://www.ee.surrey.ac.uk/Teaching/Unix/
+
+[fn:7] [[https://wiki.python.org/moin/IntegratingPythonWithOtherLanguages][Wiki Python]]
+
+[fn:6] [[http://mattia-lab.com/work/soft-filaments/][Mattialab]]
+
+[fn:5] [[https://zulko.github.io/blog/2014/11/13/things-you-can-do-with-python-and-pov-ray/#disqus_thread][Vapory/Povray]]
+
+[fn:4][[https://yanpanlau.github.io/2016/07/10/FlappyBird-Keras.html][ FlappyBird-Keras]], [[https://github.com/yanpanlau/Keras-FlappyBird/blob/master/qlearn.py][Code]] , [[https://www.pygame.org/wiki/about][Pygame]], [[https://scikit-image.org/][Scikit-image]], [[https://www.tensorflow.org/][TensorFlow]]
+
+[fn:3] [[https://www.pluralsight.com/blog/software-development/why-python][Pluralsight]]
+
+[fn:2] [[https://pypi.org/][PyPi]]
+
+[fn:1] [[https://techfossguru.com/python-machine-learning-and-deep-learning/][Techfossguru]]

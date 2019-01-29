@@ -1,0 +1,25 @@
+#+TITLE: Scientific computing in Python
+#+AUTHOR: /Tejaswin Parthasarathy/, Mattia Gazzola
+#+SUBTITLE: ME498: Comp. modeling & optimization
+#+BEAMER_FRAME_LEVEL: 2
+# #+BEAMER_HEADER: \institute[INST]{Institute\\\url{http://www.institute.edu}}
+# #+BEAMER_HEADER: \titlegraphic{\includegraphics[height=1.5cm]{test}}
+
+#+startup: beamer
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation]
+#+LATEX_HEADER:\usetheme[progressbar=frametitle,block=fill]{metropolis}
+#+OPTIONS:   H:2 num:t toc:nil ::t |:t ^:{} -:t f:t *:t <:t
+#+OPTIONS:   tex:t d:nil todo:t pri:nil tags:nil
+#+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col) %8BEAMER_OPT(Opt)
+
+	 - Numpy
+	 - Matplotlib
+	 - Pandas
+	 - Scipy
+**                                                                   :B_note:
+   :PROPERTIES:
+   :BEAMER_env: note
+   :END:
+- Access to https://github.com/donnemartin/data-science-ipython-notebooks
+  especially the numpy section

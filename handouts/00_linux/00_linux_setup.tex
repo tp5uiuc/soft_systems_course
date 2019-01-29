@@ -1,0 +1,334 @@
+% Created 2019-01-16 Wed 23:41
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{awesomebox}
+\usepackage{booktabs}
+\usepackage{placeins}
+\usepackage{siunitx}
+\usepackage{minted}
+\usepackage{hyperref}
+\usepackage{csquotes}
+\setminted[powershell]{fontsize=\footnotesize}
+\author{\emph{Tejaswin Parthasarathy}, Mattia Gazzola}
+\date{\today}
+\title{Prerequisities\\\medskip
+\large ME498: Comp. modeling \& optimization}
+\hypersetup{
+ pdfauthor={\emph{Tejaswin Parthasarathy}, Mattia Gazzola},
+ pdftitle={Prerequisities},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.0.50 (Org mode 9.2)},
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+To ensure that the scripts/applications that you will write in this course works
+seamlessly, we need to install few applications/libraries. I have detailed ways
+to do the same for different OS distributions here. The recommended way for your
+OS is also marked.
+
+\section*{Dependencies which we will install}
+\label{sec:org62694cd}
+\begin{itemize}
+\item A shell runnning \texttt{sh} compliant implementation (\texttt{bash/zsh/fish})
+\item \texttt{Python} 3.x (preferably the latest)
+\item \texttt{Jupyter} for installing notebooks. IMPORTANT: The instructions for installing
+\texttt{Jupyter} are attached at the end of this guide and is OS-agnostic.
+\end{itemize}
+
+\section*{OS-agnostic method (Easiest and definitely works)}
+\label{sec:orge437b40}
+We can load a virtual machine in your environment---it's essentially an 'OS' that
+runs inside your 'OS'.
+\begin{itemize}
+\item Follow the steps \href{https://andreask.cs.illinois.edu/ComputeVirtualMachineImages}{listed here} \footnote{\url{https://andreask.cs.illinois.edu/ComputeVirtualMachineImages}}. Download both:
+\label{sec:orgd4b054b}
+\begin{itemize}
+\item VirtualBox
+\label{sec:orgae38ae7}
+\item ComputeImage
+\label{sec:org45e97f0}
+\end{itemize}
+\item You should have a working debian installation with your favorite
+\label{sec:org2b88e1d}
+\texttt{shell} and \texttt{python3} already installed
+\end{itemize}
+
+\section*{Ubuntu/Debian (and equivalent distros)}
+\label{sec:org00b2d42}
+Try any one of the following methods.
+
+\begin{itemize}
+\item Method \#1 (Recommended, Easiest)
+\label{sec:org8e6fe57}
+\begin{itemize}
+\item Almost works off the shelf! You have access to the shell from the \texttt{Terminal} application.
+\item \texttt{Python3} can be installed directly using the \texttt{Conda} distribution \footnote{\href{https://www.anaconda.com/download/\#linux}{Conda Install for Linux}\label{org4a6e3a2}}. \href{https://www.anaconda.com/download/\#linux}{Installation of the Anaconda distribution for Linux systems can be found here.}
+\item Enjoy using \texttt{Python} from the \texttt{Conda} distribution on the \texttt{Terminal}.
+\item To install packages in the current virtual environment (details skipped for
+brevity) do
+\begin{minted}[]{sh}
+conda update conda
+conda install -c anaconda numpy scipy matplotlib pandas
+\end{minted}
+\end{itemize}
+
+\item Method \#2 (Somewhat harder, not recommended)
+\label{sec:org7c8c091}
+
+\begin{itemize}
+\item Almost works off the shelf! You have access to the shell from the \texttt{Terminal} application.
+\item Install the \texttt{Spyder IDE} from the Terminal using the following steps. Also
+gives access to an editing environment which provides useful
+syntax-highlighting, among other shiny features.
+
+\begin{minted}[]{sh}
+# Fetches up-to-date package information from
+  #the Ubuntu aptitude repository
+sudo apt-get update
+
+# Upgrades all packages
+sudo apt-get upgrade
+
+# Install Python3, if not already there
+sudo apt-get install spyder3
+\end{minted}
+\item You can now use the \texttt{Spyder IDE} to launch \texttt{Python} processes.
+\end{itemize}
+
+\item Method \#3 (Recommended if you want more control)
+\label{sec:org601761b}
+\begin{itemize}
+\item Almost works off the shelf!
+\item To ensure that all packages are up to date, and that you have the latest
+\texttt{Python} installation run the following commands in your \texttt{Terminal} (type
+\texttt{terminal} in the \texttt{Ubuntu} dash, and enter the following commands)
+\end{itemize}
+
+\begin{minted}[]{sh}
+# Fetches up-to-date package information from the Ubuntu aptitude repository
+sudo apt-get update
+
+# Upgrades all packages
+sudo apt-get upgrade
+
+# Install Python3, if not already there
+sudo apt-get install python3-pip
+
+# See if pip3 installed successfully and is in your path
+which pip3
+
+# Install other libraries using pip
+pip3 install numpy scipy matplotlib pandas
+
+\end{minted}
+\begin{itemize}
+\item You can now type in \texttt{python3} in the \texttt{Terminal} app prompt and will be taken
+to the \texttt{python} environment.
+\end{itemize}
+
+\item Method \#4 (Not tested and not recommended)
+\label{sec:org8f810f0}
+\begin{itemize}
+\item \href{https://www.python.org/downloads/source/}{Download and build directly from the source code.} \footnote{\href{https://www.python.org/}{Python}\label{org039ccfb}}
+\end{itemize}
+\item Method \#5 (Good practice for independent external installation of software in Ubuntu)
+\label{sec:org8ed70ab}
+\begin{itemize}
+\item Use an external package manager, the recommended choice being \href{https://linuxbrew.sh/}{Linuxbrew}. It
+is painful to install, especially if you can't navigate your way
+around the terminal. If you are just getting used to the terminal
+environment, this option is not for you.
+\item Follow the instructions for building Linuxbrew from their website first.
+\item After successfully installing Linuxbrew, just type installation
+\begin{minted}[]{sh}
+brew install python3
+\end{minted}
+\item This should also install \texttt{pip3}, which you can use to install \texttt{Python} packages.
+\end{itemize}
+\end{itemize}
+
+\section*{Windows 10}
+\label{sec:org45e102f}
+\begin{itemize}
+\item Unfortunately \texttt{Windows} environment uses a different shell interpreter, which
+complicates scripting and development. However you can run a \texttt{Linux} subsystem perfectly within Windows!
+\begin{itemize}
+\item This needs Windows build 16215 or later for painless processing (which you
+most probably have as Microsoft aggressively updates their products).
+\item If you want you can check your build here. \footnote{\href{https://docs.microsoft.com/en-us/windows/wsl/troubleshooting\#check-your-build-number}{Check your Windows build here}}
+\end{itemize}
+\end{itemize}
+
+\begin{itemize}
+\item Enabling access to \texttt{sh} compliant shell \footnote{\href{https://docs.microsoft.com/en-us/windows/wsl/install-win10}{Install Linux on Windows}}\textsuperscript{,}\,\footnote{\href{https://docs.microsoft.com/en-us/windows/wsl/initialize-distro}{Initialize your distro}}
+\label{sec:org8c1c19f}
+\begin{itemize}
+\item Open \texttt{PowerShell} as Administrator and run:
+\end{itemize}
+
+\begin{minted}[]{powershell}
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+\end{minted}
+
+\begin{itemize}
+\item Restart your computer when prompted.
+\item Once this is done, you can install the \texttt{Linux} distro of your choice from the
+Windows Store.
+\begin{itemize}
+\item Open the Microsoft Store and choose your favorite \texttt{Linux} distribution (say
+\texttt{Ubuntu})
+\item From the distro's page, select ``Get''
+\end{itemize}
+\item Launch the distro from the start menu, like any other app. You can find it at
+\texttt{<distro\_name>} (in the case of \texttt{Ubuntu}, this will be called \texttt{Ubuntu})
+\begin{itemize}
+\item The first launch will take some time
+\end{itemize}
+\item Set the required \texttt{Linux} username and password (this can be different than you
+\texttt{Windows} user name and password)
+\item You are now running a \texttt{sh} compliant shell. Type in the following to update
+the repository information.
+
+\begin{minted}[]{sh}
+# Fetches up-to-date package information
+#from the Ubuntu aptitude repository
+sudo apt-get update
+
+# Upgrades all packages
+sudo apt-get upgrade
+\end{minted}
+\end{itemize}
+
+\item Installing Python
+\label{sec:org29b0aa0}
+
+\begin{itemize}
+\item To get a working installation of \texttt{Python} within your \texttt{Linux} subsystem, follow
+the steps listed in \hyperref[sec:org601761b]{Method \#3 (Recommended if you want more control)} for the
+\texttt{Linux} distros. This will give you everything within your Linux environment.
+\item If you need a \texttt{Python} installation in your Windows environment, you can use
+Anaconda. \href{https://www.anaconda.com/download/\#windows}{Installation of the Anaconda distribution for Windows systems can be found here.}
+\begin{itemize}
+\item You can then use \texttt{Python} from the \texttt{Anaconda prompt} application.
+\item To install packages in the current virtual environment (details skipped for
+brevity) do
+\begin{minted}[]{sh}
+conda update conda
+conda install -c anaconda numpy scipy matplotlib pandas
+\end{minted}
+\end{itemize}
+\item \href{https://www.python.org/downloads/windows/}{Alternatively you can also download the official Python installer from the source}. I
+didn't test this option out. \textsuperscript{\ref{org039ccfb}}
+\end{itemize}
+\end{itemize}
+
+\section*{MacOS}
+\label{sec:orgd126048}
+Try any one of the following methods.
+
+\begin{itemize}
+\item Method \#1 (Recommended, Easiest)
+\label{sec:orgf6c4596}
+\begin{itemize}
+\item Once again, \texttt{Python3} can be installed directly using the \texttt{Conda} distribution \textsuperscript{\ref{org4a6e3a2}}. \href{https://www.anaconda.com/download/\#macos}{Installation of the Anaconda distribution for systems running MacOS can be found here.}
+\item Enjoy using \texttt{Python} from the \texttt{Conda} distribution on the \texttt{Terminal}.
+\item To install packages in the current virtual environment (details skipped for
+brevity) do
+\begin{minted}[]{sh}
+conda update conda
+conda install -c anaconda numpy scipy matplotlib pandas
+\end{minted}
+\end{itemize}
+
+\item Method \#2
+\label{sec:orgb27d3c0}
+\begin{itemize}
+\item \href{https://www.python.org/downloads/mac-osx/}{Alternatively, download the Python installer}. I do not recommend this
+option. \textsuperscript{\ref{org039ccfb}}
+\end{itemize}
+
+\item Method \#3 (Use a package manager)
+\label{sec:org8cf0c2d}
+\begin{itemize}
+\item MacOS sorely misses a package manager for installation of binaries. So you
+can install the \texttt{Homebrew} package manager found \href{https://brew.sh/}{here}.
+\item The installation might seem long drawn (I have listed the time needed
+below), but will usually proceed without difficulty. You can consult the
+reference \footnote{\href{https://docs.python-guide.org/starting/install3/osx/}{The Hitchhiker's guide to Python}\label{org0adc07e}} if you face any issues. The steps are given below:
+\begin{itemize}
+\item Download \texttt{Xcode} from the MacOS App Store \href{https://developer.apple.com/xcode/}{found here} and install it, if you have not
+done so before. You will need an Apple account (can be created for free) to do so. This step will take you some time, as
+detailed \href{https://stackoverflow.com/questions/32701043/how-long-should-xcode-7-installation-take}{here} for example (I remember it taking me 1.5-2 \textbf{hours}).
+Consult \href{https://medium.com/@LondonAppBrewery/how-to-download-and-setup-xcode-10-for-ios-development-b63bed1865c}{this link} if you face any difficulties or contact me.
+\item Next you need to install \texttt{Command Line Tools} of \texttt{Xcode}. Type in the
+following in the terminal to see if you have already installed it
+\begin{minted}[]{sh}
+xcode-select -p
+\end{minted}
+If the output is non-null, you can safely skip to the next step. If not,
+type in the following in your terminal:
+\begin{minted}[]{sh}
+xcode-select --install
+\end{minted}
+This usually pops up a display window like \href{https://railsapps.github.io/images/installing-mavericks-popup.png}{this}. The instructions in the
+alert box are confusing. You don’t need to ``Get Xcode'' from the App
+Store. Just click ``Install'' for the Xcode Command Line Tools. If you have
+a slow Internet connection, this step may take many minutes. After the
+installation repeat the \texttt{xcode-select -p}  command and this time you will
+see the path of installation of \texttt{Command Line Tools} in your terminal prompt.
+\item Now we can install \texttt{Homebrew} by typing in the following commands
+\begin{minted}[]{powershell}
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+\end{minted}
+Quoting \textsuperscript{\ref{org0adc07e}},
+
+``The script will explain what changes it will make and prompt you before the installation begins.''
+
+\item You should then be able to type in
+\begin{minted}[]{sh}
+brew install python3
+\end{minted}
+and \texttt{Python3}, along with \texttt{pip} should be installed.
+\end{itemize}
+\end{itemize}
+\end{itemize}
+
+\section*{Jupyter notebooks}
+\label{sec:org6dedccc}
+\begin{itemize}
+\item \textbf{Note}: \texttt{Python3} is a prerequisite to install \texttt{Jupyter}. You can find all the
+relevant information in Jupyter's home page \footnote{\url{https://jupyter.org/install}}.
+\item If you have your \texttt{Python} installation done via \texttt{Conda}, you should also have
+jupyter-notebook installed. To verify this type
+\begin{minted}[]{sh}
+jupyter notebook
+\end{minted}
+in your terminal to see the \texttt{Jupyter} console up and running in your browser.
+\item Alternatively, you can also install \texttt{Jupyter} quickly via \texttt{pip}. Just type
+\begin{minted}[]{sh}
+#Upgrades pip repository information
+pip3 install --upgrade pip
+pip3 install jupyter
+\end{minted}
+in your terminal prompt. You can verify successful installation by typing in
+your terminal:
+\begin{minted}[]{sh}
+jupyter notebook
+\end{minted}
+\end{itemize}
+\end{document}
