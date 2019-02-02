@@ -123,6 +123,9 @@ dmypy.json
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
 
+# Numpy data files
+*.npz
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof

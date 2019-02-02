@@ -74,28 +74,28 @@ fixed-size knapsack and must fill it with the most valuable items. "
 :CUSTOM_ID: sec:data
 :END:
 
-  There are two data sets--A, B. Each data set will be posted on Compass as simple
-  comma delimited text files with the knapsack capacity, number of different
-  items, number of each type of items, and their values + weights. For
-  convenience you can read the information using ~numpy~'s ~loadtxt~ function,
+  There are two data sets--A, B. Each data set will be posted on Compass as
+  simple ~numpy npz~ files with the knapsack capacity, number of different
+  items (which are all assumed to be distinct so you do not need to worry about
+  /choosing/ same items), and their values + weights. For
+  convenience you can read the information using ~numpy~'s ~load~ function,
   shown in the snippet below:
 
   #+begin_src python :results replace :exports code
 	import numpy as np
 
-	# Load data from txt file
-	my_data = np.loadtxt('file_name.txt', delimiter=',')
+	# Load data from npz file
+	my_data = np.load('file_name.npz')
 
 	# Data stored as a dictionary
 	# use data however you want
 	bag_capacity = my_data['capacity']
 	'''
 	other possible keys include
-	n_item_types : The number of different item types, integer
 	capacity : Bag capacity, float
-	n_items : Number of each item, a (n_item_types , ) numpy array
-	item_values : Value of each item, a (n_item_types , ) numpy array
-	item_weights : Weight of each item, a (n_item_types , ) numpy array
+	n_items : Number of items, integer value
+	item_values : Value of each item, a (n_items, ) numpy array
+	item_weights : Weight of each item, a (n_items, ) numpy array
 	'''
 
   #+end_src
