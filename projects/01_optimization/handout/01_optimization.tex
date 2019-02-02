@@ -1,4 +1,4 @@
-% Created 2019-01-28 Mon 19:59
+% Created 2019-02-02 Sat 15:58
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -36,12 +36,22 @@
 \maketitle
 \textbf{Issue Date} : \today
 
-\textbf{Submission Date/Time}: \emph{When to submit}
-
 \textbf{Teaching Assistant} : Tejaswin Parthasarathy, \texttt{tp5@illinois.edu}
 
+\textbf{Submission Date/Time}: Wednesday 11:59 PM, 27 February, 2019
+
+\textbf{Submission Instructions}:
+\begin{itemize}
+\item You need to submit both your presentation (as \texttt{.pdf}, \texttt{.ppt[x]} or \texttt{.key}) and code
+(as \texttt{.py} or \texttt{.ipynb}) on Compass, in separate links
+\item Submit your code file(s) packaged as a \texttt{.zip} or \texttt{.tar.gz} files (please do not use
+\texttt{.7z} or other formats) and name the compressed file as \texttt{<net\_id>\_code\_01}
+\item Submit your presentation file(s) packaged as a \texttt{.zip} or \texttt{.tar.gz} files (please do not use
+\texttt{.7z} or other formats) and name the compressed file as \texttt{<net\_id>\_slides\_01}
+\end{itemize}
+
 \section{Guidelines}
-\label{sec:org615e5a1}
+\label{sec:org731ba0d}
 General advice that pertains to all the problems include:
 \begin{enumerate}
 \item Pick sensible representation, fitness function, selection and mutation
@@ -60,14 +70,14 @@ on academic integrity---plagiarism will not be tolerated!
 \end{enumerate}
 
 \section{The Knapsack problem}
-\label{sec:orga486aea}
+\label{sec:org8983cac}
 \subsection{Definition}
-\label{sec:org6f2256a}
+\label{sec:org8d8ae40}
   Use genetic algorithm and rank-\(\mu\), weighted recombination version of the CMA
 evolutionary strategy discussed in class to find the solution to the 0/1 variant of
 the Knapsack problem.
 \subsection{Details}
-\label{sec:orgac0b7b5}
+\label{sec:orgc0123f9}
 More details about the 0/1 Knapsack problem are contained in the lecture slides.
 Alternatively, the \href{https://en.wikipedia.org/wiki/Knapsack\_problem}{Wikipedia} page also has a lot of information about this
 problem. Quoting the introductory text,
@@ -128,13 +138,13 @@ item_weights : Weight of each item, a (n_item_types , ) numpy array
 \end{minted}
 
 \section{Minima of the parabola}
-\label{sec:org6a9417c}
+\label{sec:org850c949}
 \subsection{Definition}
-\label{sec:orgf0e1dbf}
+\label{sec:org4aac5bc}
   Use genetic algorithm and rank-\(\mu\), weighted recombination version of the CMA
 evolutionary strategy discussed in class to find the minima of a simple parabola.
 \subsection{Details}
-\label{sec:org64283fa}
+\label{sec:orgbda2117}
 The one-dimensional parabola is a continuous, convex, unimodal function. We
 pick the parabola given by the formula
 \begin{equation}
@@ -150,14 +160,14 @@ and compare the performance of these algorithms on this function.
 Furthermore, explore the effect of the parameters (particularly in GA) on the
 performance of the algorithms. Start your search using a randomly initialized population around \(\mathbf{x}_0 = \mathbf{0}\)---the vector of zeros.
 \section{Minima of the Rotated Hyper-Ellipsoid}
-\label{sec:org4cad629}
+\label{sec:orgb43239e}
 \subsection{Definition}
-\label{sec:orgffc7b03}
+\label{sec:org45394c8}
   Use genetic algorithm and rank-\(\mu\), weighted recombination version of the CMA
 evolutionary strategy discussed in class to find the minima of the
 two-dimensional rotated ellispoid.
 \subsection{Details}
-\label{sec:org58256b7}
+\label{sec:org65aca8b}
 The two-dimensional Rotated Hyper-Ellipsoid is a continuous, convex, unimodal
 and non-separable function. We pick the variant that is rotated \(\frac{\pi}{6} \; \si{rad}\) clockwise from the \(x_1\)-axis and shifted along
 both axes, given by the formula below:
@@ -186,15 +196,15 @@ explore the effect of the parameters on the performance of the algorithms.
 Start your search using a randomly initialized population around \(\mathbf{x}_0 = \mathbf{0}\)---the vector of zeros.
 
 \section{Minima of the Rastrigin function}
-\label{sec:org8c3ac75}
+\label{sec:org54222d7}
 \subsection{Definition}
-\label{sec:orgcbad40b}
+\label{sec:org52aa3fa}
   Use the rank-\(\mu\), weighted recombination version of the CMA
 evolutionary strategy discussed in class to find the minima of the shifted
 \emph{Rastrigin} function in two and five dimensions.
 
 \subsection{Details}
-\label{sec:org0a81697}
+\label{sec:orge844049}
 The (unshifted) Rastrigin function is shown in \cref{rastr} for the case of two-dimensions.
 
 \begin{figure}[htbp]

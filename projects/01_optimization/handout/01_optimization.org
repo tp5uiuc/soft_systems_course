@@ -6,9 +6,17 @@
 
 *Issue Date* : \today
 
-*Submission Date/Time*: /When to submit/
-
 *Teaching Assistant* : Tejaswin Parthasarathy, ~tp5@illinois.edu~
+
+*Submission Date/Time*: Wednesday 11:59 PM, 27 February, 2019
+
+*Submission Instructions*:
+ - You need to submit both your presentation (as ~.pdf~, ~.ppt[x]~ or ~.key~) and code
+   (as ~.py~ or ~.ipynb~) on Compass, in separate links
+ - Submit your code file(s) packaged as a ~.zip~ or ~.tar.gz~ files (please do not use
+   ~.7z~ or other formats) and name the compressed file as ~<net_id>_code_01~
+ - Submit your presentation file(s) packaged as a ~.zip~ or ~.tar.gz~ files (please do not use
+   ~.7z~ or other formats) and name the compressed file as ~<net_id>_slides_01~
 
 * Guidelines
   General advice that pertains to all the problems include:
