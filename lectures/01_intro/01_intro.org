@@ -1845,6 +1845,33 @@ If you get stuck:
 
   Download Goldilocks: http://www.textfiles.com/stories/gold3ber.txt
 
+** Classes : Object oriented programming
+   - A logical entity that groups variables and functions together!
+	#+LATEX:\footnotesize
+    #+NAME:class_bloc
+	#+begin_src python :results output :exports code
+	  class Point:
+		  """ A point class with (x,y) coords and manipulations
+		  """
+		  def __init__(self, x, y):
+			  """ Create new point at x,y"""
+			  self.x = x; self.y = y
+		  def translate(self, t_x, t_y):
+			  """ Translate by some distance"""
+			  self.x += t_x; self.y += t_y
+		  # Other members follow
+	  p = Point(1.0, 0.0)
+	#+end_src
+
+	#+RESULTS: class_bloc
+
+
+   - The ~class~ has *attributes* (or variables) and *methods* (functions that
+     act on the attributes)
+   - ~init~ is a special method
+** Classes : Object oriented programming
+   We have come a full circle! All variables (ints, floats, sequences) are
+   classes in ~Python~!!!
 ** Modules
 ***                                                                  :B_note:
 	:PROPERTIES:

@@ -1,4 +1,4 @@
-% Created 2019-01-16 Wed 23:29
+% Created 2019-02-03 Sun 23:18
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation]{beamer}
 \usepackage[utf8]{inputenc}
@@ -35,10 +35,122 @@
 \begin{document}
 
 \maketitle
-\begin{itemize}
-\item Numpy
-\item Matplotlib
-\item Pandas
-\item Scipy
+
+\section{\texttt{numpy}}
+\label{sec:org8dcfdb0}
+\begin{frame}[label={sec:org641cc63},fragile]{\texttt{numpy} package \footnote{\href{https://www.numpy.org/}{numpy}}}
+ \begin{itemize}
+\item High-performance vector, matrix and higher-dimensional data structures for
+\texttt{Python}
+\item Shares a lot of similarity and differences (syntactically and semantically)
+with \texttt{MATLAB} \footnote{\href{https://docs.scipy.org/doc/numpy/user/numpy-for-matlab-users.html}{numpy for Matlab users}}
+\item Vectors, matrices and higher-dimensional data sets are \emph{(nd) arrays} in \texttt{numpy}
+(there is also the \texttt{matrix} class, but it is being phased out)
+\item Standard import---\texttt{import numpy as np}
 \end{itemize}
+\end{frame}
+\begin{frame}[label={sec:org75fb475},fragile]{Simple array creation in \texttt{numpy}}
+ \note{:B\_note:
+\begin{itemize}
+\item Show the documentaion and how to browse it
+\item Show as a demonstration\ldots{}
+\end{itemize}}
+\begin{itemize}
+\item \texttt{v = np.array([1,2,3,4])} creates a vector (argument : list)
+\item \texttt{M = np.array([[1, 2], [3, 4]])} creates a matrix (argument : nested list)
+\item \texttt{type(v), type(M)} both return \texttt{numpy.ndarray}
+\item The difference lies in the \alert{shape} seen using \texttt{v.shape/M.shape}\ldots{}
+\item Alternatively use function \texttt{np.shape(v)}
+\item Arrays can also have different data types, seen using \texttt{v.dtype}
+\begin{itemize}
+\item \texttt{npint32}, \texttt{np.float32}, \texttt{np.float64} (default)\ldots{}
+\end{itemize}
+\item \texttt{M = np.array([[1, 2], [3, 4]], dtype=int)}
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:org59d67bc},fragile]{Array generating functions}
+ \note{:B\_note:
+\begin{itemize}
+\item Show as a demonstration\ldots{}
+\end{itemize}}
+\begin{itemize}
+\item \texttt{v = np.arange(0,11,2)} gives ranges similar to \texttt{Python's range}
+\item \texttt{v = np.arange(0, 11, 0.1)} is also valid! (gives step of 0.1)
+\item \texttt{v = np.linspace(0, 1, 3)} creates a linearly spaced vector [0, 0.5, 1.]
+\item Also have \texttt{logspace, geomspace} for other progressions
+\item Multidimensional array creation using \texttt{meshgrid, ndgrid} and others
+\item Other useful ones are \texttt{ones} (which generates matrix with all 1), \texttt{zeros}
+(simliar) and \texttt{eye} (identity matrix)
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:orga0e0fe7},fragile]{Random numbers}
+ \note{:B\_note:
+\begin{itemize}
+\item Show as a demonstration
+\item np.random.rand(5,5)\ldots{}same syntax for randn too..
+\item np.random.randint(1,5,size=(2,4))
+\end{itemize}}
+\begin{itemize}
+\item We'll work extensively with random numbers, so let's see what \texttt{numpy} has
+to offer
+\item \texttt{np.random.rand(<shape>)} gives random floats from uniform dist. in [0, 1)
+\item \texttt{np.random.randn(<shape>)} gives random floats from univariate normal
+dist. with \(\mu = 0\) and \(\sigma = 1\)
+\item \texttt{np.random.randint(low, high, size)} gives random ints from discrete uniform dist.
+in \texttt{[low, high)}
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:org76c7e1c},fragile]{Indexing}
+ \note{:B\_note:
+\begin{itemize}
+\item Show as a demonstration of all
+\item A = np.random.randn(5,5); A[2:3,:] is slicing
+\item Fancy indexing: idx\_rows = [1,5]; idx\_cols = [1,2,4]; A[idx\_rows, idx\_cols]
+\item mask\_row = [True, False, False, False, True]; A[mask\_row]. Compare with
+A[idx\_rows, :] above
+\end{itemize}}
+\begin{itemize}
+\item Slicing works for \texttt{numpy} arrays too, across any dimension!
+\item Fancy indexing
+\begin{itemize}
+\item Extends slicing to be more useful + practical
+\end{itemize}
+\item Masking
+\begin{itemize}
+\item Bools to \emph{mask} what is not necessary
+\item Useful with conditional functions (e.g. \texttt{x < 5})
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org6228e08}]{Linear Algebra}
+\note{:B\_note:
+\begin{itemize}
+\item Show as a demonstration of all
+\item A = np.random.randn(5,5); A[2:3,:] is slicing
+\item Fancy indexing: idx\_rows = [1,5]; idx\_cols = [1,2,4]; A[idx\_rows, idx\_cols]
+\item mask\_row = [True, False, False, False, True]; A[mask\_row]. Compare with
+A[idx\_rows, :] above
+\end{itemize}}
+\begin{itemize}
+\item First do element wise
+\begin{itemize}
+\item To show element wise constant ops : A +|*|/|** \ldots{}
+\item Element wise with arrays A * A for eg.
+\end{itemize}
+\item np.dot() and so on \alert{@}
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:org9dd666d},fragile]{Practice}
+ \begin{block}{Please attempt}
+\texttt{12\_numpy\_library.ipynb}
+\end{block}
+\end{frame}
+
+\note{:B\_note:
+\begin{itemize}
+\item Access to \url{https://github.com/donnemartin/data-science-ipython-notebooks}
+especially the numpy section
+\end{itemize}}
 \end{document}

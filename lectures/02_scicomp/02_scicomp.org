@@ -13,13 +13,126 @@
 #+OPTIONS:   tex:t d:nil todo:t pri:nil tags:nil
 #+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col) %8BEAMER_OPT(Opt)
 
-	 - Numpy
-	 - Matplotlib
-	 - Pandas
-	 - Scipy
+* ~numpy~
+** ~numpy~ package [fn:1]
+  - High-performance vector, matrix and higher-dimensional data structures for
+    ~Python~
+  - Shares a lot of similarity and differences (syntactically and semantically)
+    with ~MATLAB~ [fn:2]
+  - Vectors, matrices and higher-dimensional data sets are /(nd) arrays/ in ~numpy~
+    (there is also the ~matrix~ class, but it is being phased out)
+  - Standard import---~import numpy as np~
+** Simple array creation in ~numpy~
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- Show the documentaion and how to browse it
+	- Show as a demonstration...
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+	- ~v = np.array([1,2,3,4])~ creates a vector (argument : list)
+	- ~M = np.array([[1, 2], [3, 4]])~ creates a matrix (argument : nested list)
+	- ~type(v), type(M)~ both return ~numpy.ndarray~
+	- The difference lies in the *shape* seen using ~v.shape/M.shape~...
+	- Alternatively use function ~np.shape(v)~
+	- Arrays can also have different data types, seen using ~v.dtype~
+	  - ~npint32~, ~np.float32~, ~np.float64~ (default)...
+	- ~M = np.array([[1, 2], [3, 4]], dtype=int)~
+** Array generating functions
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- Show as a demonstration...
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+	- ~v = np.arange(0,11,2)~ gives ranges similar to ~Python's range~
+	- ~v = np.arange(0, 11, 0.1)~ is also valid! (gives step of 0.1)
+	- ~v = np.linspace(0, 1, 3)~ creates a linearly spaced vector [0, 0.5, 1.]
+	- Also have ~logspace, geomspace~ for other progressions
+	- Multidimensional array creation using ~meshgrid, ndgrid~ and others
+	- Other useful ones are ~ones~ (which generates matrix with all 1), ~zeros~
+      (simliar) and ~eye~ (identity matrix)
+
+** Random numbers
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- Show as a demonstration
+	- np.random.rand(5,5)...same syntax for randn too..
+	- np.random.randint(1,5,size=(2,4))
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+	- We'll work extensively with random numbers, so let's see what ~numpy~ has
+      to offer
+	- ~np.random.rand(<shape>)~ gives random floats from uniform dist. in [0, 1)
+	- ~np.random.randn(<shape>)~ gives random floats from univariate normal
+      dist. with \(\mu = 0\) and \(\sigma = 1\)
+	- ~np.random.randint(low, high, size)~ gives random ints from discrete uniform dist.
+      in ~[low, high)~
+** Indexing
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- Show as a demonstration of all
+	- A = np.random.randn(5,5); A[2:3,:] is slicing
+	- Fancy indexing: idx_rows = [1,5]; idx_cols = [1,2,4]; A[idx_rows, idx_cols]
+	- mask_row = [True, False, False, False, True]; A[mask_row]. Compare with
+      A[idx_rows, :] above
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+	- Slicing works for ~numpy~ arrays too, across any dimension!
+	- Fancy indexing
+	  - Extends slicing to be more useful + practical
+	- Masking
+	  - Bools to /mask/ what is not necessary
+	  - Useful with conditional functions (e.g. ~x < 5~)
+
+** TODO Linear Algebra
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- Show as a demonstration of all
+	- A = np.random.randn(5,5); A[2:3,:] is slicing
+	- Fancy indexing: idx_rows = [1,5]; idx_cols = [1,2,4]; A[idx_rows, idx_cols]
+	- mask_row = [True, False, False, False, True]; A[mask_row]. Compare with
+      A[idx_rows, :] above
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+	- First do element wise
+	  - To show element wise constant ops : A +|*|/|** ...
+	  - Element wise with arrays A * A for eg.
+	- np.dot() and so on *@*
+** Practice
+*** Please attempt                                                  :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	=12_numpy_library.ipynb=
+
 **                                                                   :B_note:
    :PROPERTIES:
    :BEAMER_env: note
    :END:
 - Access to https://github.com/donnemartin/data-science-ipython-notebooks
   especially the numpy section
+
+* Footnotes
+
+[fn:2] [[https://docs.scipy.org/doc/numpy/user/numpy-for-matlab-users.html][numpy for Matlab users]]
+
+[fn:1] [[https://www.numpy.org/][numpy]]
