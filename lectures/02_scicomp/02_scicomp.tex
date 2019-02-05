@@ -1,4 +1,4 @@
-% Created 2019-02-03 Sun 23:18
+% Created 2019-02-04 Mon 17:25
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation]{beamer}
 \usepackage[utf8]{inputenc}
@@ -37,8 +37,8 @@
 \maketitle
 
 \section{\texttt{numpy}}
-\label{sec:org8dcfdb0}
-\begin{frame}[label={sec:org641cc63},fragile]{\texttt{numpy} package \footnote{\href{https://www.numpy.org/}{numpy}}}
+\label{sec:orgcab7e74}
+\begin{frame}[label={sec:org3d4c8d2},fragile]{\texttt{numpy} package \footnote{\href{https://www.numpy.org/}{numpy}}}
  \begin{itemize}
 \item High-performance vector, matrix and higher-dimensional data structures for
 \texttt{Python}
@@ -49,7 +49,7 @@ with \texttt{MATLAB} \footnote{\href{https://docs.scipy.org/doc/numpy/user/numpy
 \item Standard import---\texttt{import numpy as np}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org75fb475},fragile]{Simple array creation in \texttt{numpy}}
+\begin{frame}[label={sec:orgd37e6fd},fragile]{Simple array creation in \texttt{numpy}}
  \note{:B\_note:
 \begin{itemize}
 \item Show the documentaion and how to browse it
@@ -68,7 +68,7 @@ with \texttt{MATLAB} \footnote{\href{https://docs.scipy.org/doc/numpy/user/numpy
 \item \texttt{M = np.array([[1, 2], [3, 4]], dtype=int)}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org59d67bc},fragile]{Array generating functions}
+\begin{frame}[label={sec:org742b32d},fragile]{Array generating functions}
  \note{:B\_note:
 \begin{itemize}
 \item Show as a demonstration\ldots{}
@@ -84,7 +84,7 @@ with \texttt{MATLAB} \footnote{\href{https://docs.scipy.org/doc/numpy/user/numpy
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orga0e0fe7},fragile]{Random numbers}
+\begin{frame}[label={sec:org7e36254},fragile]{Random numbers}
  \note{:B\_note:
 \begin{itemize}
 \item Show as a demonstration
@@ -101,7 +101,7 @@ dist. with \(\mu = 0\) and \(\sigma = 1\)
 in \texttt{[low, high)}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org76c7e1c},fragile]{Indexing}
+\begin{frame}[label={sec:org97334c7},fragile]{Indexing}
  \note{:B\_note:
 \begin{itemize}
 \item Show as a demonstration of all
@@ -121,36 +121,60 @@ A[idx\_rows, :] above
 \item Bools to \emph{mask} what is not necessary
 \item Useful with conditional functions (e.g. \texttt{x < 5})
 \end{itemize}
+\item Reshaping using \texttt{np.reshape} changes index access
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org6228e08}]{Linear Algebra}
-\note{:B\_note:
+\begin{frame}[label={sec:orgdfdf9b7},fragile]{Linear Algebra}
+ \note{:B\_note:
 \begin{itemize}
-\item Show as a demonstration of all
-\item A = np.random.randn(5,5); A[2:3,:] is slicing
-\item Fancy indexing: idx\_rows = [1,5]; idx\_cols = [1,2,4]; A[idx\_rows, idx\_cols]
-\item mask\_row = [True, False, False, False, True]; A[mask\_row]. Compare with
-A[idx\_rows, :] above
+\item In the demo construct structure A with 1:25 using \texttt{A =
+      np.linspace(1.0,25.0,25)} and then do \texttt{A = A.reshape(5,5)}
+\item Use \texttt{np.arange} for constructing \texttt{v=np.arange(0, 5)}
+\item Show that \texttt{A*v} does element wise onlt
 \end{itemize}}
+
 \begin{itemize}
-\item First do element wise
+\item Scalar operations on an array \texttt{A}
 \begin{itemize}
-\item To show element wise constant ops : A +|*|/|** \ldots{}
-\item Element wise with arrays A * A for eg.
+\item \texttt{A + 2}, \texttt{A * 2} , \texttt{A ** 2} \ldots{}
 \end{itemize}
-\item np.dot() and so on \alert{@}
+\item Element wise operations on an array \texttt{A}
+\begin{itemize}
+\item \texttt{A * A}, \texttt{A / A} \ldots{}
+\item What do you get when you do \texttt{A*v}? \alert{DEMO}
+\end{itemize}
+\item Matrix algebra on an array \texttt{A}
+\begin{itemize}
+\item \texttt{np.dot(A, v)} or \texttt{A.dot(v)} or simply \texttt{A@v}
+\item Shape needs to be compliant! \texttt{numpy} also has broadcasts that is useful,
+but is confusing and so is not covered here \ldots{}
+\end{itemize}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org9dd666d},fragile]{Practice}
+
+\begin{frame}[label={sec:org8e0f4f4},fragile]{Practice}
  \begin{block}{Please attempt}
-\texttt{12\_numpy\_library.ipynb}
+\begin{itemize}
+\item \texttt{12\_numpy\_library.ipynb}
+\item For a more extensive tutorial: \url{https://github.com/donnemartin/data-science-ipython-notebooks\#numpy}
+\end{itemize}
 \end{block}
 \end{frame}
-
 \note{:B\_note:
 \begin{itemize}
 \item Access to \url{https://github.com/donnemartin/data-science-ipython-notebooks}
 especially the numpy section
 \end{itemize}}
+
+\section{Genetic algorithm using \texttt{numpy}}
+\label{sec:orgf2bee9b}
+\begin{frame}[label={sec:org2aec3b2}]{Schematic}
+\footnotesize
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=1.0\textwidth]{images/ga_schematic.png}
+\caption{Schematic of an evolutionary search algorithm}
+\end{figure}
+\end{frame}
 \end{document}

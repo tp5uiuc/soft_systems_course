@@ -98,32 +98,39 @@
 	- Masking
 	  - Bools to /mask/ what is not necessary
 	  - Useful with conditional functions (e.g. ~x < 5~)
+	- Reshaping using ~np.reshape~ changes index access
 
-** TODO Linear Algebra
+** Linear Algebra
 ***                                                                  :B_note:
 	:PROPERTIES:
 	:BEAMER_env: note
 	:END:
-	- Show as a demonstration of all
-	- A = np.random.randn(5,5); A[2:3,:] is slicing
-	- Fancy indexing: idx_rows = [1,5]; idx_cols = [1,2,4]; A[idx_rows, idx_cols]
-	- mask_row = [True, False, False, False, True]; A[mask_row]. Compare with
-      A[idx_rows, :] above
+	- In the demo construct structure A with 1:25 using ~A =
+      np.linspace(1.0,25.0,25)~ and then do ~A = A.reshape(5,5)~
+	- Use ~np.arange~ for constructing ~v=np.arange(0, 5)~
+	- Show that ~A*v~ does element wise onlt
+
 ***                                                         :B_ignoreheading:
 	:PROPERTIES:
 	:BEAMER_env: ignoreheading
 	:END:
-	- First do element wise
-	  - To show element wise constant ops : A +|*|/|** ...
-	  - Element wise with arrays A * A for eg.
-	- np.dot() and so on *@*
+	- Scalar operations on an array ~A~
+	  - ~A + 2~, ~A * 2~ , ~A ** 2~ ...
+	- Element wise operations on an array ~A~
+	  + ~A * A~, ~A / A~ ...
+	  + What do you get when you do ~A*v~? *DEMO*
+	- Matrix algebra on an array ~A~
+	  + ~np.dot(A, v)~ or ~A.dot(v)~ or simply ~A@v~
+	  + Shape needs to be compliant! ~numpy~ also has broadcasts that is useful,
+        but is confusing and so is not covered here ...
+
 ** Practice
 *** Please attempt                                                  :B_block:
 	:PROPERTIES:
 	:BEAMER_env: block
 	:END:
-	=12_numpy_library.ipynb=
-
+	- =12_numpy_library.ipynb=
+	- For a more extensive tutorial: https://github.com/donnemartin/data-science-ipython-notebooks#numpy
 **                                                                   :B_note:
    :PROPERTIES:
    :BEAMER_env: note
@@ -131,6 +138,12 @@
 - Access to https://github.com/donnemartin/data-science-ipython-notebooks
   especially the numpy section
 
+* Genetic algorithm using ~numpy~
+** Schematic
+#+LATEX: \footnotesize
+#+CAPTION: Schematic of an evolutionary search algorithm
+#+ATTR_LATEX: :width 1.0\textwidth
+[[file:images/ga_schematic.png]]
 * Footnotes
 
 [fn:2] [[https://docs.scipy.org/doc/numpy/user/numpy-for-matlab-users.html][numpy for Matlab users]]
