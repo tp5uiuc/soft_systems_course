@@ -7,8 +7,8 @@
 
 #+STARTUP: beamer
 #+LATEX_CLASS: beamer
-# #+LATEX_CLASS_OPTIONS: [presentation]
-#+LATEX_CLASS_OPTIONS: [notes]
+#+LATEX_CLASS_OPTIONS: [presentation]
+# #+LATEX_CLASS_OPTIONS: [notes]
 #+LATEX_HEADER:\usetheme[progressbar=frametitle]{metropolis}
 #+LATEX_HEADER:\newcommand{\gv}[1]{\ensuremath{\mbox{\boldmath$ #1 $}}}
 #+LATEX_HEADER:\newcommand{\bv}[1]{\ensuremath{\mathbf{#1}}}
@@ -34,7 +34,11 @@
 	+ Tuning is painful
 *** \Rightarrow CMAes (and other algorithms)
 * Implementation of CMAes
-** TODO The algorithm
+** The algorithm
+#+LATEX: \footnotesize
+#+CAPTION: CMAes
+#+ATTR_LATEX: :width 1.03\textwidth
+[[file:images/cma_algo.001.jpeg]]
 ** Starting CMAes
 *** Problem independent
    - Set evolution paths \( \gv{p}_\sigma = \gv{0}, \gv{p}_c = \gv{0}\)
@@ -43,7 +47,6 @@
 *** Problem dependent
    - Distribution mean \( \gv{m} \in \mathbb{R}^n \)
    - Step size \( \sigma \in \mathbb{R}_{>0} \) (Important to set \( >0\) )
-   - Population size \( n \)
 ** Starting CMAes: more on problem dependent parameters
    - Optimum presumably be within the initial cube \( \gv{m} \pm 3 \sigma
      \left(1 ,1 , \cdots, 1 \right)^T\)
@@ -89,7 +92,7 @@
 	- ~np.random.multivariate_normal~ *DEMO*
 *** Caveats?
 	- What is \( \bv{C}\) / ~cov~ (in a 2D case) and its meaning?
-	- ~cov~ needs to be SPD. Is it? What about the update step?
+	- ~cov~ needs to be SP(semi)D. Is it? What about the update step?
 	- What happens in ~numpy~ if it is not?
 ***                                                                  :B_note:
 	:PROPERTIES:
@@ -102,6 +105,7 @@
 	- Show positive definiteness (use PD of C, as well as the fact that it is
 	  made up of rank-one decompositions
 	- ~numpy~ checks for PD and throws an error
+	- Now explain why you set \( A=CC^T \)
 ** Covariance Matrix [fn:4]
   #+begin_export latex
   \includegraphics[page=68,width=1.0\textwidth]{images/cma_slideshare.pdf}
@@ -157,16 +161,12 @@
 	  2. Symmetric after update too
 	* What happens in ~numpy~ if it is not?
 	  1. ~numpy~ checks for PD, else throws an exception
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- Return back to the top and discuss what's C and stuff.
 
-** PCA
-*** CMAes performs PCA on the optimzation data
-*** PCA?
-	1) Principal Component Analysis
-	2) Find directions with
-	   - High Variance
-	   - Low Covariance with other components
-	3) Find dimensions that are "independent" from one another
-	4) Gives basis (in this case for \( \bv{C}\) )
 ** Sampling : Idea of \( \bv{C} \) \rightarrow math
 *** What is CMA-ES doing?
 	- How does CMA estimate \( \bv{C} \)?
@@ -188,7 +188,8 @@
 ** Sampling : Idea of \( \bv{C} \) \rightarrow math--Answers
 	- How does CMA estimate \( \bv{C} \)?
 	  1. You can use the new population to get \( \bv{C} \) too, but information
-         is lost (no information on how the population "evolved")
+         is lost (no information on how the population "evolved", see EMNA from
+         previous slides)
 	  2. *Idea* : Use \(  \mu_x^{(g+1)} = \frac{1}{N_{best}}
          \sum_{i=1}^{N_{best}}x_i \) rather than \(\sigma_x^{2, (g+1)} =
          \frac{1}{N_{best}} \sum_{i=1}^{N_{best}}(x_i - \mu_x^{(g)})^2 \),
@@ -199,8 +200,17 @@
 	  1. Reflect normalization (relates back to the ability of CMA to maintain invariance)
 	- What is CMA doing by adapting \( \bv{C}\)?
 	  1. Conducts PCA (eigenvectors), rotated representation \( \bv{C} =
-		 \bv{B}\bv{D}^2\bv{D}^T \), inverse Hessian
+		 \bv{B}\bv{D}^2\bv{B}^T \), inverse Hessian
 		 (second order)
+** PCA
+*** CMAes performs PCA on the optimization data
+*** PCA?
+	1) Principal Component Analysis
+	2) Find directions with
+	   - High Variance
+	   - Low Covariance with other components
+	3) Find dimensions that are "independent" from one another
+	4) Gives a useful basis (in this case for \( \bv{C}\) )
 ** Sampling : Parameters
 *** Choice of \( \lambda \)?
 	- Look at the CMA tutorial : [[file:~/Desktop/Masters_Resources/readings/optimization/Hansen/The%20CMA%20evolution%20strategy%20A%20tutorial.pdf][The CMA tutorial]]/[[https://arxiv.org/pdf/1604.00772.pdf][CMA tutorial on Arxiv]]
@@ -265,7 +275,7 @@
 	 + *Hint*: Exploit properties of \bv{C}!
 	 + This means you just need ~np.linalg.eigh()~ for now (there are many other
        powerful methods for general symmetric matrix inverse)
-	 + Can reduce \( \order{n}^3\) to \(\order{n}^2 \) in practice? ( See B2.
+	 + Can reduce \( \order{n^3}\) to \(\order{n^2} \) in practice? ( See B2.
        Strategy internal numerical effort in CMA tutorial)
 
 ***                                                                  :B_note:
@@ -283,7 +293,7 @@
    + What about the norm in the \( \sigma \) update?
 	 + What is a norm?
 	 + So what norm should we use?
-	   + The two-norm is widely used
+	   + The two-norm is widely used (Euclidean distance)
    + What's \( \mathsf{E} \)?
 	 - What's \( \mathsf{E} \norm{ \mathcal{N}\left( {0}, \bv{I} \right) } \)?
 	   - \( \approx \sqrt{n} \left( 1 - \tfrac{1}{4n} + \tfrac{1}{21n^2} \right) \)
@@ -587,7 +597,7 @@
 	  - Biped: https://www.youtube.com/watch?v=lOaWvOA9cb4
 	  - Robot Invivo: https://www.youtube.com/watch?v=trR2Gc1tLzg
 	  - Robot invitro: https://www.youtube.com/watch?v=fjTd06L-9bQ
-	  - Knifwfisj : https://www.youtube.com/watch?v=3XjgZbs0t2g
+	  - Knifefish : https://www.youtube.com/watch?v=3XjgZbs0t2g
 	  - https://blog.openai.com/evolution-strategies/
 
 * Footnotes
