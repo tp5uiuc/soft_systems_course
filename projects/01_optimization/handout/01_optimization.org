@@ -37,7 +37,7 @@
 * The Knapsack problem
 ** Definition
    Use genetic algorithm and rank-\( \mu \), weighted recombination version of the CMA
- evolutionary strategy discussed in class to find the solution to the 0/1 variant of
+ evolutionary strategy discussed in class to find the solution to the *0/1 variant* of
  the Knapsack problem.
 ** Details
   More details about the 0/1 Knapsack problem are contained in the lecture slides.
@@ -75,11 +75,11 @@ fixed-size knapsack and must fill it with the most valuable items. "
 :END:
 
   There are two data sets--A, B. Each data set will be posted on Compass as
-  simple ~numpy npz~ files with the knapsack capacity, number of different
-  items (which are all assumed to be distinct so you do not need to worry about
-  /choosing/ same items), and their values + weights. For
-  convenience you can read the information using ~numpy~'s ~load~ function,
-  shown in the snippet below:
+  simple ~numpy npz~ files with the knapsack capacity (total weight of the
+  knapsack), number of different items (which are all assumed to be distinct in
+  the 0/1 knapsack problem so you *do not* need to worry about /choosing/ same
+  items), and their values + weights. For convenience you can read the
+  information using ~numpy~'s ~load~ function, shown in the snippet below:
 
   #+begin_src python :results replace :exports code
 	import numpy as np
@@ -92,7 +92,7 @@ fixed-size knapsack and must fill it with the most valuable items. "
 	bag_capacity = my_data['capacity']
 	'''
 	other possible keys include
-	capacity : Bag capacity, float
+	capacity : Bag capacity in terms of total weight, float
 	n_items : Number of items, integer value
 	item_values : Value of each item, a (n_items, ) numpy array
 	item_weights : Weight of each item, a (n_items, ) numpy array

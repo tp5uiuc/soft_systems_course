@@ -1,0 +1,842 @@
+% Created 2019-02-21 Thu 00:12
+% Intended LaTeX compiler: pdflatex
+\documentclass[notes]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{awesomebox}
+\usepackage{booktabs}
+\usepackage{placeins}
+\usepackage{siunitx}
+\usepackage{minted}
+\usetheme[progressbar=frametitle]{metropolis}
+\newcommand{\gv}[1]{\ensuremath{\mbox{\boldmath$ #1 $}}}
+\newcommand{\bv}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\order}[1]{\mathcal O \left( #1 \right)} % order of magnitude
+\definecolor{scarlet}{rgb}{1.0, 0.13, 0.0}
+\definecolor{shamrockgreen}{rgb}{0.0, 0.62, 0.38}
+\definecolor{royalblue}{rgb}{0.25, 0.41, 0.88}
+\usetheme{default}
+\author{\emph{Tejaswin Parthasarathy}, Mattia Gazzola}
+\date{\today}
+\title{Covariance Matrix Adaptation in Python}
+\subtitle{ME498: Comp. modeling \& optimization}
+\hypersetup{
+ pdfauthor={\emph{Tejaswin Parthasarathy}, Mattia Gazzola},
+ pdftitle={Covariance Matrix Adaptation in Python},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.0.50 (Org mode 9.2)},
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\section{\texttt{Matplotlib}}
+\label{sec:org40d8e17}
+\begin{frame}[label={sec:orga10f54a},fragile]{Additional packages}
+ \begin{itemize}
+\item \texttt{Seaborn}  \alert{DEMO}
+\item \texttt{bokeh}
+\item \texttt{plotly}
+\item See \href{https://wiki.python.org/moin/NumericAndScientific/Plotting}{Python wiki} for more plotting tools
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:orgd75c60a}]{Quick review}
+\begin{block}{GA demo : Results of our GA implementation}
+\end{block}
+\begin{block}{How to improve convergence?}
+\begin{itemize}
+\item Parameters?
+\item Strategies? (More mutation, less recombination say\ldots{}?)
+\item Tuning is painful
+\end{itemize}
+\end{block}
+\begin{block}{\(\Rightarrow\) CMAes (and other algorithms)}
+\end{block}
+\end{frame}
+\section{Implementation of CMAes}
+\label{sec:orgee034ca}
+\begin{frame}[label={sec:org4918055}]{The algorithm}
+\end{frame}
+\begin{frame}[label={sec:orgc7af781}]{Starting CMAes}
+\begin{block}{Problem independent}
+\begin{itemize}
+\item Set evolution paths \(\gv{p}_\sigma = \gv{0}, \gv{p}_c = \gv{0}\)
+\item Set number of generations \(g = 0\)
+\item Set covariance matrix \(\bv{C} = \bv{I}\) (Why?)
+\end{itemize}
+\end{block}
+\begin{block}{Problem dependent}
+\begin{itemize}
+\item Distribution mean \(\gv{m} \in \mathbb{R}^n\)
+\item Step size \(\sigma \in \mathbb{R}_{>0}\) (Important to set \(>0\) )
+\item Population size \(n\)
+\end{itemize}
+\end{block}
+\end{frame}
+\begin{frame}[label={sec:orgbfaa6c6}]{Starting CMAes: more on problem dependent parameters}
+\begin{itemize}
+\item Optimum presumably be within the initial cube \(\gv{m} \pm 3 \sigma
+     \left(1 ,1 , \cdots, 1 \right)^T\)
+\item \(\therefore\) if optima \(\in [a, b]^{n}\) choose \(\gv{m} \in [a,b]^{n}\) (as a uniformly random vector) and \(\sigma = 0.3*(b-a)\)
+\item Different search intervals \(\Delta s_i\) for different variables can be
+done using \(\bv{C}\) as shown below (deferred discussion):
+\end{itemize}
+
+\begin{equation}
+\label{lyap_asym}
+\begin{aligned}
+\begin{bmatrix}
+\Delta s^2_1 & 0 & \cdots & 0 \\
+0 & \Delta s^2_2 & \cdots & 0 \\
+\vdots & \ddots & \ddots & \vdots \\
+0 & 0 &  \cdots & \Delta s^n_2  \\
+\end{bmatrix}
+\end{aligned}
+\end{equation}
+
+\begin{itemize}
+\item \(\Delta s_i\) all must be of similar magnitude (for conditioning). Else,
+rescale your problem.
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:org5f2fb76},fragile]{First step : Sampling}
+ \begin{block}{New population of points, for \(k = 1 \cdots \lambda\)}
+\begin{itemize}
+\item \(\gv{y}_k \sim \mathcal{N}\left( \gv{0}, \bv{I} \right)\)
+\item \(\gv{z}_k \sim \mathcal{N}\left( \gv{0}, \bv{C} \right) =
+     \bv{B}\bv{D}\gv{y}_k\)
+\begin{itemize}
+\item Given \(\bv{C} = \bv{B}\bv{D}^2\bv{B}^T\)
+\item Consult \footnote{\url{https://math.stackexchange.com/q/2115701}}  for a proof of why \(\bv{A} \mathcal{N}\left(\gv{0}, \bv{I}
+       \right) = \mathcal{N} \left(\gv{0}, \bv{A}\bv{A}^T \right)\)
+\end{itemize}
+\item \(\gv{x}_k = \gv{m} + \sigma \gv{z}_k \sim \mathcal{N}\left( \gv{m},
+     \sigma^2 \bv{C} \right)\)
+\end{itemize}
+\end{block}
+\begin{block}{Computing?}
+\begin{itemize}
+\item Steps 1 and 3 above using \texttt{*/np.multiply} for
+elementwise multiplication and \texttt{+} for elementwise addition
+\end{itemize}
+\end{block}
+\alert{We need a way to sample correlated (across dimensions) populations from} \texttt{numpy}
+\end{frame}
+\begin{frame}[label={sec:orgca98b9e},fragile]{Sampling : Python}
+ \begin{block}{How to sample a multivariate normal distribution?}
+\begin{itemize}
+\item \texttt{np.random.multivariate\_normal} \alert{DEMO}
+\end{itemize}
+\end{block}
+\begin{block}{Caveats?}
+\begin{itemize}
+\item What is \(\bv{C}\) / \texttt{cov} (in a 2D case) and its meaning?
+\item \texttt{cov} needs to be SPD. Is it? What about the update step?
+\item What happens in \texttt{numpy} if it is not?
+\end{itemize}
+\end{block}
+\note{:B\_note:
+\begin{itemize}
+\item \(\mu_x = \frac{1}{N} \sum_{i=1}^{N}x_i\)
+\item \(\sigma_x^2 = \frac{1}{N} \sum_{i=1}^{N}(x_i - \mu_x)^2\) and \(\sigma_{xy} = \frac{1}{N} \sum_{i=1}^{N}(x_i - \mu_x)(y_i - \mu_y)\)
+\item Show symmetric nature of \texttt{cov} after update
+\item Show positive definiteness (use PD of C, as well as the fact that it is
+made up of rank-one decompositions
+\item \texttt{numpy} checks for PD and throws an error
+\end{itemize}}
+\end{frame}
+\begin{frame}[label={sec:org58368d8}]{Covariance Matrix \footnote{\href{https://www.slideshare.net/OsamaSalaheldin2/cmaes-presentation}{CMAes overview, Slideshare}}}
+\includegraphics[page=68,width=1.0\textwidth]{images/cma_slideshare.pdf}
+\end{frame}
+\begin{frame}[label={sec:org27d17cb}]{Covariance Matrix : Example 1}
+\includegraphics[page=69,width=1.0\textwidth]{images/cma_slideshare.pdf}
+\end{frame}
+\begin{frame}[label={sec:org5bbcbdd}]{Covariance Matrix : Example 2}
+\includegraphics[page=70,width=1.0\textwidth]{images/cma_slideshare.pdf}
+\end{frame}
+\begin{frame}[label={sec:org5879aaa}]{Covariance Matrix : Example 3}
+\includegraphics[page=71,width=1.0\textwidth]{images/cma_slideshare.pdf}
+\end{frame}
+\begin{frame}[label={sec:org32b69a6}]{Covariance Matrix : Example 4}
+\includegraphics[page=72,width=1.0\textwidth]{images/cma_slideshare.pdf}
+\end{frame}
+\begin{frame}[label={sec:orgb7a8a33}]{Covariance Matrix : Example 5}
+\includegraphics[page=73,width=1.0\textwidth]{images/cma_slideshare.pdf}
+\end{frame}
+\begin{frame}[label={sec:orga02012d}]{Covariance Matrix : Definition}
+\includegraphics[page=74,width=1.0\textwidth]{images/cma_slideshare.pdf}
+\end{frame}
+\begin{frame}[label={sec:orga493b04}]{Covariance Matrix : Definition}
+\includegraphics[page=75,width=1.0\textwidth]{images/cma_slideshare.pdf}
+\end{frame}
+\begin{frame}[label={sec:orge266f45}]{Covariance Matrix : Example}
+\includegraphics[page=76,width=1.0\textwidth]{images/cma_slideshare.pdf}
+\end{frame}
+\begin{frame}[label={sec:orgbd0562c}]{Covariance Matrix : Definition}
+\includegraphics[page=77,width=1.0\textwidth]{images/cma_slideshare.pdf}
+\end{frame}
+\begin{frame}[label={sec:orgd37fb6f}]{Covariance Matrix : Example}
+\includegraphics[page=78,width=1.0\textwidth]{images/cma_slideshare.pdf}
+\end{frame}
+\begin{frame}[label={sec:org6f87fea},fragile]{Sampling : Python--Answers}
+ \begin{itemize}
+\item What is \(\bv{C}\) / \texttt{cov} (in a 2D case) and its meaning?
+\begin{enumerate}
+\item Covariance, how a gene varies with another (across dimensions)
+\item \(\mu_x = \frac{1}{N} \sum_{i=1}^{N}x_i\)
+\item \(\sigma_x^2 = \frac{1}{N} \sum_{i=1}^{N}(x_i - \mu_x)^2\) and \(\sigma_{xy} = \frac{1}{N} \sum_{i=1}^{N}(x_i - \mu_x)(y_i - \mu_y)\)
+\end{enumerate}
+\item \texttt{cov} needs to be SPD. Is it? What about the update step?
+\begin{enumerate}
+\item Symmetric by definition
+\item Symmetric after update too
+\end{enumerate}
+\item What happens in \texttt{numpy} if it is not?
+\begin{enumerate}
+\item \texttt{numpy} checks for PD, else throws an exception
+\end{enumerate}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org36d4dd2}]{PCA}
+\begin{block}{CMAes performs PCA on the optimzation data}
+\end{block}
+\begin{block}{PCA?}
+\begin{enumerate}
+\item Principal Component Analysis
+\item Find directions with
+\begin{itemize}
+\item High Variance
+\item Low Covariance with other components
+\end{itemize}
+\item Find dimensions that are ``independent'' from one another
+\item Gives basis (in this case for \(\bv{C}\) )
+\end{enumerate}
+\end{block}
+\end{frame}
+\begin{frame}[label={sec:org176aa2e}]{Sampling : Idea of \(\bv{C}\) \(\rightarrow\) math}
+\begin{block}{What is CMA-ES doing?}
+\begin{itemize}
+\item How does CMA estimate \(\bv{C}\)?
+\item What about the choice of weights?
+\item What is CMA doing by adapting \(\bv{C}\)?
+\end{itemize}
+\end{block}
+\note{:B\_note:
+\begin{itemize}
+\item \(\mu_x^{(g+1)} = \frac{1}{N_{best}} \sum_{i=1}^{N_{best}}x_i\) and \(\sigma_x^{2, (g+1)} = \frac{1}{N_{best}} \sum_{i=1}^{N_{best}}(x_i -
+      \mu_x^{(g)})^2\)
+\item This is rank \(\mu\) update, but with also exponential weighting of
+previous \(C\) (show separately, will be discussed in CMA)
+\item Choice of weights reflect ``normalization''
+\item Conducts PCA (eigenvectors), rotated representation \(\bv{C} =
+	  \bv{B}\bv{D}^2\bv{D}^T\), inverse Hessian
+(second order)
+\end{itemize}}
+\end{frame}
+\begin{frame}[label={sec:orgca6faba}]{Sampling : Idea of \(\bv{C}\) \(\rightarrow\) math--Answers}
+\begin{itemize}
+\item How does CMA estimate \(\bv{C}\)?
+\begin{enumerate}
+\item You can use the new population to get \(\bv{C}\) too, but information
+is lost (no information on how the population ``evolved'')
+\item \alert{Idea} : Use \(\mu_x^{(g+1)} = \frac{1}{N_{best}}
+         \sum_{i=1}^{N_{best}}x_i\) rather than \(\sigma_x^{2, (g+1)} =
+         \frac{1}{N_{best}} \sum_{i=1}^{N_{best}}(x_i - \mu_x^{(g)})^2\),
+across \(N_{best}\) individuals to estimate covariance between genes
+(rank \(\mu\) update)
+\item Exponential weighting, discussed later on
+\end{enumerate}
+\item What about the choice of weights?
+\begin{enumerate}
+\item Reflect normalization (relates back to the ability of CMA to maintain invariance)
+\end{enumerate}
+\item What is CMA doing by adapting \(\bv{C}\)?
+\begin{enumerate}
+\item Conducts PCA (eigenvectors), rotated representation \(\bv{C} =
+		 \bv{B}\bv{D}^2\bv{D}^T\), inverse Hessian
+(second order)
+\end{enumerate}
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:org8292a3d}]{Sampling : Parameters}
+\begin{block}{Choice of \(\lambda\)?}
+\begin{itemize}
+\item Look at the CMA tutorial : \href{file:///Users/tp5/Desktop/Masters\_Resources/readings/optimization/Hansen/The\%20CMA\%20evolution\%20strategy\%20A\%20tutorial.pdf}{The CMA tutorial}/\href{https://arxiv.org/pdf/1604.00772.pdf}{CMA tutorial on Arxiv}
+\item Usually \(\lambda = \lfloor 4 + 3 \ln n \rfloor\)
+\item And \(\mu = \lfloor \lambda/ 2 \rfloor\)
+\end{itemize}
+\end{block}
+\end{frame}
+\begin{frame}[label={sec:org6c1913f},fragile]{Second step : Selection}
+ \begin{block}{How to select \(\mu\) best individuals}
+\begin{itemize}
+\item \(\langle \gv{z}_k \rangle_{w} = \sum_{i=1}^{\mu} w_i \gv{z}_{i:\lambda}\)
+\item Constraint on weights: \(\sum_{i=1}^{\mu} w_i = 1, \; w_i > 0 \; \forall i=1
+     \cdots \mu\) (at least in our version of CMA)
+\end{itemize}
+\end{block}
+\begin{block}{Computing?}
+\begin{itemize}
+\item Fitness function evaluation left upto user (including constraints etc.).
+This determines the \(\mu\) best individuals.
+\item The weighted sum can be evaluated using \texttt{np.inner()/broadcasting with
+     */np.sum() after *} \ldots{}
+\end{itemize}
+\end{block}
+\end{frame}
+\begin{frame}[label={sec:orgc44758b}]{Selection : Parameters}
+\begin{block}{Choice of \(w_i\)?}
+\begin{itemize}
+\item Look at the CMA tutorial : \href{file:///Users/tp5/Desktop/Masters\_Resources/readings/optimization/Hansen/The\%20CMA\%20evolution\%20strategy\%20A\%20tutorial.pdf}{The CMA tutorial}/\href{https://arxiv.org/pdf/1604.00772.pdf}{CMA tutorial on Arxiv}
+\end{itemize}
+\end{block}
+\end{frame}
+\begin{frame}[label={sec:orga8133cf},fragile]{Third step : Recombination}
+ \begin{block}{Recombination to get new \(m\)}
+\begin{itemize}
+\item \(\gv{m} \leftarrow \gv{m} + \sigma \langle \gv{z} \rangle_{w}\)
+\item No parameters in this step!
+\end{itemize}
+\end{block}
+\begin{alertblock}{Notice!}
+\begin{itemize}
+\item \(\sigma\) is the ``overall'' step size and is a scalar.
+\item It could also be a matrix. Is this a good idea?
+\begin{itemize}
+\item What about a diagonal matrix?
+\end{itemize}
+\end{itemize}
+\end{alertblock}
+\begin{block}{Computing?}
+\begin{itemize}
+\item Use elementwise addition using \texttt{+} operator
+\end{itemize}
+\end{block}
+\note{:B\_note:
+\begin{itemize}
+\item Having \(\sigma\) as matrix is not a good idea because one dimension
+depends on another---a which complicates stuff for a black box algorithm.
+\item Besides that's precisely what the \(\bv{C}\) encodes---both rotation and
+scaling.
+\item So choose only a scalar.
+\end{itemize}}
+\end{frame}
+\begin{frame}[label={sec:org8abb750}]{Third step : Recombination--Answers}
+\begin{itemize}
+\item \(\sigma\) could also be a matrix. Is this a good idea?
+\begin{itemize}
+\item \alert{NO}!
+\item One dimension depends on another, but not during sampling. This degrades
+the convergence of the algorithm
+\end{itemize}
+\item What about a diagonal matrix?
+\begin{itemize}
+\item \alert{NO}!
+\item \bv{C}= \bv{BD^2B^T} does the job of maintaining scaling, orientation etc. of the elements.
+\end{itemize}
+\end{itemize}
+
+\alert{CONCLUSION}---Scalar \(\sigma\) is apt.
+\end{frame}
+\begin{frame}[label={sec:orgbbcf80a},fragile]{Fourth step : Step size control}
+ \begin{block}{Control for \(\sigma\) and cumulation \(\gv{p}_{\sigma}\)}
+\begin{itemize}
+\item \(\gv{p}_\sigma \leftarrow (1 - c_\sigma) \gv{p}_\sigma +
+     \sqrt{c_\sigma \left( 2 - c_\sigma \right)} \mu_{\text{cov} }
+     \bv{C}^{-\frac{1}{2}} \langle \gv{z} \rangle_{w}\)
+\item \(\sigma \leftarrow \sigma \exp{\left( \frac{c_\sigma}{d_\sigma} \left[
+     \tfrac{ \norm{\gv{p}_\sigma} }{ \mathsf{E} \norm{ \mathcal{N}\left( {0},
+     \bv{I} \right) } } - 1 \right] \right)}\)
+\end{itemize}
+\end{block}
+
+\begin{block}{Computing/Python?}
+\begin{itemize}
+\item Notice you need to invert the covariance matrix! How will you do it?
+\begin{itemize}
+\item \alert{Hint}: Exploit properties of \bv{C}!
+\item This means you just need \texttt{np.linalg.eigh()} for now (there are many other
+powerful methods for general symmetric matrix inverse)
+\item Can reduce \(\order{n}^3\) to \(\order{n}^2\) in practice? ( See B2.
+Strategy internal numerical effort in CMA tutorial)
+\end{itemize}
+\end{itemize}
+\end{block}
+
+\note{:B\_note:
+\begin{itemize}
+\item Positive definiteness is the property. Show a demo of how positive
+definiteness used to invert.
+\item Spectral theorem : Symmetric matrices have a complete set of eigenvectors
+(no generalized EV needed)
+\item PD : All positive eigenvalues needed
+\end{itemize}}
+\end{frame}
+\begin{frame}[label={sec:org6989f35},fragile]{Step size control: Computing/Python}
+ \begin{block}{Computing continued}
+\begin{itemize}
+\item Extensive use of matvecs (\texttt{@})
+\item What about the norm in the \(\sigma\) update?
+\begin{itemize}
+\item What is a norm?
+\item So what norm should we use?
+\begin{itemize}
+\item The two-norm is widely used
+\end{itemize}
+\end{itemize}
+\item What's \(\mathsf{E}\)?
+\begin{itemize}
+\item What's \(\mathsf{E} \norm{ \mathcal{N}\left( {0}, \bv{I} \right) }\)?
+\begin{itemize}
+\item \(\approx \sqrt{n} \left( 1 - \tfrac{1}{4n} + \tfrac{1}{21n^2} \right)\)
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{block}
+\note{:B\_note:
+\begin{itemize}
+\item Expected length of distribution
+\end{itemize}}
+\end{frame}
+\begin{frame}[label={sec:orgafdfe94}]{Step size control \(\rightarrow\) math}
+\begin{block}{What is path update doing?}
+\begin{itemize}
+\item Increase probability of reproducing successful solution paths\ldots{}
+\item Weighting with exponential decay\ldots{}
+\item What about the choice of weights?
+\begin{itemize}
+\item Makes the expected length independent of the direction
+\item ``Follows'' the random choice of \(\gv{p}^{(0)}_\sigma\)
+\end{itemize}
+\end{itemize}
+\end{block}
+\begin{block}{What is \(\sigma\) update doing?}
+\begin{itemize}
+\item Decrease/Increase size until path steps are uncorrelated\ldots{}
+\item How does the two norm of the path reflect this ``un''correlation?
+\item What about the choice of weights?
+\end{itemize}
+\end{block}
+\note{:B\_note:
+\begin{itemize}
+\item Two norm weighted by expectation tells you how much deviation is there in
+the expectation\ldots{}
+\end{itemize}}
+\end{frame}
+\begin{frame}[label={sec:orgdd95fb8}]{Step size : Parameters}
+\begin{block}{Choice of \(c_\sigma , d_\sigma\)?}
+\begin{itemize}
+\item Look at the CMA tutorial : \href{file:///Users/tp5/Desktop/Masters\_Resources/readings/optimization/Hansen/The\%20CMA\%20evolution\%20strategy\%20A\%20tutorial.pdf}{The CMA tutorial}/\href{https://arxiv.org/pdf/1604.00772.pdf}{CMA tutorial on Arxiv}
+\item \(c_\sigma\) is learning rate for cumulation usually set to \(\approx
+      \tfrac{4}{n}\)
+\item \(d_\sigma\) is the damping parameter for step size update \(\approx 1 + \frac{\mu_{\text{cov}}}{\sqrt{n}}\)
+\end{itemize}
+\end{block}
+\end{frame}
+\begin{frame}[label={sec:orgf7f9dca},fragile]{Fifth step : Covariance matrix adaptation}
+ \begin{block}{Control for \(\bv{C}\) and cumulation \(\gv{p}_{c}\)}
+\begin{itemize}
+\item \(\gv{p}_c \leftarrow (1 - c_c) \gv{p}_c+
+     \sqrt{c_c\left( 2 - c_c\right) } \mu_{\text{cov}}
+     \langle \gv{z} \rangle_{w}\)
+\item \(\bv{C} \leftarrow (1 - c_{\text{cov}}) \bv{C} +
+     \frac{c_{\text{cov}}}{\mu_{\text{cov}}} \gv{p}_{c} \gv{p}^T_c +
+     c_{\text{cov}} \left( 1 - \frac{1}{\mu_{cov}}\right) \bv{Z}\)
+where \(\bv{Z} =  \sum_{i=1}^{\mu} w_i \gv{z}_{i:\lambda} \gv{z}^T_{i:\lambda}\)
+\end{itemize}
+\end{block}
+\begin{block}{Computing/Python?}
+\begin{itemize}
+\item Usual operations (\texttt{*,+})
+\item For calculating outer products, use \texttt{np.outer()}
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:org2916e64}]{CMA \(\rightarrow\) math}
+\begin{block}{What is cumulation for \(\gv{p}_c\) doing?}
+\begin{itemize}
+\item Weighting with exponential decay for prior values
+\item New information from PCA of steps updated into \(\bv{C}\) path
+\item What about the choice of weights?
+\end{itemize}
+\end{block}
+\begin{block}{What is \(\bv{C}\) update doing?}
+\begin{itemize}
+\item Weighting with exponential decay for prior values
+\item Rank one update using \(\gv{p}_c\) (What's \alert{rank}?)
+\begin{itemize}
+\item Why is the update rank one? (One-dimensional information)
+\item Why use \(\gv{p}_c\) rather than \(\langle z \rangle\)?
+\end{itemize}
+\item Rank \(\mu\) update
+\begin{itemize}
+\item As seen earlier, CMA cleverly estimates \(\bv{C}\) using old step
+information
+\end{itemize}
+\end{itemize}
+\end{block}
+\note{:B\_note:
+\begin{itemize}
+\item Rank demo using \([1 2 3]\)
+\item using \(\langle z \rangle\) loses information about correlation between
+steps, the history informatino (Explain that this may lead to effects on
+path length adaption and so on)
+\end{itemize}}
+\end{frame}
+
+\begin{frame}[label={sec:org09a7e2f}]{CMA: Parameters}
+\begin{block}{Choice of \(c_c, c_{\text{cov}}\)?}
+\begin{itemize}
+\item Look at the CMA tutorial : \href{file:///Users/tp5/Desktop/Masters\_Resources/readings/optimization/Hansen/The\%20CMA\%20evolution\%20strategy\%20A\%20tutorial.pdf}{The CMA tutorial}/\href{https://arxiv.org/pdf/1604.00772.pdf}{CMA tutorial on Arxiv}
+\item \(c_c\) is learning rate for path cumulation set to \(\approx
+      \tfrac{4}{n}\)
+\item \(c_{\text{cov}} \approx \tfrac{2 + \mu^2_{\text{cov}}}{n^2}\)
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:org56a2297},fragile]{Terminating CMA}
+ \begin{block}{Algorithm should be stopped when CPU-time is wasted. Then we can:}
+\begin{enumerate}
+\item restart (eventually with increased population size)
+\item reconsider encoding and objective function formulation
+\end{enumerate}
+\end{block}
+\begin{block}{Problem independent}
+\begin{itemize}
+\item \texttt{NoEffectAxis} : Stop if adding \(0.1\) std.dev. vector to any direction
+of basis \(\bv{B}\) does not change \(\gv{m}\)
+\item \texttt{NoEffectCoord} : Stop if adding \(0.2\) std.dev. to any coordinate does not change \(\gv{m}\)
+\item \texttt{ConditionCov}: stop if condition number of covariance matrix exceeds \(10^{14}\)
+\begin{itemize}
+\item Whats condition number of a matrix?
+\item \texttt{np.linalg.cond()}, although you can directly check \texttt{D}
+\end{itemize}
+\end{itemize}
+\end{block}
+\note{:B\_note:
+\begin{itemize}
+\item First criteria is explanatory: when the c matrix is small, it will still
+choose yours as an optima
+\item \texttt{NoEffectCoord} : \(m_i = m_i + 0.2 \sigma c_i\)
+\item using \(\langle z \rangle\) loses information about correlation between
+steps, the history informatino (Explain that this may lead to effects on
+path length adaption and so on)
+\item Condition number tells you stretch of matrix. If 10\^{}14 you can go home.
+\end{itemize}}
+\end{frame}
+
+\begin{frame}[label={sec:org0a9d96e},fragile]{Terminating CMA contd.}
+ \begin{block}{Problem independent}
+\begin{itemize}
+\item \texttt{EqualFunValues}: stop if the range of the best \(\gv{f}(\gv{x})\) of
+the last \(10 + \lceil 30n/\lambda \rceil\) generations is zero.
+\item \texttt{Stagnation}: Track history of the best and the median fitness in each
+iteration over the last \(20 \%\) but at least \(120+30n/\lambda\) and
+no more than \(20000\) iterations. Stop, if in both histories the median
+of the last (most recent) \(30 \%\) values is not better than the median
+of the first \(30\%\).
+\item \texttt{TolXUp}: stop if \(\sigma \times max(diag(\bv{D}))\) increased by more
+than \(10^4\). This indicates a far too small initial \(\sigma\), or
+divergence.
+\end{itemize}
+\end{block}
+\alert{We note that there are problem dependent diagnostics too!}
+\note{:B\_note:
+\begin{itemize}
+\item Equalfunvalus is self explanatory
+\item Average properties of the simualtion does not improve
+\item Toelrance limit reached
+\end{itemize}}
+\end{frame}
+
+\begin{frame}[label={sec:org3d7de0d}]{Boundaries/Constraints in CMA : Best solution strictly inside}
+\begin{itemize}
+\item Set fitness (for minimization problem) as
+\end{itemize}
+\[ f_{\text{fitness}} (\gv{x}) = f_{\text{max}} + \norm{\gv{x} -
+\gv{x}_{\text{feasible}}} \]
+\begin{enumerate}
+\item Notation
+\begin{enumerate}
+\item \(f_{\text{max}}\) is larger than worst feasible fitness
+\item \(\gv{x}_{\text{feasible}}\) is constant,in the middle of feasible region
+\end{enumerate}
+\item Caveat : Optimal solution not too close to the infeasible region
+\end{enumerate}
+
+
+\begin{itemize}
+\item Alternatively, resample any infeasible point until it becomes feasible
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:orgb2e5856}]{Boundaries/Constraints in CMA : Repair}
+\begin{itemize}
+\item Simply ``repair'' infeasible individuals (say when boundary is a box) before
+update so that they satisfy the constraint
+\begin{enumerate}
+\item Caveat : Repairs are dangerous
+\begin{itemize}
+\item Distribution affected by repair, hurting CMA's convergence
+\end{itemize}
+\item ``Re-repair'' mechanisms to prevent divergence are also reported
+\end{enumerate}
+
+\item Alternatively, penalize the repaired solutions
+\end{itemize}
+\[  f_{\text{fitness}} (\gv{x}) = f(\gv{x}_{\text{repaired}}) + \alpha \norm{\gv{x} -
+\gv{x}_{\text{repaired}}}^2 \]
+\end{frame}
+
+\section{Comparing CMA against GA}
+\label{sec:orga965e6b}
+\begin{frame}[label={sec:orgcf7103e}]{CMAes vs GA--setup}
+\begin{block}{Optimization on smooth functions}
+\begin{itemize}
+\item Two dimensional, \(C^{\infty}\) functions \(f(\gv{x})\) : \(\left(\mathbb{R}^2,  \mathbb{R}, f, \leq \right)\)
+\item shifted Schaffer function (optima in the middle well)
+\end{itemize}
+\end{block}
+\begin{center}
+\includegraphics[width=.9\linewidth]{images/schaffer.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:org33fcf3a}]{CMAes vs GA--setup}
+\begin{itemize}
+\item shifted Rastrigin function (optima in the middle well)
+\end{itemize}
+\begin{center}
+\includegraphics[width=.9\linewidth]{images/rastrigin.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:org0344cb7}]{Comparison between functions\footnote{\href{http://blog.otoro.net/2017/10/29/visual-evolution-strategies/}{Otoro}}}
+\begin{columns}
+\begin{column}{0.5\columnwidth}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{images/schaffer_start.png}
+\caption{Schaffer--setup}
+\end{figure}
+\end{column}
+\begin{column}{0.5\columnwidth}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{images/rastrigin_start.png}
+\caption{Rastrigin--setup}
+\end{figure}
+\end{column}
+\end{columns}
+
+Lighter region indicates smaller values
+\end{frame}
+\begin{frame}[label={sec:org62ffef5}]{Simple ES}
+\begin{block}{Scheme}
+\begin{itemize}
+\item \alert{Sampling} : \(\gv{z}_i \sim \mathcal{N}\left( \gv{m}, \bv{C} \right)\)
+\item \alert{Mean-update} : \(\gv{m} \leftarrow \gv{z}_{1:\lambda}\)
+\item \alert{Covariance-update} : \(\bv{C} = \begin{bmatrix}\sigma^2_x & \sigma_x \sigma_y \\  \sigma_x
+      \sigma_y & \sigma^2_y \end{bmatrix}\) \(\sigma_x, \sigma_y\) are fixed.
+\item No other updates (on path etc.)
+\end{itemize}
+\end{block}
+\begin{block}{Legend}
+\begin{itemize}
+\item {\color{shamrockgreen}Green} : Tracks the mean \(\gv{m}\).
+\item {\color{royalblue}Blue} : Tracks the sampled solutions
+at generetation \(g\).
+\item {\color{scarlet}Red} : Tracks the best individual so
+far.
+\end{itemize}
+\end{block}
+\begin{block}{Results}
+Simple Evolution strategy from \href{http://blog.otoro.net/2017/10/29/visual-evolution-strategies/}{Otoro} shown for 20 generations
+\end{block}
+\end{frame}
+\begin{frame}[label={sec:org8ddb5ac}]{Simple ES-Observations}
+\begin{block}{Convergence}
+\begin{itemize}
+\item What do you expect for general problems?
+\item
+\end{itemize}
+\end{block}
+\begin{block}{Rate of convergence}
+\begin{itemize}
+\item Is this fast/slow convergence?
+\item
+\end{itemize}
+\end{block}
+\begin{block}{Number of function evaluations?}
+\begin{itemize}
+\item High? Low? Not bad?
+\item
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:orgba71f5c}]{Simple ES-Observations}
+\begin{block}{Convergence}
+\begin{itemize}
+\item What do you expect for general problems?
+\item \alert{Will get stuck--lack of diversity, keeps only best population} (See
+rastrigin, which temporarily gets stuck)
+\item \alert{Heavy} parameter dependence too
+\end{itemize}
+\end{block}
+\begin{block}{Rate of convergence}
+\begin{itemize}
+\item Is this fast/slow convergence?
+\item \alert{Slow--no history information}
+\end{itemize}
+\end{block}
+\begin{block}{Number of function evaluations?}
+\begin{itemize}
+\item High? Low? Not bad?
+\item \alert{Decent--but no promises for real life black-box optimization problems}
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:orgfd07b96}]{Simple GA}
+\begin{block}{Scheme}
+\begin{itemize}
+\item \alert{Environmental selection} : Keep only best \(10 \%\)
+\item \alert{Sampling} : Crossover from parents selected above with \(p_c = 1\)
+\item \alert{Crossover} : Select two parents, obtain \(x\) or \(y\) from either parent
+with \(0.5\) probability (two coin tosses)
+\item \alert{Mutation} : Introduce Gaussian noise with fixed \(\sigma\)
+\item No other updates (on path etc.)
+\end{itemize}
+\end{block}
+\begin{block}{Legend}
+\begin{itemize}
+\item {\color{shamrockgreen}Green} : Tracks the elites from
+prior generation \(g\).
+\item {\color{royalblue}Blue} : Offsprings from candidate solutions.
+\item {\color{scarlet}Red} : Tracks the best individual so
+far.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:orgbf03b43}]{Simple GA-Observations}
+\begin{block}{Convergence}
+\begin{itemize}
+\item What do you expect for general problems?
+\item
+\end{itemize}
+\end{block}
+\begin{block}{Rate of convergence}
+\begin{itemize}
+\item Is this fast/slow convergence?
+\item
+\end{itemize}
+\end{block}
+\begin{block}{Number of function evaluations?}
+\begin{itemize}
+\item High? Low? Not bad?
+\item
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:orgb817020}]{Simple GA-Observations}
+\begin{block}{Convergence}
+\begin{itemize}
+\item What do you expect for general problems?
+\item \alert{Will get stuck--lack of diversity, keeps only elitist population}
+\item \alert{Heavy} parameter dependence
+\item \alert{Tracks} modality well (for both Schaffer and Rastrigin)
+\end{itemize}
+\end{block}
+\begin{block}{Rate of convergence}
+\begin{itemize}
+\item Is this fast/slow convergence?
+\item \alert{Slower} than simple ES
+\end{itemize}
+\end{block}
+\begin{block}{Number of function evaluations?}
+\begin{itemize}
+\item High? Low? Not bad?
+\item \alert{High}
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:orgef4bb6b}]{CMAes-Observations}
+\begin{block}{Can you spot the updates?}
+\begin{itemize}
+\item \(\gv{m}\) update (fairly obvious)
+\item Step size update
+\begin{itemize}
+\item Path update
+\end{itemize}
+\item Covariance matrix upfate
+\begin{itemize}
+\item Rank \(\mu\) updates
+\item Rank \(1\) update (Path update)
+\end{itemize}
+\end{itemize}
+\end{block}
+\note{:B\_note:
+\begin{itemize}
+\item Step size : Initially small, As soon as it sees all are moving in one
+direction, it quickly adapts in both cases.
+\item Step size reduce. Rastrigin more difficult as
+optima close to zero, so step size reduce takes time.
+\item Cov update : Direction is clearly important. First recognizes the ascent
+direction as a prinicpal component. Then of course the next one is
+complementary to it\ldots{}
+\item Most due to rank \(\mu\) update (as scaling applied there)
+\item But rank one update also seen\ldots{}
+\end{itemize}}
+\end{frame}
+
+\begin{frame}[label={sec:orgd2a9bad}]{CMAes-Observations}
+\begin{block}{Convergence}
+\begin{itemize}
+\item What do you expect for general problems?
+\item \alert{Good} for problems of ``moderate'' dimensions
+\end{itemize}
+\end{block}
+\begin{block}{Rate of convergence}
+\begin{itemize}
+\item Is this fast/slow convergence?
+\item \alert{Fast} (Approximately brackets minima in \(\order{n}\) functional evaluations)
+\end{itemize}
+\end{block}
+\begin{block}{Number of function evaluations?}
+\begin{itemize}
+\item High? Low? Not bad?
+\item Low (same as above)
+\end{itemize}
+\end{block}
+\end{frame}
+\begin{frame}[label={sec:org9c3da6b}]{CMAes-Some interesting videos}
+\begin{itemize}
+\item Mario \url{https://www.youtube.com/watch?v=0iipyd7Gi70}
+\item Rastrigin : \url{https://www.youtube.com/watch?v=aP31Q7o2UGU}
+\item Biped: \url{https://www.youtube.com/watch?v=lOaWvOA9cb4}
+\item Robot Invivo: \url{https://www.youtube.com/watch?v=trR2Gc1tLzg}
+\item Robot invitro: \url{https://www.youtube.com/watch?v=fjTd06L-9bQ}
+\item Knifwfisj : \url{https://www.youtube.com/watch?v=3XjgZbs0t2g}
+\item \url{https://blog.openai.com/evolution-strategies/}
+\end{itemize}
+\end{frame}
+\end{document}

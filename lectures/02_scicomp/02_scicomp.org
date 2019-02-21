@@ -8,6 +8,7 @@
 #+startup: beamer
 #+LATEX_CLASS: beamer
 #+LATEX_CLASS_OPTIONS: [presentation]
+# #+LATEX_CLASS_OPTIONS: [notes]
 #+LATEX_HEADER:\usetheme[progressbar=frametitle,block=fill]{metropolis}
 #+OPTIONS:   H:2 num:t toc:nil ::t |:t ^:{} -:t f:t *:t <:t
 #+OPTIONS:   tex:t d:nil todo:t pri:nil tags:nil
@@ -144,6 +145,150 @@
 #+CAPTION: Schematic of an evolutionary search algorithm
 #+ATTR_LATEX: :width 1.0\textwidth
 [[file:images/ga_schematic.png]]
+** Let's use GA to solve...
+*** Problem statement                                               :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+   Maximize the function \( f(\mathbf{x}) = \sum_{i=1}^{6} w_i x_i \) for a given
+   set of weights \( w_i \), with the constraints that \( x_i \; \in \; [-4,4] \;
+   \forall \; i\).
+
+   \therefore Domain \(\mathbb{D}\) of the search is \( \mathbb{D}:= [-4,4]^6 \).
+
+   Optimization problem: \(\left(\mathbb{D}, \mathbb{R} , \mathbf{f}, \geq \right)\).
+** Representation?
+*** Bitvector? Float vector?                                        :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	Pick a representation for \( \mathbf{x}\)
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+	In any case, ~np.array~ seems useful. You can make a bitvector using
+	~np.array(..., dtype=bool)~
+** GA parameters
+*** Decisions                                                       :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	- How long are you going to run your campaign? (Number of generations)
+	- How many solutions will you consider in one step? (Population size)
+	  - If so, whats your degree of freedom? (How many numbers should you change)
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+	All these are just floating point numbers
+
+*** Initialization                                                         :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	- How will you initialize your population?
+
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+	Consider the ~np.random~ module...
+
+** Fitness assignment
+*** What's your fitness?                                            :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	  - Feed in objective function directly?
+	  - Competitive fitness between members?
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+	Use matrix-vector products and/or slicing to determine fitness
+** Selection (for variation)
+*** Stochastic / Deterministic
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	  - How many parents do you want to select? Or do you want to leave it up to
+        the algorithm?
+	  - Deterministic / Stochastic?
+		- Remember that stochastic selection is usally used for variation, but
+          we do not need to do it necessarily...
+	  - Competitive fitness between members?
+		- It's definitely a good exercise to learn ~numpy~
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+	~np.argsort/np.sort~ is very useful to sort/rank stuff, indexing magic
+	needed. The brave souls doing SUS may also need ~searchsorted, cumsum, sum~
+	and so on (familiarize yourself with the ~numpy~ documentation)
+** Variation
+*** Recombination
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	  - What will be your \( p_c \), the rate of recombination?
+	  - Is there a limit on the number of offspring you generate?
+	  - How to achieve crossover for your representation?
+	  - Uniform crossover? N-point crossover? ...
+	  - In which gene do you want to effect crossover?
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+	Extensively use slicing and index magic. You may use any algorithm (say
+	using the ~%~ operator) to select parents.
+** Variation
+*** Mutation
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	  - What will be your \( p_m \), the rate of mutation?
+	  - How do you want to achieve mutation? Flip bits? Number exchange? Random numbers?
+	  - Do you want to mutate the entire vector? Or only one gene?
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+	~np.random~ once again. You can also use other ~np~ tools
+** Selection (environmental)
+*** Constraints / Deterministic schemes
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	  - What about constraints of \( -4 \leq x_i \leq 4 \)?
+	  - How do you select individuals (chromosomes) from the population to
+        propogate to the next generation? Objective function alone?
+	  - If so what scheme do you want to use? \( \left( \mu, \lambda \right) \),
+        \( \left( \mu + \lambda \right) \),...?
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+	All the tools seen above apply to this case too...
+** Putting it all together
+*** Convergence, performance, diagnostics
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	  - Now that we have all the /modules/, how do they perform when you put
+        them together?
+	  - How do we track performance as generations progress?
+	  - Can you think of some diagnostics that may well-characterize the scheme
+        that you have just developed?
+** Practice
+*** Exploration
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	  - Explore representations, parameters and all other design choices that you
+        made
+      - You will essentially be doing a scaled up version of this exercise for
+        your project 1
 * Footnotes
 
 [fn:2] [[https://docs.scipy.org/doc/numpy/user/numpy-for-matlab-users.html][numpy for Matlab users]]

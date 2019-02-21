@@ -1,4 +1,4 @@
-% Created 2019-02-02 Sat 17:30
+% Created 2019-02-10 Sun 00:41
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -51,7 +51,7 @@
 \end{itemize}
 
 \section{Guidelines}
-\label{sec:org0b1c9f2}
+\label{sec:org50c965a}
 General advice that pertains to all the problems include:
 \begin{enumerate}
 \item Pick sensible representation, fitness function, selection and mutation
@@ -70,14 +70,14 @@ on academic integrity---plagiarism will not be tolerated!
 \end{enumerate}
 
 \section{The Knapsack problem}
-\label{sec:org8b7e38d}
+\label{sec:org3ea5df5}
 \subsection{Definition}
-\label{sec:orgc4d8d97}
+\label{sec:orgcf445dc}
   Use genetic algorithm and rank-\(\mu\), weighted recombination version of the CMA
-evolutionary strategy discussed in class to find the solution to the 0/1 variant of
+evolutionary strategy discussed in class to find the solution to the \textbf{0/1 variant} of
 the Knapsack problem.
 \subsection{Details}
-\label{sec:org61d4e22}
+\label{sec:orgefaf654}
 More details about the 0/1 Knapsack problem are contained in the lecture slides.
 Alternatively, the \href{https://en.wikipedia.org/wiki/Knapsack\_problem}{Wikipedia} page also has a lot of information about this
 problem. Quoting the introductory text,
@@ -112,11 +112,11 @@ performance of the algorithms.
 \subsection{Data}
 \label{sec:data}
 There are two data sets--A, B. Each data set will be posted on Compass as
-simple \texttt{numpy npz} files with the knapsack capacity, number of different
-items (which are all assumed to be distinct so you do not need to worry about
-\emph{choosing} same items), and their values + weights. For
-convenience you can read the information using \texttt{numpy}'s \texttt{load} function,
-shown in the snippet below:
+simple \texttt{numpy npz} files with the knapsack capacity (total weight of the
+knapsack), number of different items (which are all assumed to be distinct in
+the 0/1 knapsack problem so you \textbf{do not} need to worry about \emph{choosing} same
+items), and their values + weights. For convenience you can read the
+information using \texttt{numpy}'s \texttt{load} function, shown in the snippet below:
 
 \begin{minted}[]{python}
 import numpy as np
@@ -129,7 +129,7 @@ my_data = np.load('file_name.npz')
 bag_capacity = my_data['capacity']
 '''
 other possible keys include
-capacity : Bag capacity, float
+capacity : Bag capacity in terms of total weight, float
 n_items : Number of items, integer value
 item_values : Value of each item, a (n_items, ) numpy array
 item_weights : Weight of each item, a (n_items, ) numpy array
@@ -138,13 +138,13 @@ item_weights : Weight of each item, a (n_items, ) numpy array
 \end{minted}
 
 \section{Minima of the parabola}
-\label{sec:org2851a0c}
+\label{sec:org9429c0f}
 \subsection{Definition}
-\label{sec:orge2e94e8}
+\label{sec:orge331595}
   Use genetic algorithm and rank-\(\mu\), weighted recombination version of the CMA
 evolutionary strategy discussed in class to find the minima of a simple parabola.
 \subsection{Details}
-\label{sec:orgf524d03}
+\label{sec:orgaeef201}
 The one-dimensional parabola is a continuous, convex, unimodal function. We
 pick the parabola given by the formula
 \begin{equation}
@@ -160,14 +160,14 @@ and compare the performance of these algorithms on this function.
 Furthermore, explore the effect of the parameters (particularly in GA) on the
 performance of the algorithms. Start your search using a randomly initialized population around \(\mathbf{x}_0 = \mathbf{0}\)---the vector of zeros.
 \section{Minima of the Rotated Hyper-Ellipsoid}
-\label{sec:orgef47b04}
+\label{sec:orgc26df46}
 \subsection{Definition}
-\label{sec:org27e7c02}
+\label{sec:orgfaf3974}
   Use genetic algorithm and rank-\(\mu\), weighted recombination version of the CMA
 evolutionary strategy discussed in class to find the minima of the
 two-dimensional rotated ellispoid.
 \subsection{Details}
-\label{sec:org70431d1}
+\label{sec:org1a1c949}
 The two-dimensional Rotated Hyper-Ellipsoid is a continuous, convex, unimodal
 and non-separable function. We pick the variant that is rotated \(\frac{\pi}{6} \; \si{rad}\) clockwise from the \(x_1\)-axis and shifted along
 both axes, given by the formula below:
@@ -196,15 +196,15 @@ explore the effect of the parameters on the performance of the algorithms.
 Start your search using a randomly initialized population around \(\mathbf{x}_0 = \mathbf{0}\)---the vector of zeros.
 
 \section{Minima of the Rastrigin function}
-\label{sec:orgcb89dfb}
+\label{sec:org287503a}
 \subsection{Definition}
-\label{sec:org990fbb3}
+\label{sec:orgad53ef5}
   Use the rank-\(\mu\), weighted recombination version of the CMA
 evolutionary strategy discussed in class to find the minima of the shifted
 \emph{Rastrigin} function in two and five dimensions.
 
 \subsection{Details}
-\label{sec:orgdcd9db3}
+\label{sec:org216ea6a}
 The (unshifted) Rastrigin function is shown in \cref{rastr} for the case of two-dimensions.
 
 \begin{figure}[htbp]

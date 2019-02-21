@@ -1803,7 +1803,7 @@ If you get stuck:
    - The same mechanism can be used to write to a file
 	#+LATEX:\footnotesize
 	#+begin_src python :results output :exports code
-	  # 'w' for read mode, 'a' for append mode
+	  # 'w' for write mode, 'a' for append mode
 	  # 'w' wipes a file clean before it writes
 	  # This creates a file if it doesn't exist
 	  with open("show_me_to_the_class_two.txt", 'w') as fobj:

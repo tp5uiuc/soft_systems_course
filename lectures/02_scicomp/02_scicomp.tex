@@ -1,4 +1,4 @@
-% Created 2019-02-04 Mon 17:25
+% Created 2019-02-14 Thu 14:59
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation]{beamer}
 \usepackage[utf8]{inputenc}
@@ -37,8 +37,8 @@
 \maketitle
 
 \section{\texttt{numpy}}
-\label{sec:orgcab7e74}
-\begin{frame}[label={sec:org3d4c8d2},fragile]{\texttt{numpy} package \footnote{\href{https://www.numpy.org/}{numpy}}}
+\label{sec:orgc20d724}
+\begin{frame}[label={sec:org7a10349},fragile]{\texttt{numpy} package \footnote{\href{https://www.numpy.org/}{numpy}}}
  \begin{itemize}
 \item High-performance vector, matrix and higher-dimensional data structures for
 \texttt{Python}
@@ -49,7 +49,7 @@ with \texttt{MATLAB} \footnote{\href{https://docs.scipy.org/doc/numpy/user/numpy
 \item Standard import---\texttt{import numpy as np}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:orgd37e6fd},fragile]{Simple array creation in \texttt{numpy}}
+\begin{frame}[label={sec:org0adc71c},fragile]{Simple array creation in \texttt{numpy}}
  \note{:B\_note:
 \begin{itemize}
 \item Show the documentaion and how to browse it
@@ -68,7 +68,7 @@ with \texttt{MATLAB} \footnote{\href{https://docs.scipy.org/doc/numpy/user/numpy
 \item \texttt{M = np.array([[1, 2], [3, 4]], dtype=int)}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org742b32d},fragile]{Array generating functions}
+\begin{frame}[label={sec:org2539220},fragile]{Array generating functions}
  \note{:B\_note:
 \begin{itemize}
 \item Show as a demonstration\ldots{}
@@ -84,7 +84,7 @@ with \texttt{MATLAB} \footnote{\href{https://docs.scipy.org/doc/numpy/user/numpy
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org7e36254},fragile]{Random numbers}
+\begin{frame}[label={sec:org0ae008d},fragile]{Random numbers}
  \note{:B\_note:
 \begin{itemize}
 \item Show as a demonstration
@@ -101,7 +101,7 @@ dist. with \(\mu = 0\) and \(\sigma = 1\)
 in \texttt{[low, high)}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org97334c7},fragile]{Indexing}
+\begin{frame}[label={sec:orgb7c7d58},fragile]{Indexing}
  \note{:B\_note:
 \begin{itemize}
 \item Show as a demonstration of all
@@ -125,7 +125,7 @@ A[idx\_rows, :] above
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orgdfdf9b7},fragile]{Linear Algebra}
+\begin{frame}[label={sec:org3411e3d},fragile]{Linear Algebra}
  \note{:B\_note:
 \begin{itemize}
 \item In the demo construct structure A with 1:25 using \texttt{A =
@@ -153,7 +153,7 @@ but is confusing and so is not covered here \ldots{}
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org8e0f4f4},fragile]{Practice}
+\begin{frame}[label={sec:org0d84c63},fragile]{Practice}
  \begin{block}{Please attempt}
 \begin{itemize}
 \item \texttt{12\_numpy\_library.ipynb}
@@ -168,13 +168,137 @@ especially the numpy section
 \end{itemize}}
 
 \section{Genetic algorithm using \texttt{numpy}}
-\label{sec:orgf2bee9b}
-\begin{frame}[label={sec:org2aec3b2}]{Schematic}
+\label{sec:org7d2850c}
+\begin{frame}[label={sec:org6cbe02f}]{Schematic}
 \footnotesize
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=1.0\textwidth]{images/ga_schematic.png}
 \caption{Schematic of an evolutionary search algorithm}
 \end{figure}
+\end{frame}
+\begin{frame}[label={sec:orga6d8564}]{Let's use GA to solve\ldots{}}
+\begin{block}{Problem statement}
+Maximize the function \(f(\mathbf{x}) = \sum_{i=1}^{6} w_i x_i\) for a given
+set of weights \(w_i\), with the constraints that \(x_i \; \in \; [-4,4] \;
+   \forall \; i\).
+
+\(\therefore\) Domain \(\mathbb{D}\) of the search is \(\mathbb{D}:= [-4,4]^6\).
+
+Optimization problem: \(\left(\mathbb{D}, \mathbb{R} , \mathbf{f}, \geq \right)\).
+\end{block}
+\end{frame}
+\begin{frame}[label={sec:orgeb346c1},fragile]{Representation?}
+ \begin{block}{Bitvector? Float vector?}
+Pick a representation for \(\mathbf{x}\)
+\end{block}
+In any case, \texttt{np.array} seems useful. You can make a bitvector using
+\texttt{np.array(..., dtype=bool)}
+\end{frame}
+\begin{frame}[label={sec:org9a024f8},fragile]{GA parameters}
+ \begin{block}{Decisions}
+\begin{itemize}
+\item How long are you going to run your campaign? (Number of generations)
+\item How many solutions will you consider in one step? (Population size)
+\begin{itemize}
+\item If so, whats your degree of freedom? (How many numbers should you change)
+\end{itemize}
+\end{itemize}
+\end{block}
+All these are just floating point numbers
+
+\begin{block}{Initialization}
+\begin{itemize}
+\item How will you initialize your population?
+\end{itemize}
+\end{block}
+
+Consider the \texttt{np.random} module\ldots{}
+\end{frame}
+
+\begin{frame}[label={sec:orgf3488d5}]{Fitness assignment}
+\begin{block}{What's your fitness?}
+\begin{itemize}
+\item Feed in objective function directly?
+\item Competitive fitness between members?
+\end{itemize}
+\end{block}
+Use matrix-vector products and/or slicing to determine fitness
+\end{frame}
+\begin{frame}[label={sec:orga6bd0b3},fragile]{Selection (for variation)}
+ \begin{block}{Stochastic / Deterministic}
+\begin{itemize}
+\item How many parents do you want to select? Or do you want to leave it up to
+the algorithm?
+\item Deterministic / Stochastic?
+\begin{itemize}
+\item Remember that stochastic selection is usally used for variation, but
+we do not need to do it necessarily\ldots{}
+\end{itemize}
+\item Competitive fitness between members?
+\begin{itemize}
+\item It's definitely a good exercise to learn \texttt{numpy}
+\end{itemize}
+\end{itemize}
+\end{block}
+\texttt{np.argsort/np.sort} is very useful to sort/rank stuff, indexing magic
+needed. The brave souls doing SUS may also need \texttt{searchsorted, cumsum, sum}
+and so on (familiarize yourself with the \texttt{numpy} documentation)
+\end{frame}
+\begin{frame}[label={sec:orga084e3a},fragile]{Variation}
+ \begin{block}{Recombination}
+\begin{itemize}
+\item What will be your \(p_c\), the rate of recombination?
+\item Is there a limit on the number of offspring you generate?
+\item How to achieve crossover for your representation?
+\item Uniform crossover? N-point crossover? \ldots{}
+\item In which gene do you want to effect crossover?
+\end{itemize}
+\end{block}
+Extensively use slicing and index magic. You may use any algorithm (say
+using the \texttt{\%} operator) to select parents.
+\end{frame}
+\begin{frame}[label={sec:org6ad5101},fragile]{Variation}
+ \begin{block}{Mutation}
+\begin{itemize}
+\item What will be your \(p_m\), the rate of mutation?
+\item How do you want to achieve mutation? Flip bits? Number exchange? Random numbers?
+\item Do you want to mutate the entire vector? Or only one gene?
+\end{itemize}
+\end{block}
+\texttt{np.random} once again. You can also use other \texttt{np} tools
+\end{frame}
+\begin{frame}[label={sec:org8e036a9}]{Selection (environmental)}
+\begin{block}{Constraints / Deterministic schemes}
+\begin{itemize}
+\item What about constraints of \(-4 \leq x_i \leq 4\)?
+\item How do you select individuals (chromosomes) from the population to
+propogate to the next generation? Objective function alone?
+\item If so what scheme do you want to use? \(\left( \mu, \lambda \right)\),
+\(\left( \mu + \lambda \right)\),\ldots{}?
+\end{itemize}
+\end{block}
+All the tools seen above apply to this case too\ldots{}
+\end{frame}
+\begin{frame}[label={sec:org2514b38}]{Putting it all together}
+\begin{block}{Convergence, performance, diagnostics}
+\begin{itemize}
+\item Now that we have all the \emph{modules}, how do they perform when you put
+them together?
+\item How do we track performance as generations progress?
+\item Can you think of some diagnostics that may well-characterize the scheme
+that you have just developed?
+\end{itemize}
+\end{block}
+\end{frame}
+\begin{frame}[label={sec:org444b6d5}]{Practice}
+\begin{block}{Exploration}
+\begin{itemize}
+\item Explore representations, parameters and all other design choices that you
+made
+\item You will essentially be doing a scaled up version of this exercise for
+your project 1
+\end{itemize}
+\end{block}
 \end{frame}
 \end{document}

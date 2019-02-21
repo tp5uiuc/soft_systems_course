@@ -1,4 +1,4 @@
-% Created 2019-02-03 Sun 20:18
+% Created 2019-02-07 Thu 16:08
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation]{beamer}
 \usepackage[utf8]{inputenc}
@@ -36,7 +36,7 @@
 
 \maketitle
 
-\begin{frame}[label={sec:orga1f72f6}]{Logistics}
+\begin{frame}[label={sec:orgc6646d1}]{Logistics}
 \begin{itemize}
 \item Office hours
 \item Installation instructions up on Compass (Setup -> 00\_setup\_basics.pdf)
@@ -44,8 +44,8 @@
 \end{itemize}
 \end{frame}
 \section{Tentative plan}
-\label{sec:orgfbe2ae4}
-\begin{frame}[label={sec:org8e25bfa}]{Last class}
+\label{sec:orgeb89e2f}
+\begin{frame}[label={sec:org7fc28dc}]{Last class}
 \begin{columns}
 \begin{column}[c]{0.5\columnwidth}
 \begin{figure}[htbp]
@@ -64,7 +64,7 @@
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org8aae298},fragile]{Content}
+\begin{frame}[label={sec:orgef43002},fragile]{Content}
  \begin{itemize}
 \item Motivate the need for/utility of \texttt{Python} + \texttt{shell} in comp. modeling
 \item Introduction to \texttt{shell} (*nix) commands
@@ -74,7 +74,7 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orgc8188cb},fragile]{Quick survey}
+\begin{frame}[label={sec:org9eb0e30},fragile]{Quick survey}
  \begin{itemize}
 \item \texttt{Python}?
 \item Scientific computing in \texttt{Python} / other languages (if so, what)?
@@ -83,8 +83,8 @@
 \end{itemize}
 \end{frame}
 \section{Why python?}
-\label{sec:org74d68ec}
-\begin{frame}[label={sec:org4b4bf9a}]{Python is popular \footnote{Slide credits: \href{https://github.com/williamgrimes/teach\_python\_in\_notebooks/blob/master/python\_course.pdf}{William Grimes @ Github}}}
+\label{sec:org338c7e8}
+\begin{frame}[label={sec:orgf73d3ef}]{Python is popular \footnote{Slide credits: \href{https://github.com/williamgrimes/teach\_python\_in\_notebooks/blob/master/python\_course.pdf}{William Grimes @ Github}}}
 \begin{columns}
 \begin{column}{0.35\columnwidth}
 \begin{itemize}
@@ -110,18 +110,18 @@
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org6a2c748}]{Python as a language}
+\begin{frame}[label={sec:org18cf1da}]{Python as a language}
 \begin{itemize}
 \item Free and open-source
 \item Object oriented with sensible data structures
 \item Interactive\footnote{\href{https://techfossguru.com/python-machine-learning-and-deep-learning/}{Techfossguru}} (and thus extensible)
 \item Open source packages\footnote{\href{https://pypi.org/}{PyPi}} (163,402 as of January 1, 2019)
-\item Widely used as an application/library API\footnote{\href{https://www.pluralsight.com/blog/software-development/why-python}{Pluralsight}\label{org05b4569}}
+\item Widely used as an application/library API\footnote{\href{https://www.pluralsight.com/blog/software-development/why-python}{Pluralsight}\label{orge9cbbae}}
 \item \(\therefore\) productivity
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orgbae56d7},fragile]{Interactive\footnote{\href{https://wiki.python.org/moin/IntegratingPythonWithOtherLanguages}{Wiki Python}}}
+\begin{frame}[label={sec:org98f46b8},fragile]{Interactive\footnote{\href{https://wiki.python.org/moin/IntegratingPythonWithOtherLanguages}{Wiki Python}}}
  \begin{itemize}
 \item As a wrapper for other languages!
 \begin{itemize}
@@ -136,7 +136,7 @@ HPC \ldots{}
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org0765c76}]{FlappyBird      \footnote{\href{https://yanpanlau.github.io/2016/07/10/FlappyBird-Keras.html}{ FlappyBird-Keras}, \href{https://github.com/yanpanlau/Keras-FlappyBird/blob/master/qlearn.py}{Code} , \href{https://www.pygame.org/wiki/about}{Pygame}, \href{https://scikit-image.org/}{Scikit-image}, \href{https://www.tensorflow.org/}{TensorFlow}}}
+\begin{frame}[label={sec:orgc81f054}]{FlappyBird      \footnote{\href{https://yanpanlau.github.io/2016/07/10/FlappyBird-Keras.html}{ FlappyBird-Keras}, \href{https://github.com/yanpanlau/Keras-FlappyBird/blob/master/qlearn.py}{Code} , \href{https://www.pygame.org/wiki/about}{Pygame}, \href{https://scikit-image.org/}{Scikit-image}, \href{https://www.tensorflow.org/}{TensorFlow}}}
 \begin{columns}
 \begin{column}[c]{0.35\columnwidth}
 \footnotesize
@@ -157,7 +157,7 @@ HPC \ldots{}
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org018dd71},fragile]{Comp. modeling with HPC using FOSS packages}
+\begin{frame}[label={sec:orga57b2e3},fragile]{Comp. modeling with HPC using FOSS packages}
  \begin{block}{Fluid dynamics using \texttt{DEDALUS}}
 \begin{center}
 \includegraphics[width=0.4\textwidth]{images/kh_swirl.jpg}
@@ -183,7 +183,7 @@ HPC \ldots{}
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org50b3114}]{Your favorite applications use Python!\textsuperscript{\ref{org05b4569}}}
+\begin{frame}[label={sec:org805853b}]{Your favorite applications use Python!\textsuperscript{\ref{orge9cbbae}}}
 \begin{itemize}
 \item Dropbox
 \item Spotify
@@ -193,7 +193,7 @@ HPC \ldots{}
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org17286f0},fragile]{We will use python for\footnote{\href{https://zulko.github.io/blog/2014/11/13/things-you-can-do-with-python-and-pov-ray/\#disqus\_thread}{Vapory/Povray}}\textsuperscript{,}\,\footnote{\href{http://mattia-lab.com/work/soft-filaments/}{Mattialab}}}
+\begin{frame}[label={sec:orgc037396},fragile]{We will use python for\footnote{\href{https://zulko.github.io/blog/2014/11/13/things-you-can-do-with-python-and-pov-ray/\#disqus\_thread}{Vapory/Povray}}\textsuperscript{,}\,\footnote{\href{http://mattia-lab.com/work/soft-filaments/}{Mattialab}}}
  \begin{itemize}
 \item Modeling (\texttt{numpy}, \texttt{scipy})
 \item Optimization (\texttt{numpy}, \texttt{scipy})
@@ -203,8 +203,8 @@ HPC \ldots{}
 \end{frame}
 
 \section{Introduction to Shell}
-\label{sec:org0d86eb3}
-\begin{frame}[label={sec:orge4c766c}]{Shell?}
+\label{sec:orgb20fde2}
+\begin{frame}[label={sec:orge28cbb3}]{Shell?}
 \begin{itemize}
 \item User interface for access to an operating system's services
 \item You have already used it
@@ -219,7 +219,7 @@ HPC \ldots{}
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orgfed2d25},fragile]{On to your shell}
+\begin{frame}[label={sec:org915291b},fragile]{On to your shell}
  \begin{itemize}
 \item MacOS : Find \texttt{Terminal} in \texttt{Applications/Utilities/Terminal} (Spotlight
 works too)
@@ -231,7 +231,7 @@ these support *nix based shells (\texttt{sh/bash/zsh}).
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org7c713e4},fragile]{Shell demo}
+\begin{frame}[label={sec:org23a8308},fragile]{Shell demo}
  \begin{block}{Command line is great for code development, but can be a bit intimidating at first.}
 \end{block}
 Let's go through some of the important ones!
@@ -249,7 +249,7 @@ If you get stuck:
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org12b8dd4},fragile]{View current directory}
+\begin{frame}[label={sec:orgef167ee},fragile]{View current directory}
  \begin{block}{Command}
 \begin{minted}[]{shell}
 ls # LiSt directory contents
@@ -275,7 +275,7 @@ show\_me\_to\_the\_class.txt\\
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org9664200},fragile]{My current directory structure?}
+\begin{frame}[label={sec:orgeb6e9c4},fragile]{My current directory structure?}
  \begin{block}{Command}
 \begin{minted}[]{fish}
 tree -d # Visualize directory as a TREE
@@ -309,7 +309,7 @@ tree -d # Visualize directory as a TREE
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org016bc9c},fragile]{What's my current directory?}
+\begin{frame}[label={sec:org624367f},fragile]{What's my current directory?}
  \begin{block}{Command}
 \begin{minted}[]{shell}
 pwd # What is the Present Working Directory?
@@ -323,7 +323,7 @@ pwd # What is the Present Working Directory?
 \end{verbatim}
 \end{frame}
 
-\begin{frame}[label={sec:orgfaefa90},fragile]{Navigate to another directory}
+\begin{frame}[label={sec:org6b912d3},fragile]{Navigate to another directory}
  \begin{block}{Command}
 \begin{minted}[]{shell}
 cd images # Change Directory
@@ -368,7 +368,7 @@ while\_loop\_with\_else\_break.png\\
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:orgdfed68d},fragile]{Navigate back to source directory}
+\begin{frame}[label={sec:org655092c},fragile]{Navigate back to source directory}
  \begin{block}{Command}
 \begin{minted}[]{shell}
 cd images # Change Directory
@@ -398,7 +398,7 @@ show\_me\_to\_the\_class.txt\\
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org26c1706},fragile]{Make a new directory}
+\begin{frame}[label={sec:org2470014},fragile]{Make a new directory}
  \begin{block}{Command}
 \begin{minted}[]{shell}
 mkdir MyFolderName # MaKe DIRectory
@@ -439,7 +439,7 @@ tree -d # List directories as TREE
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org152d417},fragile]{Remove directories and files}
+\begin{frame}[label={sec:org42a18dc},fragile]{Remove directories and files}
  \begin{block}{Command}
 \begin{minted}[]{shell}
 rmdir MyFolderName #ReMove DIRectory
@@ -476,7 +476,7 @@ tree -d
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org534ff3a},fragile]{If the directory has files, then}
+\begin{frame}[label={sec:orgaa36b32},fragile]{If the directory has files, then}
  \begin{block}{Command}
 \begin{minted}[]{bash}
 mkdir MyFolderName
@@ -516,7 +516,7 @@ tree -d
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org91f6649},fragile]{See file contents}
+\begin{frame}[label={sec:org8e872a8},fragile]{See file contents}
  \begin{block}{Command}
 \begin{minted}[]{sh}
 # Print out contents of a file
@@ -532,7 +532,7 @@ I am a file whose contents the class needs to see.
 \end{verbatim}
 \end{frame}
 
-\begin{frame}[label={sec:org8580c1f},fragile]{Move files around}
+\begin{frame}[label={sec:orgbe5a3c0},fragile]{Move files around}
  \begin{block}{Command}
 \begin{minted}[]{sh}
 # MoVe a file, similar to cut/paste
@@ -563,7 +563,7 @@ images\\
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:orgd6250e0},fragile]{Copy files around}
+\begin{frame}[label={sec:org829bad1},fragile]{Copy files around}
  \begin{block}{Command}
 \begin{minted}[]{sh}
 # CoPy a file, similar to copy/paste
@@ -594,7 +594,7 @@ show\_me\_to\_the\_class.txt\\
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:orgbcf153f},fragile]{Launch applications}
+\begin{frame}[label={sec:org06de639},fragile]{Launch applications}
  \begin{block}{Command}
 \begin{minted}[]{bash}
 # Do we have Python?---the which command
@@ -618,7 +618,7 @@ Hello\_world\_from\_ME498\\
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org86b7cbf}]{More about your shell}
+\begin{frame}[label={sec:orgd35bcd6}]{More about your shell}
 \begin{itemize}
 \item We have just scratched the surface in exploring the capabilities of the
 shell
@@ -628,8 +628,8 @@ commands
 \end{frame}
 
 \section{Introduction to Python}
-\label{sec:org547c0e7}
-\begin{frame}[label={sec:orgbe87a52},fragile]{Outline\footnote{\url{https://www.python-course.eu/python3\_course.php}}}
+\label{sec:org0ef9c6f}
+\begin{frame}[label={sec:orgba43668},fragile]{Outline\footnote{\url{https://www.python-course.eu/python3\_course.php}}}
  \begin{itemize}
 \item Help you setup \texttt{Python}
 \item Basics of \texttt{Python} as a programming language
@@ -651,7 +651,7 @@ commands
 \end{itemize}}
 \end{frame}
 
-\begin{frame}[label={sec:orgf0e7539},fragile]{Installation/Setup}
+\begin{frame}[label={sec:org7f8c651},fragile]{Installation/Setup}
  \begin{itemize}
 \item Fetch the install instructions at Compass (Setup -> 00\_setup\_basics.pdf) and follow it.
 \item Even a VirtualMachine (the OS agnostic step in the install instructions) is
@@ -661,7 +661,7 @@ fine, for the purposes of learning Python.
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org5955bb5},fragile]{Python interactive shell}
+\begin{frame}[label={sec:orgb59b3f7},fragile]{Python interactive shell}
  \note{:B\_note:
 \begin{itemize}
 \item Ask them if all variable names work\ldots{} for example 2ducks = 2
@@ -688,7 +688,7 @@ pass, print, raise, return, try, while, with, yield\textasciitilde{}
 \item Getting help using \texttt{help()}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org888890c},fragile]{Python scripts}
+\begin{frame}[label={sec:orgc1a59af},fragile]{Python scripts}
  \note{:B\_note:
 \begin{itemize}
 \item Imports are a way to ``use'' the file and definitions inside a file. Similar
@@ -704,7 +704,7 @@ to \#include directives.
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org33cd6b5},fragile]{Common types and operations}
+\begin{frame}[label={sec:orgbc7afe9},fragile]{Common types and operations}
  \note{:B\_note:
 \begin{itemize}
 \item SKIP---id as a function to see address before copy
@@ -725,7 +725,7 @@ to \#include directives.
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org1e20057},fragile]{Common types and operations contd.}
+\begin{frame}[label={sec:org21f0cf6},fragile]{Common types and operations contd.}
  \note{:B\_note:
 \begin{itemize}
 \item Interactive: Make sure the indexing is understood [f,l), especially MATLAB users
@@ -754,7 +754,7 @@ and show them)
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org6f37954},fragile]{Some more operations}
+\begin{frame}[label={sec:orgffc17a4},fragile]{Some more operations}
  \note{:B\_note:
 \begin{itemize}
 \item my\_str = 'saudi' ; 'a' in my\_str returns True
@@ -774,7 +774,7 @@ already)
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org11010e1},fragile]{Practice}
+\begin{frame}[label={sec:orgaeac1ba},fragile]{Practice}
  \begin{block}{Please attempt}
 \texttt{02\_datatypes\_strings\_numbers\_and\_variables.ipynb}
 \end{block}
@@ -790,7 +790,7 @@ already)
 \end{itemize}}
 \end{frame}
 
-\begin{frame}[label={sec:orgaa8293b},fragile]{Sequential types}
+\begin{frame}[label={sec:orga78f995},fragile]{Sequential types}
  \begin{itemize}
 \item Strings, \alert{Lists} and \alert{Tuples} (and \alert{\emph{sets}})
 \item Underlying concepts (and hence operations) are the same. So know one
@@ -801,7 +801,7 @@ already)
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org4258d44},fragile]{Lists}
+\begin{frame}[label={sec:org083ba30},fragile]{Lists}
  \note{:B\_note:
 \begin{itemize}
 \item Say that for list, I'll show you examples and code some lists and show
@@ -826,7 +826,7 @@ Features:
 \item They are mutable (the elements of a list can be changed)
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:orgad67305},fragile]{Examples of lists}
+\begin{frame}[label={sec:org5f62bde},fragile]{Examples of lists}
  \begin{center}
 \begin{tabular}{ll}
 \toprule
@@ -842,7 +842,7 @@ List & Description\\
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:orgb85c744},fragile]{Operations on lists}
+\begin{frame}[label={sec:org1577af6},fragile]{Operations on lists}
  \note{:B\_note:
 \begin{itemize}
 \item Construct a bigass list. 8 or 9 elements say. Break a string down using
@@ -863,7 +863,7 @@ split and add using the + operator!
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org7667e9c},fragile]{Additional operations on lists}
+\begin{frame}[label={sec:org2c224e2},fragile]{Additional operations on lists}
  \note{:B\_note:
 \begin{itemize}
 \item demo pop(i) to pop at the ith location
@@ -882,7 +882,7 @@ split and add using the + operator!
 \item \texttt{remove} (first found element)
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org75d3da9},fragile]{Activity}
+\begin{frame}[label={sec:orgae0b1a8},fragile]{Activity}
  \note{:B\_note:
 \begin{itemize}
 \item str=``Python 3 is awesome dude''; a = str.split(); a[1]=float(a[1]);
@@ -903,7 +903,7 @@ Give me the following lists, minimal keystroke:
 \end{itemize}
 \texttt{[begin: end: step], pop, append, extend, index, insert, remove}
 \end{frame}
-\begin{frame}[label={sec:org16a1bb9},fragile]{Tuples (very briefly)}
+\begin{frame}[label={sec:orga38a53a},fragile]{Tuples (very briefly)}
  \begin{itemize}
 \item Immutable list---\alert{cannot be changed in any way once it has been created}
 \item Nice for \emph{constness} and speed
@@ -918,7 +918,7 @@ my_tuple = ("tuples", "are like", "immutable", "lists")
 \item \alert{Demo} cannot change/add/remove elements
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org288a99a},fragile]{Copies of lists}
+\begin{frame}[label={sec:org68c4da4},fragile]{Copies of lists}
  \note{:B\_note:
 \begin{itemize}
 \item Ask them to do list copy and see whether one can modify another
@@ -938,7 +938,7 @@ my_tuple = ("tuples", "are like", "immutable", "lists")
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orgd37be28},fragile]{Numerical lists}
+\begin{frame}[label={sec:orgff73a65},fragile]{Numerical lists}
  \note{:B\_note:
 \begin{itemize}
 \item Note same concept [forst, last)
@@ -965,13 +965,13 @@ print((numbers))
 \end{itemize}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org26e796b},fragile]{Practice}
+\begin{frame}[label={sec:org130351c},fragile]{Practice}
  \begin{block}{Please attempt}
 \texttt{03\_lists\_tuples\_and\_sets.ipynb}
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:org325fb8f},fragile]{Dictionaries}
+\begin{frame}[label={sec:orga9822c5},fragile]{Dictionaries}
  \note{:B\_note:
 \begin{itemize}
 \item Use type to see the object type
@@ -1005,7 +1005,7 @@ yes
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orga23b442},fragile]{Operations on dictionaries}
+\begin{frame}[label={sec:org21a6ae6},fragile]{Operations on dictionaries}
  \note{:B\_note:
 \begin{itemize}
 \item Use (key, value) = pop(key) or popitem
@@ -1029,7 +1029,7 @@ like a; b=a.copy(); Change one value in b; a.update(b) updates value.
 \item \texttt{update} (Merge dictionaries)
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:orgdad934f},fragile]{Conditional statements}
+\begin{frame}[label={sec:orgfbd771c},fragile]{Conditional statements}
  \begin{itemize}
 \item Decisions, decisions, decisions
 \item \texttt{if}, \texttt{if-else}, \texttt{if-elif-else}
@@ -1064,7 +1064,7 @@ else:
 \item Indentation is key in \texttt{Python} (No \{\}, [] or variants)
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:orga388554},fragile]{Conditional assignments}
+\begin{frame}[label={sec:org5dc740a},fragile]{Conditional assignments}
  \note{:B\_note:
 \begin{itemize}
 \item Can come in a variety of form and shapes that you can only learn if you do
@@ -1089,13 +1089,13 @@ max_ab = (a if (a>b) else b)*3.14 - 2.718
 \item Conditional statements can be used as expressions
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:orgf78e566},fragile]{Practice}
+\begin{frame}[label={sec:org031f6ee},fragile]{Practice}
  \begin{block}{Please attempt}
 \texttt{04\_if\_statements.ipynb}
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:org0f3c8de},fragile]{Loops in \texttt{Python}}
+\begin{frame}[label={sec:org4cf6f08},fragile]{Loops in \texttt{Python}}
  \begin{itemize}
 \item Roughly two types:
 \begin{itemize}
@@ -1133,7 +1133,7 @@ print("Counter reaches {}".format(counter))
 \end{itemize}}
 \end{frame}
 
-\begin{frame}[label={sec:org1bc5d67},fragile]{The \texttt{while} loop \footnote{Picture credits:\href{https://www.python-course.eu/python3\_loops.php}{ Python Course}\label{orgbbe3d87}}}
+\begin{frame}[label={sec:orge409cf4},fragile]{The \texttt{while} loop \footnote{Picture credits:\href{https://www.python-course.eu/python3\_loops.php}{ Python Course}\label{orgd6b116e}}}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 \scriptsize
@@ -1163,7 +1163,7 @@ Sum of 1 until 100: 5050
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org05753cb},fragile]{The \texttt{while-else} loop? \textsuperscript{\ref{orgbbe3d87}}}
+\begin{frame}[label={sec:org0a2b76b},fragile]{The \texttt{while-else} loop? \textsuperscript{\ref{orgd6b116e}}}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 \scriptsize
@@ -1204,7 +1204,7 @@ end with the rest of the stuff no?
 \item Thats where our friend break comes in!
 \end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:org16edd0d},fragile]{\texttt{break} statement \textsuperscript{\ref{orgbbe3d87}}}
+\begin{frame}[label={sec:org286b259},fragile]{\texttt{break} statement \textsuperscript{\ref{orgd6b116e}}}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 \scriptsize
@@ -1244,7 +1244,7 @@ Sum of 1 until 50: 1275
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org145b830},fragile]{\texttt{break} statement contd \textsuperscript{\ref{orgbbe3d87}}}
+\begin{frame}[label={sec:org5aa4c22},fragile]{\texttt{break} statement contd \textsuperscript{\ref{orgd6b116e}}}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 \scriptsize
@@ -1285,7 +1285,7 @@ Sum of 1 until 30: 465
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org22bce48},fragile]{\texttt{for} loops}
+\begin{frame}[label={sec:orgbfd3ca3},fragile]{\texttt{for} loops}
  \note{:B\_note:
 \begin{itemize}
 \item for x in b: print(x)---do for lists
@@ -1313,7 +1313,7 @@ else:
 \item \alert{Demo} \texttt{Range} for numbered sequences
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org398eb86},fragile]{Activity}
+\begin{frame}[label={sec:org8bf542b},fragile]{Activity}
  \note{:B\_note:
 }
 Write a script that produces the following strings:
@@ -1326,7 +1326,7 @@ Write a script that produces the following strings:
 
 \alert{Hints}: consider using \texttt{chr()} and \texttt{ord()} and \texttt{str.upper()} / \texttt{str.lower()}
 \end{frame}
-\begin{frame}[label={sec:org9d7ff17},fragile]{\texttt{continue} statement}
+\begin{frame}[label={sec:org00adff9},fragile]{\texttt{continue} statement}
  \begin{itemize}
 \item In the example below, using a \texttt{break} quits the for loop
 \scriptsize
@@ -1357,7 +1357,7 @@ consuming the other food?
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org6695abd},fragile]{\texttt{continue} statement contd.}
+\begin{frame}[label={sec:org12a211f},fragile]{\texttt{continue} statement contd.}
  \begin{itemize}
 \item Simple! Replace \texttt{break} with \texttt{continue}
 \scriptsize
@@ -1385,14 +1385,14 @@ Finally, I finished stuffing myself
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orgac7c978},fragile]{Practice}
+\begin{frame}[label={sec:org14dd33c},fragile]{Practice}
  \begin{block}{Please attempt}
 \texttt{05\_while\_loops\_and\_user\_input.ipynb}
 \texttt{06\_dictionaries.ipynb}
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:orgc2b81ef},fragile]{Towards functions}
+\begin{frame}[label={sec:org604d99e},fragile]{Towards functions}
  \begin{itemize}
 \item \texttt{Functions} are quintessential to any programming language.
 \item Are ``structured elements to group a set of statements so they can be utilized more than once''
@@ -1415,10 +1415,10 @@ Finally, I finished stuffing myself
 \end{itemize}}
 \end{frame}
 
-\begin{frame}[label={sec:org31e2114},fragile]{Quick detour: How to format output?}
+\begin{frame}[label={sec:org7eb87fc},fragile]{Quick detour: How to format output?}
  \begin{itemize}
 \item Always use the \texttt{format()} method for formatting strings
-\item Positional or keyword params \textsuperscript{\ref{orgbbe3d87}}
+\item Positional or keyword params \textsuperscript{\ref{orgd6b116e}}
 \end{itemize}
 \begin{center}
 \includegraphics[width=0.7\textwidth]{images/format_method_positional_parameters.png}
@@ -1436,7 +1436,7 @@ Finally, I finished stuffing myself
 \end{itemize}}
 \end{frame}
 
-\begin{frame}[label={sec:org463e304}]{Functions}
+\begin{frame}[label={sec:org3630159}]{Functions}
 \begin{itemize}
 \item Syntax \footnote{\href{http://hcc-cs.weebly.com/functions.html}{HCC-CS}}
 \end{itemize}
@@ -1444,7 +1444,7 @@ Finally, I finished stuffing myself
 \includegraphics[width=0.7\textwidth]{images/function_def.png}
 \end{center}
 \end{frame}
-\begin{frame}[label={sec:org47c7763},fragile]{Skeleton of a function}
+\begin{frame}[label={sec:org82a7362},fragile]{Skeleton of a function}
  \begin{block}{\texttt{def my\_fun(a, b, c="Two"):}}
 \ldots{}. \texttt{if (a>2):}
 
@@ -1464,13 +1464,13 @@ Finally, I finished stuffing myself
 \item Arbitrary number of arguments also possible
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org2734f4c},fragile]{Practice}
+\begin{frame}[label={sec:orgf59ab2d},fragile]{Practice}
  \begin{block}{Please attempt}
 \texttt{07\_introduction\_to\_functions.ipynb}
 \texttt{08\_some\_more\_functions.ipynb}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org89f1611},fragile]{Call by value/reference \#1?}
+\begin{frame}[label={sec:orgca5e4d9},fragile]{Call by value/reference \#1?}
  What's the output of the following code block?
 \footnotesize
 \begin{minted}[]{python}
@@ -1487,14 +1487,14 @@ print("Second call {0} with value {1}".format(id(x), x))
 \begin{block}<2->{Output}
 \footnotesize
 \begin{verbatim}
-First call 4309148344 with value 3.14159
-x = 3.14159  id = 4309148344
-x = 42.0  id = 4309148008
-Second call 4309148344 with value 3.14159
+First call 4523352760 with value 3.14159
+x = 3.14159  id = 4523352760
+x = 42.0  id = 4523352424
+Second call 4523352760 with value 3.14159
 \end{verbatim}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org175ec32},fragile]{Call by value/reference \#2?}
+\begin{frame}[label={sec:org1219aa3},fragile]{Call by value/reference \#2?}
  What's the output of the following code block?
 \footnotesize
 \begin{minted}[]{python}
@@ -1511,14 +1511,14 @@ print("Second call {0} with value {1}".format(id(x), x))
 \begin{block}<2->{Output}
 \scriptsize
 \begin{verbatim}
-First call 4476284744 with value ['cs', 'mechse', 'matse']
-x = ['cs', 'mechse', 'matse']  id = 4476284744
-x = ['cs', 'mechse', 'matse', 'aero', 'civil']  id = 4478247368
-Second call 4476284744 with value ['cs', 'mechse', 'matse']
+First call 4332515144 with value ['cs', 'mechse', 'matse']
+x = ['cs', 'mechse', 'matse']  id = 4332515144
+x = ['cs', 'mechse', 'matse', 'aero', 'civil']  id = 4334477448
+Second call 4332515144 with value ['cs', 'mechse', 'matse']
 \end{verbatim}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:orgbddfe1c},fragile]{Call by value/reference \#3?}
+\begin{frame}[label={sec:orgb40e525},fragile]{Call by value/reference \#3?}
  What's the output of the following code block?
 \footnotesize
 \begin{minted}[]{python}
@@ -1535,20 +1535,20 @@ print("Second call {0} with value {1}".format(id(x), x))
 \begin{block}<2->{Output}
 \scriptsize
 \begin{verbatim}
-First call 4560445256 with value ['cs', 'mechse', 'matse']
-x = ['cs', 'mechse', 'matse']  id = 4560445256
-x = ['cs', 'mechse', 'matse', 'aero', 'civil']  id = 4560445256
-Second call 4560445256 with value ['cs', 'mechse', 'matse', 'aero', 'civil']
+First call 4439121736 with value ['cs', 'mechse', 'matse']
+x = ['cs', 'mechse', 'matse']  id = 4439121736
+x = ['cs', 'mechse', 'matse', 'aero', 'civil']  id = 4439121736
+Second call 4439121736 with value ['cs', 'mechse', 'matse', 'aero', 'civil']
 \end{verbatim}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:orgc1318b7}]{Call by value/reference}
+\begin{frame}[label={sec:orgce6343a}]{Call by value/reference}
 \begin{alertblock}{Take-away}
 Only mutable structures can be changed with in-place transformations!
 \end{alertblock}
 \end{frame}
 
-\begin{frame}[label={sec:org450eaf0}]{Recursive functions}
+\begin{frame}[label={sec:org2e27d17}]{Recursive functions}
 \note{:B\_note:
 \begin{itemize}
 \item Ask them to do it
@@ -1563,7 +1563,7 @@ Only mutable structures can be changed with in-place transformations!
 \[ 7! = 5040 \]
 \end{frame}
 
-\begin{frame}[label={sec:org85d79a4},fragile]{Factorial done recursively}
+\begin{frame}[label={sec:org374930f},fragile]{Factorial done recursively}
  \begin{equation*}
  n! = n \times (n-1) \times (n-2) \times \cdots \times 1
 \end{equation*}
@@ -1582,7 +1582,7 @@ print(factorial(7))  #prints(5040)
 \end{minted}
 \end{frame}
 
-\begin{frame}[label={sec:org552fe6d},fragile]{Factorial done iteratively}
+\begin{frame}[label={sec:org57a0bbc},fragile]{Factorial done iteratively}
  \begin{equation*}
  n! = n \times (n-1) \times (n-2) \times \cdots \times 1
 \end{equation*}
@@ -1601,7 +1601,7 @@ print(factorial_iter(7))  #prints(5040)
 \end{minted}
 \end{frame}
 
-\begin{frame}[label={sec:orga355fed}]{Which one is preferable?}
+\begin{frame}[label={sec:orge444927}]{Which one is preferable?}
 \begin{itemize}
 \item Consider generating the Fibonacci sequence
 \end{itemize}
@@ -1618,7 +1618,7 @@ F_{N} = F_{N-1} + F_{N-2}
 \item \alert{Fibonacci.ipynb}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org9dae5c1},fragile]{Towers of Hanoi}
+\begin{frame}[label={sec:orgcec552f},fragile]{Towers of Hanoi}
  \begin{alertblock}{Prefer iteration when possible}
 But not always! Let's solve Towers of Hanoi\ldots{}
 \end{alertblock}
@@ -1633,7 +1633,7 @@ Recursion is key.
 \caption{Tower of Hanoi}
 \end{figure}
 \end{frame}
-\begin{frame}[label={sec:org1937934}]{Solution strategy \footnote{\href{https://www.cs.sfu.ca/\~tamaras/recursion/Rules\_Towers\_Hanoi.html}{Computing Science - Simon Fraser University}}}
+\begin{frame}[label={sec:org6349412}]{Solution strategy \footnote{\href{https://www.cs.sfu.ca/\~tamaras/recursion/Rules\_Towers\_Hanoi.html}{Computing Science - Simon Fraser University}}}
 \begin{columns}
 \begin{column}{0.5\columnwidth}
 \begin{itemize}
@@ -1653,7 +1653,7 @@ Recursion is key.
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgf28643e},fragile]{Towers of Hanoi}
+\begin{frame}[label={sec:org6a1fe4e},fragile]{Towers of Hanoi}
  \footnotesize
 \begin{minted}[]{python}
 def hanoi(n, source, helper, target):
@@ -1677,7 +1677,7 @@ hanoi(len(source),source,helper,target)
 \end{itemize}}
 \end{frame}
 
-\begin{frame}[label={sec:orgd097e70},fragile]{Basic I/O}
+\begin{frame}[label={sec:org1c5b1b4},fragile]{Basic I/O}
  \begin{itemize}
 \item We frequently (but not consciously) manipulate files everyday.
 \item Here's how you do it in \texttt{Python}
@@ -1702,7 +1702,7 @@ I am a file whose contents the class needs to see.
 \item \texttt{shell} example of file manipulation using \texttt{>>, >}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org3ee36a5},fragile]{Basic I/O continued}
+\begin{frame}[label={sec:org187bbcb},fragile]{Basic I/O continued}
  \begin{itemize}
 \item A safer way to do I/O is
 \footnotesize
@@ -1724,7 +1724,7 @@ I am a file whose contents the class needs to see.
 \item The same mechanism can be used to write to a file
 \footnotesize
 \begin{minted}[]{python}
-# 'w' for read mode, 'a' for append mode
+# 'w' for write mode, 'a' for append mode
 # 'w' wipes a file clean before it writes
 # This creates a file if it doesn't exist
 with open("show_me_to_the_class_two.txt", 'w') as fobj:
@@ -1733,7 +1733,7 @@ with open("show_me_to_the_class_two.txt", 'w') as fobj:
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orgb2f99e9},fragile]{Basic I/O continued}
+\begin{frame}[label={sec:orgf6fb91e},fragile]{Basic I/O continued}
  \begin{itemize}
 \item For smaller files, you can read them completely into a list
 \footnotesize
@@ -1754,7 +1754,7 @@ print(fullfl)
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org917193e},fragile]{Basic I/O continued}
+\begin{frame}[label={sec:org45d8584},fragile]{Basic I/O continued}
  \begin{itemize}
 \item Later on we will see how to storing matrices and arrays using the \texttt{loadtxt}
 and \texttt{savetxt} methods from \texttt{numpy}
@@ -1766,7 +1766,7 @@ also exist
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orgdd94072},fragile]{Counting Words}
+\begin{frame}[label={sec:orgc99983c},fragile]{Counting Words}
  \begin{block}{Activity}
 Write a \texttt{Python} script that reads in a file and print out the number of
 words
@@ -1775,7 +1775,7 @@ Download Goldilocks: \url{http://www.textfiles.com/stories/gold3ber.txt}
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:org5761242},fragile]{Classes : Object oriented programming}
+\begin{frame}[label={sec:orgfcfb3ae},fragile]{Classes : Object oriented programming}
  \begin{itemize}
 \item A logical entity that groups variables and functions together!
 \footnotesize
@@ -1801,11 +1801,11 @@ act on the attributes)
 \item \texttt{init} is a special method
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org3970e5b},fragile]{Classes : Object oriented programming}
+\begin{frame}[label={sec:org8785b33},fragile]{Classes : Object oriented programming}
  We have come a full circle! All variables (ints, floats, sequences) are
 classes in \texttt{Python}!!!
 \end{frame}
-\begin{frame}[label={sec:org545b6bb},fragile]{Modules}
+\begin{frame}[label={sec:orge271a13},fragile]{Modules}
  \note{:B\_note:
 \begin{itemize}
 \item Show obscurity on what function is running
@@ -1825,20 +1825,20 @@ classes in \texttt{Python}!!!
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orgb2cbb4a},fragile]{Packages}
+\begin{frame}[label={sec:org14e867b},fragile]{Packages}
  \begin{itemize}
 \item Packages: make publicly available modules that other people have written
 \item You installed packages from \texttt{pip} at the start of the semester!
 \item Packages of our interest : \texttt{numpy}, \texttt{scipy}, \texttt{matplotlib}\ldots{}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:orga34aaa2},fragile]{Why do we need numpy/ scipy/ matplotlib?}
+\begin{frame}[label={sec:orgcfa7b49},fragile]{Why do we need numpy/ scipy/ matplotlib?}
  \begin{itemize}
 \item \alert{Jupyter demo} for matrix computation
 \item \alert{numpy} : Basic scientific computing powerhorse
 \item \alert{scipy} : More targeted, \emph{advanced} algorithms
 \item \alert{matplotlib} : Basic (?!) plotting library
-\item The scientific computing eco-system in \texttt{Python} \textsuperscript{\ref{orgbbe3d87}}
+\item The scientific computing eco-system in \texttt{Python} \textsuperscript{\ref{orgd6b116e}}
 \end{itemize}
 \begin{center}
 \includegraphics[width=0.4\textwidth]{images/python_numerics.png}
