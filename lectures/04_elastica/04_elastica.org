@@ -1,0 +1,365 @@
+#+TITLE: Elastica : Coordinate/Frame transformations
+#+AUTHOR: /Tejaswin Parthasarathy/, Mattia Gazzola
+#+SUBTITLE: ME498: Comp. modeling & optimization
+#+BEAMER_FRAME_LEVEL: 2
+# #+BEAMER_HEADER: \institute[INST]{Institute\\\url{http://www.institute.edu}}
+# #+BEAMER_HEADER: \titlegraphic{\includegraphics[height=1.5cm]{test}}
+
+#+STARTUP: beamer
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation]
+# #+LATEX_CLASS_OPTIONS: [notes]
+#+LATEX_HEADER:\usetheme[progressbar=frametitle]{metropolis}
+#+LATEX_HEADER:\usepackage{tikz}
+#+LATEX_HEADER:\usepackage{tikz-3dplot}
+#+LATEX_HEADER:\usepackage{spot}
+#+LATEX_HEADER:\newcommand{\gv}[1]{\ensuremath{\mbox{\boldmath$ #1 $}}}
+#+LATEX_HEADER:\newcommand{\bv}[1]{\ensuremath{\mathbf{#1}}}
+#+LATEX_HEADER:\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+#+LATEX_HEADER:\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+#+LATEX_HEADER:\newcommand{\bigqm}[1][1]{\text{\larger[#1]{\text{?}}}}
+#+LATEX_HEADER:\newcommand{\order}[1]{\mathcal O \left( #1 \right)} % order of magnitude
+#+LATEX_HEADER:\definecolor{scarlet}{rgb}{1.0, 0.13, 0.0}
+#+LATEX_HEADER:\definecolor{shamrockgreen}{rgb}{0.0, 0.62, 0.38}
+#+LATEX_HEADER:\definecolor{royalblue}{rgb}{0.25, 0.41, 0.88}
+#+OPTIONS:   H:2 num:t toc:nil ::t |:t ^:{} -:t f:t *:t <:t
+#+OPTIONS:   tex:t d:nil todo:t pri:nil tags:nil
+#+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col) %8BEAMER_OPT(Opt)
+* Coordinate/Frame transformations
+** Motivation
+   \[ \gv{x}_{\mathcal{L}} = \bv{Q}\gv{x} \]
+   #+begin_export latex
+   \[ \scalebox{5}{\textbf{?}} \]
+   #+end_export
+   \[ \frac{\partial \mathbf{d}_j}{\partial t} = \left( \mathbf{Q}^T
+   \omega_{\mathcal{L}}\right) \times \mathbf{d}_j \]
+   #+begin_export latex
+   \[ \scalebox{5}{\textbf{?}} \]
+   #+end_export
+
+** Motivation
+*** Transformations used                                           :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.7
+	:END:
+	 - To convert between arbitrary spaces, e.g. world space and other spaces (in
+       graphics) or Eulerian frame to Lagrangian frame in physics
+     - To convert between coordinates that are more "natural" to the system under
+       observation---e.g. complex numbers can be naturally represented in polar,
+       rather than cartesian coordinates
+   - Transformations can be applied to points, vectors etc.
+*** Transformations used                                           :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.4
+	:END:
+	#+CAPTION: The complex plane, taken from Wikimedia
+	#+ATTR_LATEX: :width 0.9\textwidth
+	[[file:images/complex.pdf]]
+** Introduction
+  - Some familiar coordinate transformations (each with its own natural "frame"
+    of vectors)
+    are
+*** Coordinates                                                    :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.4
+	:END:
+**** Cartesian coordinates
+	 - Coordinate: \( (x, y, z) \)
+	 - Frame : \( \hat{\gv{e}_x}, \hat{\gv{e}_y}, \hat{\gv{e}_z}\)
+*** Pictures                                                       :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.6
+	:END:
+	#+CAPTION: Cartesian coordinate system, Wikimedia
+	#+ATTR_LATEX: :width 0.8\textwidth
+	[[file:images/cartesian.pdf]]
+** Introduction
+*** Cyl                                                            :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.4
+	:END:
+**** Cylindrical coordinates
+	 - Coordinate: \( (\rho, \phi, z) \)
+	 - Frame : \( \hat{\gv{e}_\rho}, \hat{\gv{e}_\phi}, \hat{\gv{e}_z}\)
+	 #+CAPTION: Cylindrical coordinate system, Wikimedia
+	#+ATTR_LATEX: :height 0.8\textwidth
+	[[file:images/cylindrical.pdf]]
+
+*** Spherical                                                      :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.4
+	:END:
+**** Spherical coordinates
+	 - Coordinate: \( (r, \theta, \phi) \)
+	 - Frame : \( \hat{\gv{e}_r}, \hat{\gv{e}_\theta}, \hat{\gv{e}_\phi}\)
+
+	#+CAPTION: Spherical coordinate system, Wikimedia
+	#+ATTR_LATEX: :height 0.8\textwidth
+	[[file:images/spherical.pdf]]
+** Introduction
+*** Choice of coordinate system
+	- We represent entities (points, vectors etc.) in the /cartesian coordinate
+      system/, considering only Euclidean geometry
+*** Why?
+	- To use certain *affine* transformations
+*** Affine transformations                                     :B_definition:
+	:PROPERTIES:
+	:BEAMER_env: definition
+	:END:
+	- any function between /affine spaces/ which preserves points, straight lines and planes
+	- Examples: translation, scaling, similarity transformation,
+      reflection, rotation, etc. and their compositions
+** Affine transformations
+*** Affine \leftrightarrow Linear                                 :B_theorem:
+	:PROPERTIES:
+	:BEAMER_env: theorem
+	:END:
+
+	If \( \mathcal{X} \) and \(\mathcal{Y}\) are affine spaces, then every affine transformation
+	\(f\colon \mathcal{X}\to \mathcal{Y} \) is of the form \(\gv{x}\mapsto
+	\bv{M}\gv{x}+\gv{b}\) where \(\bv{M}\) is a linear transformation on the
+	space \( \mathcal{X}\),  \( \gv{x} \) is a vector in \( \mathcal{X} \), and \(
+	\gv{b} \) is a vector in \( \mathcal{Y} \).
+
+** Affine transformations : Examples
+*** Translations ( \( \bv{M} = \bv{0} \) and \( \gv{b} \neq \gv{0}\) )
+	#+CAPTION: Translation of entities, Wikimedia, CC4.0
+	#+ATTR_LATEX: :width 0.4\textwidth
+	[[file:images/translate.pdf]]
+*** Translation *DEMO*
+** Linear transformations
+*** Difference b/w linear and affine trans.                         :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	- Most of our interest lies in modeling soft filaments, for which we will be
+      using only /linear transformations/
+	- In linear transformations, \( \gv{b} \equiv \gv{0} \) for vector spaces \(
+      \mathcal{X} \) and \(\mathcal{Y}\)
+	- We lose the ability to translate entities using linear transformations (
+      zero must map to zero by definition)
+** But what are linear transformations?
+   - We loosely define a linear transformation \( \gv{x} \to \bv{M}\gv{x} \) by a /matrix/
+     ( \( \bv{M}\) ) that acts on the vector \( \gv{x} \)
+   - Check out the Wikipedia page on [[https://en.wikipedia.org/wiki/Matrix_(mathematics)][matrices]] and [[https://en.wikipedia.org/wiki/Rotation_matrix][matrix classes]] to see why they
+     (matrices and linear transformations) are considered important.
+** Linear transformations : Examples[fn:1]
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.5
+	:END:
+**** Identity
+	\[ \bv{M} = \begin{bmatrix}1&0&0\\0&1&0\\0&0&1\end{bmatrix} \]
+	#+ATTR_LATEX: :height 0.8\textwidth
+	[[file:images/ch_id.pdf]]
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.5
+	:END:
+**** Reflection
+	\[ \bv{M} =\begin{bmatrix}-1&0&0\\0&1&0\\0&0&1\end{bmatrix} \]
+	#+ATTR_LATEX: :height 0.8\textwidth
+	[[file:images/ch_ref.pdf]]
+
+** Linear transformations : Examples
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.5
+	:END:
+**** Scale
+	\[ \bv{M} =\begin{bmatrix}c_{x}=2&0&0\\0&c_{y}=1&0\\0&0&1\end{bmatrix} \]
+	#+ATTR_LATEX: :height 0.8\textwidth
+	[[file:images/ch_sc.pdf]]
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.5
+	:END:
+**** Shear
+	\[ \bv{M} =\begin{bmatrix}1&c_{x}=0.5&0\\c_{y}=0&1&0\\0&0&1\end{bmatrix}\]
+	#+ATTR_LATEX: :height 0.8\textwidth
+	[[file:images/ch_sh.pdf]]
+
+** Linear transformations : Examples
+*** Rotation
+	#+begin_export latex
+	\begin{center}
+	\spot<2>{\( \bv{M} =\begin{bmatrix}\cos(\theta )&\sin(\theta )&0\\-\sin(\theta
+   )&\cos(\theta )&0\\0&0&1\end{bmatrix} \text{with } \theta = \frac{\pi}{6}\)}
+	\end{center}
+	#+end_export
+   # \[ \bv{M} =\begin{bmatrix}\cos(\theta )&\sin(\theta )&0\\-\sin(\theta
+   # )&\cos(\theta )&0\\0&0&1\end{bmatrix} \text{with } \theta = \frac{\pi}{6}\]
+   #+ATTR_LATEX: :height 0.5\textwidth
+	[[file:images/ch_rot.pdf]]
+** Rotations (includes reflections)
+   - Generates new unit vectors, fundamentally changing the directions
+     (eigenvectors) of further transformations
+   - Does not scale the entity under consideration ( \( \abs{\lambda} \equiv  1
+     \), more on this later...)
+** Frame rotations in two--dimensions
+   Consider
+   #+CAPTION: Rotation in two dimensions
+   #+ATTR_LATEX: :width 0.45\textwidth
+   file:images/cartesian_rotation.png
+
+   \[ \begin{bmatrix} x^\prime \\ y^\prime \end{bmatrix}
+   = \begin{bmatrix}\cos(\alpha )&\sin(\alpha )\\ -\sin(\alpha
+   )&\cos(\alpha )\end{bmatrix} \begin{bmatrix} x\\ y\end{bmatrix}\]
+** Inverse rotations
+   - Show them that inverse is naturally the antirotation
+** Frame rotations in three--dimensions
+   Then
+   #+CAPTION: Rotation in three dimensions, Wikimedia CC1.0
+   #+ATTR_LATEX: :width 0.45\textwidth
+   [[file:images/cartesian_rot_3D.pdf]]
+   is a natural extension of 2D results
+
+   \[ \begin{bmatrix} x^\prime \\ y^\prime \end{bmatrix}
+   = \begin{bmatrix}\cos(\alpha )&\sin(\alpha )\\ -\sin(\alpha
+   )&\cos(\alpha )\end{bmatrix} \begin{bmatrix} x\\ y\end{bmatrix}\]
+
+** Beware!
+*** Be wary about alias (passive) or alibi (active) transformations
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_col: 0.55
+	:END:
+**** Alias transformations                                     :B_definition:
+	 :PROPERTIES:
+	 :BEAMER_env: definition
+	 :END:
+	 Involves rotation of the coordinate system or frame
+	 (change in basis)
+**** Alibi transformations                                           :B_definition:
+	 :PROPERTIES:
+	 :BEAMER_env: definition
+	 :END:
+	 Involves rotation of the entities within the same
+	 frame (change in entity)
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_col: 0.5
+	:END:
+   #+CAPTION: Alias-Alibi transformations, Wikimedia CC3.0
+   #+ATTR_LATEX: :width 1.00\textwidth
+	[[file:images/alias_alibi.png]]
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+	Both are equally valid ways of representing rotations---in this class
+	however, we focus on alias transformations.
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- Affirm that the entity does not matter. Show this for a vector or a point.
+      Beauty of affine transformations.
+** Quote
+   - Analyzing rotation demands awareness of your desired perspective. You can rotate an object, while you stay still, or you can keep the object
+fixed while you rotate yourself. It is important to be aware of which of these
+perspectives applies for your problem of interest. The distinction between
+these fundamentally different transformations goes beyond one being the
+same as the other with an opposite rotation angle
+Cite book : https://iopscience.iop.org/book/978-0-7503-1454-1
+** Transpose changes from active to alibi
+To change the formulas for passive rotations (or find reverse active rotation),
+transpose the matrices (then each matrix transforms the initial coordinates of a
+vector remaining fixed to the coordinates of the same vector measured in the
+rotated reference system; same rotation axis, same angles, but now
+the coordinate system rotates, rather than the vector).
+** TODO Frame rotation as a change in basis
+*** TODO Transformation of basis (linear) using notation
+	- Example with elastica frames
+** Frame rotation---example
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_col: 0.5
+	:END:
+	 #+begin_export latex
+	 \tdplotsetmaincoords{60}{100}
+	 \begin{center}
+		\begin{tikzpicture}[scale=2, tdplot_main_coords]
+		\draw[thick,->, color=scarlet] (0,0,0) -- (1,0,0) node[anchor=north east]{$x$};
+		\draw[thick,->, color=shamrockgreen] (0,0,0) -- (0,1,0) node[anchor=north west]{$y$};
+		\draw[thick,->, color=royalblue] (0,0,0) -- (0,0,1) node[anchor=south]{$z$};
+		\end{tikzpicture}
+	 \end{center}
+	 #+end_export
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_col: 0.5
+	:END:
+	 #+begin_export latex
+	 \tdplotsetmaincoords{60}{100}
+	 \begin{center}
+		\begin{tikzpicture}[scale=2, tdplot_main_coords]
+		\draw[dashed,->,line width= 1.1pt] (0,0,0) -- (1,0,0) node[anchor=north east]{$x$};
+		\draw[dashed,->,line width= 1.1pt] (0,0,0) -- (0,1,0) node[anchor=north west]{$y$};
+		\draw[dashed,->,line width= 1.1pt] (0,0,0) -- (0,0,1) node[anchor=south west]{$z$};
+
+		\coordinate (Shift) at (0,0,0);
+		\tdplotsetrotatedcoords{0}{0}{90}
+		\tdplotsetrotatedcoordsorigin{(Shift)}
+
+		\draw[thick,color=scarlet,tdplot_rotated_coords,->] (0,0,0)
+		-- (1,0,0) node[anchor=south east]{$x’$};
+		\draw[thick,color=shamrockgreen,tdplot_rotated_coords,->] (0,0,0)
+		-- (0,1,0) node[anchor=west]{$y’$};
+		\draw[thick,color=royalblue,tdplot_rotated_coords,->] (0,0,0)
+		-- (0,0,1) node[anchor=south east]{$z’$};
+		\end{tikzpicture}
+	 \end{center}
+	 #+end_export
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+	- Represent \( (x-y-z) \) axis with a basis \( \mathcal{E}\) of unit vectors \( \hat{\gv{e}_1}, \hat{\gv{e}_2}, \hat{\gv{e}_3}\)
+	- Represent \( (x'-y'-z') \) axis with a basis \( \mathcal{D} \) of unit vectors \( \hat{\gv{d}_1}, \hat{\gv{d}_2}, \hat{\gv{d}_3}\)
+	- \( \mathcal{E} \to \mathcal{D} \)?
+	- Note : rotation of \( \ang{90} \) about an invariant \( z' = z \) axis
+** TODO Frame rotation---example contd.
+   - Show first with sin and cos 90
+** TODO Generalizing rotations as a basis change
+   - Extend to include dot products inside the matrix to get the basis change form
+** Answered first question
+   - Tell them you answered the first question about what xl = Qx means
+   - How do you get Q?
+   - Need to know both the basis? Do we know?
+   - We then seek how to get it.
+** TODO Rotations about fixed axis : Euler angles
+** TODO Rotations using Euler angles : z rotations
+** TODO Rotations using Euler angles : x rotations
+** TODO Rotations using Euler angles : y rotations
+** TODO Rotation using Euler angles : Implementation
+** TODO Rotations using Euler angles: compositions
+   - Show Rz * Ry * Rx
+   - Put formula for the same here
+   - https://www.mecademic.com/resources/Euler-angles/Euler-angles
+** TODO Rotations using Euler angles: compositions contd.
+   - Is it commutative (does the order matter)
+- Extrinsic or Intrinsic
+** TODO Drawbacks of only using Euler-angle based rotation
+   Not as intutive as only one axes. Althogugh it is possible.
+** TODO Other options
+**
+**
+
+* Footnotes
+[fn:1] All examples from Wikipedia found in [[https://en.wikipedia.org/wiki/Affine_transformation#Image_transformation][article "Affine transformation"
+under section "Image transformation"]] and assume origin at the center of image

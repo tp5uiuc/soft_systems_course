@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 12 12">
+<g transform="matrix(-1 0 0 1 10 2)">
+<rect width="8" height="8" fill="#fff"/>
+<rect x="4" width="4" height="8" fill="#b3b3b3"/>
+<path d="M0,0v8h1V0zm2,0v8h1V0zm2,0v8h1V0zm2,0v8h1V0zM0,0h8v1H0zm0,2h8v1H0zm0,2h8v1H0zm0,2h8v1H0z" fill-rule="evenodd"/>
+</g>
+</svg>
