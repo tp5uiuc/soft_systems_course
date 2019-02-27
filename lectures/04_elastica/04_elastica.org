@@ -213,21 +213,30 @@
    file:images/cartesian_rotation.png
 
    \[ \begin{bmatrix} x^\prime \\ y^\prime \end{bmatrix}
-   = \begin{bmatrix}\cos(\alpha )&\sin(\alpha )\\ -\sin(\alpha
-   )&\cos(\alpha )\end{bmatrix} \begin{bmatrix} x\\ y\end{bmatrix}\]
-** Inverse rotations
-   - Show them that inverse is naturally the antirotation
+   = \underbrace{\begin{bmatrix}\cos(\alpha )&\sin(\alpha )\\ -\sin(\alpha
+   )&\cos(\alpha )\end{bmatrix}}_{\bv{R}} \begin{bmatrix} x\\ y\end{bmatrix}\]
+** Inverse rotations in two--dimensions
+   Now consider the same picture, but we want to obtain \([x,y]^T\) from \( [
+   x^\prime, y^\prime ]^T \) (the other way around).
+
+   - Physically, this is just a rotation of \( - \alpha \) counter-clockwise (or
+     \( \alpha \) clockwise). That means
+   \[ \begin{bmatrix} x\\ y\end{bmatrix}
+   = \begin{bmatrix}\cos(\alpha )& -\sin(\alpha )\\ \sin(\alpha
+   )& \cos(\alpha )\end{bmatrix}  \begin{bmatrix} x^\prime \\ y^\prime
+   \end{bmatrix} \]
+   - Mathematically, if \( \gv{x}^\prime= \bv{R} \gv{x} \), then we know \(
+     \gv{x}= \bv{R}^{-1} \gv{x}^\prime \), provided \( \bv{R}^{-1}\) exists
+     (which does).
+   - Then notice that
+   \[ \bv{R}^{-1} = \begin{bmatrix}\cos(\alpha )& -\sin(\alpha )\\ \sin(\alpha
+   )& \cos(\alpha )\end{bmatrix}  = \bv{R}^T ! \]
+   - We will see later why holds for *all* rotation matrices...
 ** Frame rotations in three--dimensions
-   Then
    #+CAPTION: Rotation in three dimensions, Wikimedia CC1.0
    #+ATTR_LATEX: :width 0.45\textwidth
    [[file:images/cartesian_rot_3D.pdf]]
-   is a natural extension of 2D results
-
-   \[ \begin{bmatrix} x^\prime \\ y^\prime \end{bmatrix}
-   = \begin{bmatrix}\cos(\alpha )&\sin(\alpha )\\ -\sin(\alpha
-   )&\cos(\alpha )\end{bmatrix} \begin{bmatrix} x\\ y\end{bmatrix}\]
-
+   is a natural extension of 2D results...
 ** Beware!
 *** Be wary about alias (passive) or alibi (active) transformations
 ***                                                                :B_column:
@@ -267,22 +276,37 @@
 	:END:
 	- Affirm that the entity does not matter. Show this for a vector or a point.
       Beauty of affine transformations.
-** Quote
-   - Analyzing rotation demands awareness of your desired perspective. You can rotate an object, while you stay still, or you can keep the object
-fixed while you rotate yourself. It is important to be aware of which of these
-perspectives applies for your problem of interest. The distinction between
-these fundamentally different transformations goes beyond one being the
-same as the other with an opposite rotation angle
-Cite book : https://iopscience.iop.org/book/978-0-7503-1454-1
-** Transpose changes from active to alibi
-To change the formulas for passive rotations (or find reverse active rotation),
-transpose the matrices (then each matrix transforms the initial coordinates of a
-vector remaining fixed to the coordinates of the same vector measured in the
-rotated reference system; same rotation axis, same angles, but now
-the coordinate system rotates, rather than the vector).
+	- To change the formulas for passive rotations (or find reverse active
+      rotation), transpose the matrices (then each matrix transforms the initial
+      coordinates of a vector remaining fixed to the coordinates of the same
+      vector measured in the rotated reference system; same rotation axis, same
+      angles, but now the coordinate system rotates, rather than the vector).
+** Difference in perspectives[fn:2]
+***                                                             :B_quotation:
+	:PROPERTIES:
+	:BEAMER_env: quotation
+	:END:
+	" Analyzing rotation demands awareness of your desired perspective. You can rotate an object, while you stay still, or you can keep the object
+	fixed while you rotate yourself. It is important to be aware of which of these
+	perspectives applies for your problem of interest. The distinction between
+	these fundamentally different transformations goes beyond one being the
+	same as the other with an opposite rotation angle. "
 ** TODO Frame rotation as a change in basis
-*** TODO Transformation of basis (linear) using notation
-	- Example with elastica frames
+*** More concretely
+	If \( \mathcal{B} \) and \( \mathcal{B}^\prime \) are two (different) bases
+	\( \in \mathbb{R}^n \)
+	+ Alibi : Change in entity \( [\gv{p}]_{\mathcal{B}} \to
+      [\gv{p}^\prime]_{\mathcal{B}} \) given by
+  \[ [\gv{p}^\prime]_{\mathcal{B}} = [\bv{M}]_{\mathcal{B} \to \mathcal{B}}
+  [\gv{p}]_{\mathcal{B}} \]
+	+ Alias : Change in basis \( [\gv{p}]_{\mathcal{B}} \to
+      [\gv{p}]_{\mathcal{B}^\prime} \)
+  \[ [\gv{p}]_{\mathcal{B}^\prime} = [\bv{M}]_{\mathcal{B} \to \mathcal{B}^\prime}
+  [\gv{p}]_{\mathcal{B}} \]
+	+ In our soft filament framework, \( \mathcal{B}^\prime \equiv \mathcal{L}
+      \) and  \( \mathcal{B} \equiv \) lab frame. \( \mathbf{Q} \) is then the
+      basis transformation matrix (corresponding to pure rotation of the
+      orthonormal bases)
 ** Frame rotation---example
 ***                                                                :B_column:
 	:PROPERTIES:
@@ -333,15 +357,57 @@ the coordinate system rotates, rather than the vector).
 	- Represent \( (x'-y'-z') \) axis with a basis \( \mathcal{D} \) of unit vectors \( \hat{\gv{d}_1}, \hat{\gv{d}_2}, \hat{\gv{d}_3}\)
 	- \( \mathcal{E} \to \mathcal{D} \)?
 	- Note : rotation of \( \ang{90} \) about an invariant \( z' = z \) axis
-** TODO Frame rotation---example contd.
-   - Show first with sin and cos 90
-** TODO Generalizing rotations as a basis change
-   - Extend to include dot products inside the matrix to get the basis change form
-** Answered first question
-   - Tell them you answered the first question about what xl = Qx means
-   - How do you get Q?
-   - Need to know both the basis? Do we know?
-   - We then seek how to get it.
+** Frame rotation---example contd.
+  \[ {\begin{bmatrix} x^\prime \\ y^\prime \\ z^\prime\end{bmatrix}} =
+  \spot{[\bv{M}]_{\mathcal{E} \to \mathcal{D}}}
+  {\begin{bmatrix} x \\ y \\ z \end{bmatrix}}
+  \]
+   - We begin by noticing that \( \begin{bmatrix} x^\prime , y^\prime , z^\prime
+     \end{bmatrix} = \begin{bmatrix} y , -x , z \end{bmatrix}\) (from figure). Then
+  \[ {\begin{bmatrix} x^\prime \\ y^\prime \\ z^\prime\end{bmatrix}} =
+  {\begin{bmatrix} 0 & 1 & 0 \\ -1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}}
+  {\begin{bmatrix} x \\ y \\ z \end{bmatrix}}
+  \]
+  \[\Rightarrow {\begin{bmatrix} x^\prime \\ y^\prime \\ z^\prime\end{bmatrix}} =
+  {\begin{bmatrix} \cos(\ang{90}) & \sin(\ang{90}) & 0 \\ -\sin(\ang{90}) &
+  \cos(\ang{90}) & 0 \\ 0 & 0 & 1 \end{bmatrix}}
+  {\begin{bmatrix} x \\ y \\ z \end{bmatrix}}
+  \]
+** Generalizing frame rotations as a basis change
+   - But also notice with the given bases that
+  \[{\begin{bmatrix} x^\prime \\ y^\prime \\ z^\prime\end{bmatrix}_{\mathcal{D}}} =
+  \underbrace{\begin{bmatrix}
+  \hat{\gv{d}}_1 \cdot \hat{\gv{e}}_1 & \hat{\gv{d}}_1 \cdot
+  \hat{\gv{e}}_2 & \hat{\gv{d}}_1 \cdot \hat{\gv{e}}_3 \\
+  \hat{\gv{d}}_2 \cdot \hat{\gv{e}}_1 & \hat{\gv{d}}_2 \cdot
+  \hat{\gv{e}}_2 & \hat{\gv{d}}_2 \cdot \hat{\gv{e}}_3 \\
+  \hat{\gv{d}}_3 \cdot \hat{\gv{e}}_1 & \hat{\gv{d}}_3 \cdot
+  \hat{\gv{e}}_2 & \hat{\gv{d}}_3 \cdot \hat{\gv{e}}_3
+  \end{bmatrix}}_{[\bv{M}]_{\mathcal{E} \to \mathcal{D}}}
+  {\begin{bmatrix} x \\ y \\ z \end{bmatrix}_{\mathcal{E}}}
+  \]
+  - In the soft filament framework, if the lab frame \( \mathcal{E} \) is
+    described by the natural bases \(\hat{i}, \hat{j}, \hat{k} \) and if the
+    material (Lagrangian) frame \( \mathcal{D} \) is described by orthonormal
+    vectors \(
+    \hat{\gv{d}_1}, \hat{\gv{d}_2}, \hat{\gv{d}_3} \) (coordinates wrt
+    the natural bases), we have
+  \[{\begin{bmatrix} x_{\mathcal{L}} \\ y_{\mathcal{L}} \\ z_{\mathcal{L}} \end{bmatrix}_{\mathcal{D}}} =
+	\underbrace{\begin{bmatrix}
+	\mbox{------}~\mathbf{d}_1~\mbox{------} \\
+	\mbox{------}~\mathbf{d}_2~\mbox{------} \\
+	\mbox{------}~\mathbf{d}_3~\mbox{------} \\
+	\end{bmatrix}}_{\mathbf{Q}}
+	{\begin{bmatrix} x \\ y \\ z \end{bmatrix}_{\mathcal{E}}}
+  \]
+** Let's reconsider what we know
+   - We now know why \(  \gv{x}_{\mathcal{L}} = \bv{Q}\gv{x} \)
+   - But...
+	 - Do we know \( \mathbf{Q} \) ?
+	   - We need the basis \( \hat{\gv{d}}_j \)
+	 - Do we know \( \hat{\gv{d}}_j \)?
+	   - *No*
+   - We then seek ways to obtain this basis \( \gv{d} \).
 ** TODO Rotations about fixed axis : Euler angles
 ** TODO Rotations using Euler angles : z rotations
 ** TODO Rotations using Euler angles : x rotations
@@ -361,5 +427,8 @@ the coordinate system rotates, rather than the vector).
 **
 
 * Footnotes
+
+[fn:2][[https://iopscience.iop.org/book/978-0-7503-1454-1][Rotation, Reflection, and Frame Changes---Orthogonal tensors in computational engineering mechanics, RM Brannon, IOP Publishing 2018]]
+
 [fn:1] All examples from Wikipedia found in [[https://en.wikipedia.org/wiki/Affine_transformation#Image_transformation][article "Affine transformation"
 under section "Image transformation"]] and assume origin at the center of image
