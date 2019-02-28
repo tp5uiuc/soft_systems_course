@@ -31,8 +31,8 @@
    #+begin_export latex
    \[ \scalebox{5}{\textbf{?}} \]
    #+end_export
-   \[ \frac{\partial \mathbf{d}_j}{\partial t} = \left( \mathbf{Q}^T
-   \omega_{\mathcal{L}}\right) \times \mathbf{d}_j \]
+   \[ \frac{\partial \bv{d}_j}{\partial t} = \left( \bv{Q}^T
+   \omega_{\mathcal{L}}\right) \times \bv{d}_j \]
    #+begin_export latex
    \[ \scalebox{5}{\textbf{?}} \]
    #+end_export
@@ -304,7 +304,7 @@
   \[ [\gv{p}]_{\mathcal{B}^\prime} = [\bv{M}]_{\mathcal{B} \to \mathcal{B}^\prime}
   [\gv{p}]_{\mathcal{B}} \]
 	+ In our soft filament framework, \( \mathcal{B}^\prime \equiv \mathcal{L}
-      \) and  \( \mathcal{B} \equiv \) lab frame. \( \mathbf{Q} \) is then the
+      \) and  \( \mathcal{B} \equiv \) lab frame. \( \bv{Q} \) is then the
       basis transformation matrix (corresponding to pure rotation of the
       orthonormal bases)
 ** Frame rotation---example
@@ -376,6 +376,7 @@
 ** Generalizing frame rotations as a basis change
    - But also notice with the given bases that
   \[{\begin{bmatrix} x^\prime \\ y^\prime \\ z^\prime\end{bmatrix}_{\mathcal{D}}} =
+  \spot<2>{
   \underbrace{\begin{bmatrix}
   \hat{\gv{d}}_1 \cdot \hat{\gv{e}}_1 & \hat{\gv{d}}_1 \cdot
   \hat{\gv{e}}_2 & \hat{\gv{d}}_1 \cdot \hat{\gv{e}}_3 \\
@@ -383,40 +384,109 @@
   \hat{\gv{e}}_2 & \hat{\gv{d}}_2 \cdot \hat{\gv{e}}_3 \\
   \hat{\gv{d}}_3 \cdot \hat{\gv{e}}_1 & \hat{\gv{d}}_3 \cdot
   \hat{\gv{e}}_2 & \hat{\gv{d}}_3 \cdot \hat{\gv{e}}_3
-  \end{bmatrix}}_{[\bv{M}]_{\mathcal{E} \to \mathcal{D}}}
+  \end{bmatrix}}_{[\bv{M}]_{\mathcal{E} \to \mathcal{D}}, \text{ independent of
+  } \mathbf{x}}
+  }
   {\begin{bmatrix} x \\ y \\ z \end{bmatrix}_{\mathcal{E}}}
   \]
-  - In the soft filament framework, if the lab frame \( \mathcal{E} \) is
-    described by the natural bases \(\hat{i}, \hat{j}, \hat{k} \) and if the
-    material (Lagrangian) frame \( \mathcal{D} \) is described by orthonormal
-    vectors \(
-    \hat{\gv{d}_1}, \hat{\gv{d}_2}, \hat{\gv{d}_3} \) (coordinates wrt
-    the natural bases), we have
-  \[{\begin{bmatrix} x_{\mathcal{L}} \\ y_{\mathcal{L}} \\ z_{\mathcal{L}} \end{bmatrix}_{\mathcal{D}}} =
+*** Soft filament framework                                         :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:BEAMER_ACT: <2->
+	:END:
+   - Describe lab frame, \( \mathcal{E} \), by natural bases \(\hat{i}, \hat{j}, \hat{k} \).
+   - Describe material (Lagrangian) frame, \( \mathcal{D} \), by orthonormal
+     vectors \(\hat{\gv{d}_1}, \hat{\gv{d}_2}, \hat{\gv{d}_3} \) (coordinates wrt
+     natural bases). Then
+   \[{\begin{bmatrix} x_{\mathcal{L}} \\ y_{\mathcal{L}} \\ z_{\mathcal{L}} \end{bmatrix}_{\mathcal{D}}} =
+	 \underbrace{\begin{bmatrix}
+	 \mbox{------}~\hat{\gv{d}}_1~\mbox{------} \\
+	 \mbox{------}~\hat{\gv{d}}_2~\mbox{------} \\
+	 \mbox{------}~\hat{\gv{d}}_3~\mbox{------} \\
+	 \end{bmatrix}}_{\bv{Q}}
+	 {\begin{bmatrix} x \\ y \\ z \end{bmatrix}_{\mathcal{E}}}
+   \]
+** Generalizing frame rotations as a basis change
+   Taking it one step further we arrive at the conclusion,
+  \[
 	\underbrace{\begin{bmatrix}
-	\mbox{------}~\mathbf{d}_1~\mbox{------} \\
-	\mbox{------}~\mathbf{d}_2~\mbox{------} \\
-	\mbox{------}~\mathbf{d}_3~\mbox{------} \\
-	\end{bmatrix}}_{\mathbf{Q}}
-	{\begin{bmatrix} x \\ y \\ z \end{bmatrix}_{\mathcal{E}}}
+	\mbox{|} & \mbox{|}& \mbox{|}\\
+	\hat{\gv{d}_1} & \hat{\gv{d}_2} & \hat{\gv{d}_3} \\
+	\mbox{|} & \mbox{|}& \mbox{|}\\
+	\end{bmatrix}}_{\bv{Q}^{-1} = \bv{Q}^T}
+	{\begin{bmatrix} x_{\mathcal{L}} \\ y_{\mathcal{L}} \\ z_{\mathcal{L}}
+	\end{bmatrix}}
+	=
+	{\begin{bmatrix}1 & 0 & 0 \\ 0 & 1 & 0 \\0 & 0& 1\end{bmatrix}}
+	{\begin{bmatrix} x \\ y \\ z \end{bmatrix}}
   \]
+
+  \[
+  \Rightarrow x_{\mathcal{L}}\hat{\gv{d}_1} + y_{\mathcal{L}}\hat{\gv{d}_2} +
+  z_{\mathcal{L}}\hat{\gv{d}_3} = x\hat{i} + y\hat{j} + z\hat{k} = \gv{x} !
+  \]
+** Implementation of rotation as bases change
+   - We have seen that the action of frame rotation matrices correspond to a
+     bases change operation
+   - Let's implement these operations in our framework
+	 \[ R_{x}(\theta)={\begin{bmatrix}1&0&0\\0&\cos \theta &\sin \theta
+     \\0&-\sin \theta &\cos \theta \\\end{bmatrix}}\]
+
+	 \[ R_{y}(\theta)={\begin{bmatrix}\cos \theta & 0 & -\sin \theta\\
+	 0&1&0 \\ \sin\theta & 0 & \cos \theta \\\end{bmatrix}} \]
+
+	 \[R_{z}(\theta)={\begin{bmatrix}\cos \theta &\sin \theta &0\\-\sin
+	 \theta &\cos\theta &0\\0&0&1\\\end{bmatrix}} \]
+   - *DEMO*
+** But what about arbitrary rotations?
+	- Rotations about arbitrary axes with arbitrary angles?
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_col: 0.6
+	:END:
+	 - Can we do compositions?
+	   - *Yes*, but not that intutive (means of rotation, intrinsic/extrinsic)
+	   - Not commutative (order matters) usually
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_col: 0.3
+	:END:
+	 #+ATTR_LATEX: :width 0.80\textwidth
+	 file:images/rotated_cube.jpeg
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+	 - Becomes even more complicated when we have frames depending on one another
+	   - But not a bad idea---robotics[fn:3]
+	 - *Idea*: If we know the linear bases transformation, we don't need to worry
+       about compositions etc.
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- Mention that some means of rotation like quarternions are better suited,
+      but require more math and understanding.
 ** Let's reconsider what we know
-   - We now know why \(  \gv{x}_{\mathcal{L}} = \bv{Q}\gv{x} \)
+   - We know why \(  \gv{x}_{\mathcal{L}} = \bv{Q}\gv{x} \)
    - But...
-	 - Do we know \( \mathbf{Q} \) ?
+	 - Do we know \( \bv{Q} \) ?
 	   - We need the basis \( \hat{\gv{d}}_j \)
 	 - Do we know \( \hat{\gv{d}}_j \)?
 	   - *No*
-   - We then seek ways to obtain this basis \( \gv{d} \).
+   - We seek ways to obtain this basis \( \gv{d} \).
+   - We will see that we require some properties on \( \gv{d} \) to make \(
+     \bv{Q} \) effect a rotation.
+** Obtaining \( \gv{d} \) : Options
+   -
 ** TODO Rotations about fixed axis : Euler angles
-** TODO Rotations using Euler angles : z rotations
-** TODO Rotations using Euler angles : x rotations
-** TODO Rotations using Euler angles : y rotations
 ** TODO Rotation using Euler angles : Implementation
 ** TODO Rotations using Euler angles: compositions
    - Show Rz * Ry * Rx
    - Put formula for the same here
-   - https://www.mecademic.com/resources/Euler-angles/Euler-angles
+   -
 ** TODO Rotations using Euler angles: compositions contd.
    - Is it commutative (does the order matter)
 - Extrinsic or Intrinsic
@@ -427,6 +497,8 @@
 **
 
 * Footnotes
+
+[fn:3] [[https://www.mecademic.com/resources/Euler-angles/Euler-angles][Mecademic Euler rotations]]
 
 [fn:2][[https://iopscience.iop.org/book/978-0-7503-1454-1][Rotation, Reflection, and Frame Changes---Orthogonal tensors in computational engineering mechanics, RM Brannon, IOP Publishing 2018]]
 
