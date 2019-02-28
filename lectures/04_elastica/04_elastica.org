@@ -140,13 +140,14 @@
 	:END:
 	- Most of our interest lies in modeling soft filaments, for which we will be
       using only /linear transformations/
-	- In linear transformations, \( \gv{b} \equiv \gv{0} \) for vector spaces \(
-      \mathcal{X} \) and \(\mathcal{Y}\)
+	- In linear transformations, \( \gv{b} \equiv \gv{0} \) in vector space
+      \(\mathcal{Y}\)
 	- We lose the ability to translate entities using linear transformations (
       zero must map to zero by definition)
 ** But what are linear transformations?
    - We loosely define a linear transformation \( \gv{x} \to \bv{M}\gv{x} \) by a /matrix/
-     ( \( \bv{M}\) ) that acts on the vector \( \gv{x} \)
+     ( \( \bv{M}\) ) that acts on the vector \( \gv{x} \in \mathcal{X}\), about
+     \( \gv{0} \in \mathcal{X} \)
    - Check out the Wikipedia page on [[https://en.wikipedia.org/wiki/Matrix_(mathematics)][matrices]] and [[https://en.wikipedia.org/wiki/Rotation_matrix][matrix classes]] to see why they
      (matrices and linear transformations) are considered important.
 ** Linear transformations : Examples[fn:1]
@@ -215,6 +216,11 @@
    \[ \begin{bmatrix} x^\prime \\ y^\prime \end{bmatrix}
    = \underbrace{\begin{bmatrix}\cos(\alpha )&\sin(\alpha )\\ -\sin(\alpha
    )&\cos(\alpha )\end{bmatrix}}_{\bv{R}} \begin{bmatrix} x\\ y\end{bmatrix}\]
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	Derive this thing in class.
 ** Inverse rotations in two--dimensions
    Now consider the same picture, but we want to obtain \([x,y]^T\) from \( [
    x^\prime, y^\prime ]^T \) (the other way around).
@@ -406,6 +412,11 @@
 	 \end{bmatrix}}_{\bv{Q}}
 	 {\begin{bmatrix} x \\ y \\ z \end{bmatrix}_{\mathcal{E}}}
    \]
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- Derive the \( \gv{d} \cdot \gv{e} \) relations in class.
 ** Generalizing frame rotations as a basis change
    Taking it one step further we arrive at the conclusion,
   \[
@@ -425,6 +436,12 @@
   \Rightarrow x_{\mathcal{L}}\hat{\gv{d}_1} + y_{\mathcal{L}}\hat{\gv{d}_2} +
   z_{\mathcal{L}}\hat{\gv{d}_3} = x\hat{i} + y\hat{j} + z\hat{k} = \gv{x} !
   \]
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- Again iterate that this is a passive (alias) transformation and so this is
+      the expected result.
 ** Implementation of rotation as bases change
    - We have seen that the action of frame rotation matrices correspond to a
      bases change operation
@@ -494,10 +511,10 @@
 	:BEAMER_env: block
 	:BEAMER_col: 0.47
 	:END:
-	- Rows are unit vectors
-	- Real, orthogonal matrix
-	- Eigenvalues are \( \lambda = {1, e^{\pm j \theta}}\)
-	- Determinant \( = \prod_{i} \lambda_i = 1 \)
+	+ Rows are unit vectors
+	+ Real, orthogonal matrix ( \( \bv{Q^T}\bv{Q} = \bv{Q}\bv{Q^T} = \bv{I} \) )
+	+ Eigenvalues are \( \lambda = {1, e^{\pm j \theta}}\)
+	+ Determinant \( = \prod_{i} \lambda_i = 1 \)
 *** \( \hat{\gv{d}} \)                                              :B_block:
 	:PROPERTIES:
 	:BEAMER_env: block
@@ -513,6 +530,7 @@
 	:END:
 	- Motivate orthogonality by saying that the natural bases is orthogonal,
       and so we want to preserve this in rotation (all axes rotates equally).
+      This also makes R^-1 = R^T
 	- By Gram-Schmidt theorem, we can always find an orthonormal bases given a
       span of vectors
 	- Euler's rotation theorem: Express any roation as a single rotation about
@@ -521,7 +539,7 @@
 	- Motivate determinant by volume. It tells expansino of a volume: 1 means
       volume is preserved. Formulae for parallelopiped : \( u \cdot (v \times w)
       \). They are symmetric relations.
-** Obtaining \( \gv{d}, \bv{Q} \) : Options
+** Obtaining \( \gv{d}, \bv{Q} \) : Options[fn:4]
 ***                                                                :B_column:
 	:PROPERTIES:
 	:BEAMER_env: column
@@ -558,6 +576,8 @@
 ** TODO Other options
 
 * Footnotes
+
+[fn:4] Wikimedia, CC3.0 license
 
 [fn:3] [[https://www.mecademic.com/resources/Euler-angles/Euler-angles][Mecademic Euler rotations]]
 
