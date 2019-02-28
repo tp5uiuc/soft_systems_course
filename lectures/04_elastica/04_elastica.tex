@@ -1,4 +1,4 @@
-% Created 2019-02-28 Thu 08:55
+% Created 2019-02-28 Thu 10:13
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation]{beamer}
 \usepackage[utf8]{inputenc}
@@ -48,8 +48,8 @@
 
 \maketitle
 \section{Coordinate/Frame transformations}
-\label{sec:org6fc42a9}
-\begin{frame}[label={sec:org7feadcc}]{Motivation}
+\label{sec:org9d08a5e}
+\begin{frame}[label={sec:org4631a22}]{Motivation}
 \[ \gv{x}_{\mathcal{L}} = \bv{Q}\gv{x} \]
 \[ \scalebox{5}{\textbf{?}} \]
 \[ \frac{\partial \bv{d}_j}{\partial t} = \left( \bv{Q}^T
@@ -57,7 +57,7 @@
 \[ \scalebox{5}{\textbf{?}} \]
 \end{frame}
 
-\begin{frame}[label={sec:org957abe5}]{Motivation}
+\begin{frame}[label={sec:org34c9b75}]{Motivation}
 \begin{columns}
 \begin{column}{0.7\columnwidth}
 \begin{itemize}
@@ -80,7 +80,7 @@ rather than cartesian coordinates
 \end{column}
 \end{columns}
 \end{frame}
-\begin{frame}[label={sec:orgfb624d1}]{Introduction}
+\begin{frame}[label={sec:org4c4ef6c}]{Introduction}
 \begin{itemize}
 \item Some familiar coordinate transformations (each with its own natural ``frame''
 of vectors)
@@ -104,7 +104,7 @@ are
 \end{column}
 \end{columns}
 \end{frame}
-\begin{frame}[label={sec:orgf19aa83}]{Introduction}
+\begin{frame}[label={sec:orgf55ad79}]{Introduction}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{block}{Cylindrical coordinates}
@@ -136,7 +136,7 @@ are
 \end{column}
 \end{columns}
 \end{frame}
-\begin{frame}[label={sec:org2e742ab}]{Introduction}
+\begin{frame}[label={sec:orgd68235c}]{Introduction}
 \begin{block}{Choice of coordinate system}
 \begin{itemize}
 \item We represent entities (points, vectors etc.) in the \emph{cartesian coordinate
@@ -156,7 +156,7 @@ reflection, rotation, etc. and their compositions
 \end{itemize}
 \end{definition}
 \end{frame}
-\begin{frame}[label={sec:orga59020e}]{Affine transformations}
+\begin{frame}[label={sec:org9247135}]{Affine transformations}
 \begin{theorem}[Affine \(\leftrightarrow\) Linear]
 If \(\mathcal{X}\) and \(\mathcal{Y}\) are affine spaces, then every affine transformation
 \(f\colon \mathcal{X}\to \mathcal{Y}\) is of the form \(\gv{x}\mapsto
@@ -165,7 +165,7 @@ space \(\mathcal{X}\),  \(\gv{x}\) is a vector in \(\mathcal{X}\), and \(\gv{b}\
 \end{theorem}
 \end{frame}
 
-\begin{frame}[label={sec:org608a864}]{Affine transformations : Examples}
+\begin{frame}[label={sec:org0f4167e}]{Affine transformations : Examples}
 \begin{block}{Translations ( \(\bv{M} = \bv{0}\) and \(\gv{b} \neq \gv{0}\) )}
 \begin{figure}[htbp]
 \centering
@@ -176,7 +176,7 @@ space \(\mathcal{X}\),  \(\gv{x}\) is a vector in \(\mathcal{X}\), and \(\gv{b}\
 \begin{block}{Translation \alert{DEMO}}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org100fc57}]{Linear transformations}
+\begin{frame}[label={sec:org1912466}]{Linear transformations}
 \begin{block}{Difference b/w linear and affine trans.}
 \begin{itemize}
 \item Most of our interest lies in modeling soft filaments, for which we will be
@@ -187,7 +187,7 @@ zero must map to zero by definition)
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org6c85e07}]{But what are linear transformations?}
+\begin{frame}[label={sec:org39b8bb3}]{But what are linear transformations?}
 \begin{itemize}
 \item We loosely define a linear transformation \(\gv{x} \to \bv{M}\gv{x}\) by a \emph{matrix}
 ( \(\bv{M}\) ) that acts on the vector \(\gv{x}\)
@@ -195,7 +195,7 @@ zero must map to zero by definition)
 (matrices and linear transformations) are considered important.
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:orgcf8c655}]{Linear transformations : Examples\footnote{All examples from Wikipedia found in \href{https://en.wikipedia.org/wiki/Affine\_transformation\#Image\_transformation}{article ``Affine transformation''
+\begin{frame}[label={sec:orgcd40d30}]{Linear transformations : Examples\footnote{All examples from Wikipedia found in \href{https://en.wikipedia.org/wiki/Affine\_transformation\#Image\_transformation}{article ``Affine transformation''
 under section ``Image transformation''} and assume origin at the center of image}}
 \begin{columns}
 \begin{column}{0.5\columnwidth}
@@ -217,7 +217,7 @@ under section ``Image transformation''} and assume origin at the center of image
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgcbec8a8}]{Linear transformations : Examples}
+\begin{frame}[label={sec:org28ae0c4}]{Linear transformations : Examples}
 \begin{columns}
 \begin{column}{0.5\columnwidth}
 \begin{block}{Scale}
@@ -238,7 +238,7 @@ under section ``Image transformation''} and assume origin at the center of image
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgc8ce753}]{Linear transformations : Examples}
+\begin{frame}[label={sec:org4c5952c}]{Linear transformations : Examples}
 \begin{block}{Rotation}
 \begin{center}
 \spot<2>{\( \bv{M} =\begin{bmatrix}\cos(\theta )&\sin(\theta )&0\\-\sin(\theta
@@ -250,14 +250,14 @@ under section ``Image transformation''} and assume origin at the center of image
 \end{center}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org109d21c}]{Rotations (includes reflections)}
+\begin{frame}[label={sec:orgece13d8}]{Rotations (includes reflections)}
 \begin{itemize}
 \item Generates new unit vectors, fundamentally changing the directions
 (eigenvectors) of further transformations
 \item Does not scale the entity under consideration ( \(\abs{\lambda} \equiv  1\), more on this later\ldots{})
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org19cc3a3}]{Frame rotations in two--dimensions}
+\begin{frame}[label={sec:orgbbbfa7d}]{Frame rotations in two--dimensions}
 Consider
 \begin{figure}[htbp]
 \centering
@@ -269,7 +269,7 @@ Consider
    = \underbrace{\begin{bmatrix}\cos(\alpha )&\sin(\alpha )\\ -\sin(\alpha
    )&\cos(\alpha )\end{bmatrix}}_{\bv{R}} \begin{bmatrix} x\\ y\end{bmatrix}\]
 \end{frame}
-\begin{frame}[label={sec:orga4ab53a}]{Inverse rotations in two--dimensions}
+\begin{frame}[label={sec:org8bb8793}]{Inverse rotations in two--dimensions}
 Now consider the same picture, but we want to obtain \([x,y]^T\) from \([
    x^\prime, y^\prime ]^T\) (the other way around).
 
@@ -292,7 +292,7 @@ Now consider the same picture, but we want to obtain \([x,y]^T\) from \([
 \item We will see later why holds for \alert{all} rotation matrices\ldots{}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:orgecf4926}]{Frame rotations in three--dimensions}
+\begin{frame}[label={sec:org8ab12f3}]{Frame rotations in three--dimensions}
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.45\textwidth]{images/cartesian_rot_3D.pdf}
@@ -300,7 +300,7 @@ Now consider the same picture, but we want to obtain \([x,y]^T\) from \([
 \end{figure}
 is a natural extension of 2D results\ldots{}
 \end{frame}
-\begin{frame}[label={sec:orgbc66b2c}]{Beware!}
+\begin{frame}[label={sec:orge3dd05f}]{Beware!}
 \begin{block}{Be wary about alias (passive) or alibi (active) transformations}
 \end{block}
 \begin{columns}
@@ -335,7 +335,7 @@ vector measured in the rotated reference system; same rotation axis, same
 angles, but now the coordinate system rotates, rather than the vector).
 \end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:orgc90fd97}]{Difference in perspectives\footnote{\href{https://iopscience.iop.org/book/978-0-7503-1454-1}{Rotation, Reflection, and Frame Changes---Orthogonal tensors in computational engineering mechanics, RM Brannon, IOP Publishing 2018}}}
+\begin{frame}[label={sec:orgbecc997}]{Difference in perspectives\footnote{\href{https://iopscience.iop.org/book/978-0-7503-1454-1}{Rotation, Reflection, and Frame Changes---Orthogonal tensors in computational engineering mechanics, RM Brannon, IOP Publishing 2018}}}
 \begin{quotation} %% :B\_quotation:
 `` Analyzing rotation demands awareness of your desired perspective. You can rotate an object, while you stay still, or you can keep the object
 fixed while you rotate yourself. It is important to be aware of which of these
@@ -344,7 +344,7 @@ these fundamentally different transformations goes beyond one being the
 same as the other with an opposite rotation angle. ''
 \end{quotation}
 \end{frame}
-\begin{frame}[label={sec:orgdfac8aa}]{Frame rotation as a change in basis}
+\begin{frame}[label={sec:org4966e6b}]{Frame rotation as a change in basis}
 \begin{block}{More concretely}
 If \(\mathcal{B}\) and \(\mathcal{B}^\prime\) are two (different) bases
 \(\in \mathbb{R}^n\)
@@ -367,7 +367,7 @@ orthonormal bases)
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org0e99f12}]{Frame rotation---example}
+\begin{frame}[label={sec:org9ddc60e}]{Frame rotation---example}
 \begin{columns}
 \begin{column}{0.5\columnwidth}
 \tdplotsetmaincoords{60}{100}
@@ -408,7 +408,7 @@ orthonormal bases)
 \item Note : rotation of \(\ang{90}\) about an invariant \(z' = z\) axis
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:orgee92ec1}]{Frame rotation---example contd.}
+\begin{frame}[label={sec:org095de86}]{Frame rotation---example contd.}
 \[ {\begin{bmatrix} x^\prime \\ y^\prime \\ z^\prime\end{bmatrix}} =
   \spot{[\bv{M}]_{\mathcal{E} \to \mathcal{D}}}
   {\begin{bmatrix} x \\ y \\ z \end{bmatrix}}
@@ -427,7 +427,7 @@ orthonormal bases)
   {\begin{bmatrix} x \\ y \\ z \end{bmatrix}}
   \]
 \end{frame}
-\begin{frame}[label={sec:org84493d7}]{Generalizing frame rotations as a basis change}
+\begin{frame}[label={sec:org70a12bf}]{Generalizing frame rotations as a basis change}
 \begin{itemize}
 \item But also notice with the given bases that
 \end{itemize}
@@ -462,7 +462,7 @@ natural bases). Then
    \]
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org4de8675}]{Generalizing frame rotations as a basis change}
+\begin{frame}[label={sec:orga6dd292}]{Generalizing frame rotations as a basis change}
  Taking it one step further we arrive at the conclusion,
 \[
 	\underbrace{\begin{bmatrix}
@@ -482,7 +482,7 @@ natural bases). Then
   z_{\mathcal{L}}\hat{\gv{d}_3} = x\hat{i} + y\hat{j} + z\hat{k} = \gv{x} !
   \]
 \end{frame}
-\begin{frame}[label={sec:org5478d69}]{Implementation of rotation as bases change}
+\begin{frame}[label={sec:orgf53fa43}]{Implementation of rotation as bases change}
 \begin{itemize}
 \item We have seen that the action of frame rotation matrices correspond to a
 bases change operation
@@ -498,7 +498,7 @@ bases change operation
 \item \alert{DEMO}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org99d4804}]{But what about arbitrary rotations?}
+\begin{frame}[label={sec:org0fc23c2}]{But what about arbitrary rotations?}
 \begin{itemize}
 \item Rotations about arbitrary axes with arbitrary angles?
 \end{itemize}
@@ -530,11 +530,13 @@ about compositions etc.
 \begin{itemize}
 \item Mention that some means of rotation like quarternions are better suited,
 but require more math and understanding.
+\item Mention Euler axis angle, euler roataions, quarternions
 \end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:org302ae72}]{Let's reconsider what we know}
+\begin{frame}[label={sec:orge7a854e}]{Let's reconsider what we know}
 \begin{itemize}
 \item We know why \(\gv{x}_{\mathcal{L}} = \bv{Q}\gv{x}\)
+\item We then need the \alert{action} of \(\bv{Q}\) on \(\gv{x}\)
 \item But\ldots{}
 \begin{itemize}
 \item Do we know \(\bv{Q}\) ?
@@ -546,39 +548,99 @@ but require more math and understanding.
 \item \alert{No}
 \end{itemize}
 \end{itemize}
-\item We seek ways to obtain this basis \(\gv{d}\).
+\item We seek ways to obtain this basis \(\gv{d}\) and hence \(\bv{Q}\).
 \item We will see that we require some properties on \(\gv{d}\) to make \(\bv{Q}\) effect a rotation.
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org632ebf0}]{Obtaining \(\gv{d}\) : Options}
+\begin{frame}[label={sec:org45fded8}]{Obtaining \(\gv{d}, \bv{Q}\) : Properties}
+\[\bv{Q} =
+	 {\begin{bmatrix}
+	 \mbox{------}~\hat{\gv{d}}_1~\mbox{------} \\
+	 \mbox{------}~\hat{\gv{d}}_2~\mbox{------} \\
+	 \mbox{------}~\hat{\gv{d}}_3~\mbox{------} \\
+	 \end{bmatrix}}
+   \]
+\begin{columns}
+\begin{column}{0.47\columnwidth}
+\begin{block}{\(\bv{Q}\)}
 \begin{itemize}
-\item
+\item Rows are unit vectors
+\item Real, orthogonal matrix
+\item Eigenvalues are \(\lambda = {1, e^{\pm j \theta}}\)
+\item Determinant \(= \prod_{i} \lambda_i = 1\)
 \end{itemize}
+\end{block}
+\end{column}
+\begin{column}{0.50\columnwidth}
+\begin{block}{\(\hat{\gv{d}}\)}
+\begin{itemize}
+\item \(\norm{\hat{\gv{d}_1}} = \norm{\hat{\gv{d}_2}} = 1\)
+\item \(\hat{\gv{d}_1} \cdot \hat{\gv{d}_2} = 0\)
+\item \(\hat{\gv{d}_1} \times \hat{\gv{d}_2} = \hat{\gv{d}_3}\)
+\item \(\therefore\) They form an orthonormal basis
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+\note{:B\_note:
+\begin{itemize}
+\item Motivate orthogonality by saying that the natural bases is orthogonal,
+and so we want to preserve this in rotation (all axes rotates equally).
+\item By Gram-Schmidt theorem, we can always find an orthonormal bases given a
+span of vectors
+\item Euler's rotation theorem: Express any roation as a single rotation about
+an axis. Eigenvalues represent this. 1--> rotation axes. 2,3 are
+orthogonal axes that simply has a rotation.
+\item Motivate determinant by volume. It tells expansino of a volume: 1 means
+volume is preserved. Formulae for parallelopiped : \(u \cdot (v \times w)\). They are symmetric relations.
+\end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:org1fde7a6}]{Rotations about fixed axis : Euler angles}
+\begin{frame}[label={sec:org632dea8}]{Obtaining \(\gv{d}, \bv{Q}\) : Options}
+\begin{columns}
+\begin{column}{0.6\columnwidth}
+\begin{itemize}
+\item We only need the \alert{action} of \(\bv{Q}\) on \(\gv{x}\)
+\item Some means/formalisms to achieve these are
+\begin{itemize}
+\item Rotation matrices (gives \(\bv{Q}\) explicitly )
+\item Euler axes and angle \(\gv{r} = \theta \hat{\gv{e}}\)
+\item Euler rotations (precession, nutation, rotation)
+\item Quaternions (\(w, \gv{r}\))
+\end{itemize}
+\item (dis)Advantages are spread equally, although some are more equal than the others*
+\end{itemize}
+\end{column}
+\begin{column}{0.4\columnwidth}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.45\textwidth]{images/euler_aa.png}
+\caption{Euler axis-angle}
+\end{figure}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.45\textwidth]{images/euler_rot.pdf}
+\caption{Euler rotations}
+\end{figure}
+\end{column}
+\end{columns}
 \end{frame}
-\begin{frame}[label={sec:org0b3427e}]{Rotation using Euler angles : Implementation}
+
+\begin{frame}[label={sec:org0ed3b07}]{Rotations about fixed axis : Euler angles}
 \end{frame}
-\begin{frame}[label={sec:orgaef4d6a}]{Rotations using Euler angles: compositions}
+\begin{frame}[label={sec:orgf82d85d}]{Rotation using Euler angles : Rodrigues formula}
+\end{frame}
+\begin{frame}[label={sec:org117f86e}]{Rotation using Euler angles : Rodrigues formula contd.}
+\end{frame}
+\begin{frame}[label={sec:orge951642}]{Rotations using Euler angles: compositions}
 \begin{itemize}
 \item Show Rz * Ry * Rx
 \item Put formula for the same here
 \item
-\end{itemize}
-\end{frame}
-\begin{frame}[label={sec:org90aa6d1}]{Rotations using Euler angles: compositions contd.}
-\begin{itemize}
+
 \item Is it commutative (does the order matter)
-\end{itemize}
-\begin{itemize}
 \item Extrinsic or Intrinsic
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:orge34d5d2}]{Drawbacks of only using Euler-angle based rotation}
-Not as intutive as only one axes. Althogugh it is possible.
-\end{frame}
-\begin{frame}[label={sec:org8a9c02c}]{Other options}
-\alert{*
-*}
+\begin{frame}[label={sec:orgb7805cb}]{Other options}
 \end{frame}
 \end{document}

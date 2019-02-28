@@ -469,32 +469,93 @@
 	:END:
 	- Mention that some means of rotation like quarternions are better suited,
       but require more math and understanding.
+	- Mention Euler axis angle, euler roataions, quarternions
 ** Let's reconsider what we know
    - We know why \(  \gv{x}_{\mathcal{L}} = \bv{Q}\gv{x} \)
+   - We then need the *action* of \( \bv{Q} \) on \(\gv{x}\)
    - But...
 	 - Do we know \( \bv{Q} \) ?
 	   - We need the basis \( \hat{\gv{d}}_j \)
 	 - Do we know \( \hat{\gv{d}}_j \)?
 	   - *No*
-   - We seek ways to obtain this basis \( \gv{d} \).
+   - We seek ways to obtain this basis \( \gv{d} \) and hence \(\bv{Q}\).
    - We will see that we require some properties on \( \gv{d} \) to make \(
-     \bv{Q} \) effect a rotation.
-** Obtaining \( \gv{d} \) : Options
-   -
+		  \bv{Q} \) effect a rotation.
+** Obtaining \( \gv{d}, \bv{Q} \) : Properties
+   \[\bv{Q} =
+	 {\begin{bmatrix}
+	 \mbox{------}~\hat{\gv{d}}_1~\mbox{------} \\
+	 \mbox{------}~\hat{\gv{d}}_2~\mbox{------} \\
+	 \mbox{------}~\hat{\gv{d}}_3~\mbox{------} \\
+	 \end{bmatrix}}
+   \]
+*** \( \bv{Q}\)                                                     :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:BEAMER_col: 0.47
+	:END:
+	- Rows are unit vectors
+	- Real, orthogonal matrix
+	- Eigenvalues are \( \lambda = {1, e^{\pm j \theta}}\)
+	- Determinant \( = \prod_{i} \lambda_i = 1 \)
+*** \( \hat{\gv{d}} \)                                              :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:BEAMER_col: 0.50
+	:END:
+	- \( \norm{\hat{\gv{d}_1}} = \norm{\hat{\gv{d}_2}} = 1 \)
+	- \( \hat{\gv{d}_1} \cdot \hat{\gv{d}_2} = 0 \)
+	- \( \hat{\gv{d}_1} \times \hat{\gv{d}_2} = \hat{\gv{d}_3}\)
+	- \therefore They form an orthonormal basis
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- Motivate orthogonality by saying that the natural bases is orthogonal,
+      and so we want to preserve this in rotation (all axes rotates equally).
+	- By Gram-Schmidt theorem, we can always find an orthonormal bases given a
+      span of vectors
+	- Euler's rotation theorem: Express any roation as a single rotation about
+      an axis. Eigenvalues represent this. 1--> rotation axes. 2,3 are
+      orthogonal axes that simply has a rotation.
+	- Motivate determinant by volume. It tells expansino of a volume: 1 means
+      volume is preserved. Formulae for parallelopiped : \( u \cdot (v \times w)
+      \). They are symmetric relations.
+** Obtaining \( \gv{d}, \bv{Q} \) : Options
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_col: 0.6
+	:END:
+	- We only need the *action* of \( \bv{Q} \) on \(\gv{x}\)
+	- Some means/formalisms to achieve these are
+	  - Rotation matrices (gives \( \bv{Q} \) explicitly )
+	  - Euler axes and angle \( \gv{r} = \theta \hat{\gv{e}} \)
+	  - Euler rotations (precession, nutation, rotation)
+	  - Quaternions (\(w, \gv{r}\))
+	- (dis)Advantages are spread equally, although some are more equal than the others*
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_col: 0.4
+	:END:
+	#+CAPTION: Euler axis-angle
+	#+ATTR_LATEX: :width 0.45\textwidth
+	[[file:images/euler_aa.png]]
+	#+CAPTION: Euler rotations
+	#+ATTR_LATEX: :width 0.45\textwidth
+	[[file:images/euler_rot.pdf]]
+
 ** TODO Rotations about fixed axis : Euler angles
-** TODO Rotation using Euler angles : Implementation
+** TODO Rotation using Euler angles : Rodrigues formula
+** TODO Rotation using Euler angles : Rodrigues formula contd.
 ** TODO Rotations using Euler angles: compositions
    - Show Rz * Ry * Rx
    - Put formula for the same here
    -
-** TODO Rotations using Euler angles: compositions contd.
    - Is it commutative (does the order matter)
-- Extrinsic or Intrinsic
-** TODO Drawbacks of only using Euler-angle based rotation
-   Not as intutive as only one axes. Althogugh it is possible.
+   - Extrinsic or Intrinsic
 ** TODO Other options
-**
-**
 
 * Footnotes
 
