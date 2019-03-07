@@ -1,0 +1,166 @@
+% Created 2019-03-04 Mon 22:05
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{awesomebox}
+\usepackage{booktabs}
+\usepackage{placeins}
+\usepackage{siunitx}
+\usepackage{minted}
+\usepackage{cleveref}
+\author{Mattia Gazzola}
+\date{}
+\title{Project 2: Modeling and optimization of a slithering snake\\\medskip
+\large ME498: Computational modeling and optimization}
+\hypersetup{
+ pdfauthor={Mattia Gazzola},
+ pdftitle={Project 2: Modeling and optimization of a slithering snake},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.0.50 (Org mode 9.2)},
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\textbf{Issue Date} : \today
+
+\textbf{Teaching Assistant} : Tejaswin Parthasarathy, \texttt{tp5@illinois.edu}
+
+\textbf{Submission Date/Time}: Wednesday 11:59 PM, 27 March, 2019
+
+\textbf{Submission Instructions}:
+\begin{itemize}
+\item You need to submit both your presentation (as \texttt{.pdf}, \texttt{.ppt[x]} or \texttt{.key}) and code
+(as \texttt{.py} or \texttt{.ipynb}) on Compass, in separate archived files (see below)
+\item Submit your code file(s) packaged as a \texttt{.zip} or \texttt{.tar.gz} files (please do not use
+\texttt{.7z} or other formats) and name the compressed file as \texttt{<net\_id>\_code\_02}
+\item Submit your presentation file(s) packaged as a \texttt{.zip} or \texttt{.tar.gz} files (please do not use
+\texttt{.7z} or other formats) and name the compressed file as \texttt{<net\_id>\_slides\_02}
+\end{itemize}
+
+\newpage
+
+\section{Guidelines}
+\label{sec:orgeea9f5b}
+General advice that pertains to solving the dynamics of an idealized
+slithering snake:
+\begin{enumerate}
+\item Validate your code (i.e. test that it captures the physics) before doing
+any optimization on your snake model. Some sensible cases for validation are
+discussed later on.
+\item You will need to couple the physical simulations that you develop in this
+project with the optimizer---hence develop code keeping this requirement in mind.
+\item Use the CMAes class/function that you developed as part of the previous
+project to run the optimization campaign.
+\item We will evaluate your work based on your understanding and findings, and
+not on the code quality. However since you are learning \texttt{Python}, it is
+always a good idea to code efficiently. Use canned algorithms in \texttt{numpy} or
+\texttt{scipy} wherever possible.
+\item You are free to consult any material you want (including but not limited to
+resources in \cref{sec:references}). However you are expected to follow the
+Student Code on academic integrity---plagiarism will not be tolerated!
+\end{enumerate}
+
+\section{A soft snake}
+\label{sec:orgd1f5741}
+\subsection{Definition}
+\label{sec:orgc48a591}
+In \texttt{Python}, implement a code for computing the mechanics of soft filaments
+using Cosserat rod theory, following the discussion in class. Construct a
+model of a slithering snake using this implementation and furthermore
+optimize the gait of the snake for achieving maximal forward speed.
+
+\textbf{BONUS} : Visualize any/all of your results using the \href{http://www.povray.org/}{PovRay} raytracing
+library or its \texttt{Python} interface \href{https://github.com/Zulko/vapory}{Vapory}.
+\subsection{Details}
+\label{sec:org39b5084}
+\subsubsection{Governing equations}
+\label{sec:org4329c6e}
+\begin{enumerate}
+\item Numerical discretization
+\label{sec:org0f324f0}
+Pick the same.
+\end{enumerate}
+\subsubsection{Simplifications to the governing equations}
+\label{sec:org733c01f}
+\begin{enumerate}
+\item First simplification is done by throwing away useless terms.
+\label{sec:org9599b3f}
+\item Set e = 1
+\label{sec:org41cf07c}
+\end{enumerate}
+\subsubsection{Validation}
+\label{sec:orgc3f792b}
+Timoshenko Beam
+
+The parameters for this particular problem are \ldots{}
+\subsubsection{Modeling muscular activity and friction}
+\label{sec:org229cf45}
+\begin{itemize}
+\item Parametrization of muscles
+\item Including Friction as external force.
+\end{itemize}
+\subsubsection{Gait optimization for maximal forward speed}
+\label{sec:orgebfa432}
+
+More details about the 0/1 Knapsack problem are contained in the lecture slides.
+Alternatively, the \href{https://en.wikipedia.org/wiki/Knapsack\_problem}{Wikipedia} page also has a lot of information about this
+problem. Quoting the introductory text,
+\begin{quote}
+`` The knapsack problem or rucksack problem is a problem in combinatorial
+optimization: Given a set of items, each with a weight and a value, determine
+the number of each item to include in a collection so that the total weight is
+less than or equal to a given limit and the total value is as large as possible.
+It derives its name from the problem faced by someone who is constrained by a
+fixed-size knapsack and must fill it with the most valuable items. ''
+\end{quote}
+
+Your task is to find an optimal distribution of items to carry, that
+maximizes the overall value while adhering to the weight limit, using both
+\begin{itemize}
+\item GA
+\item CMA
+\end{itemize}
+and compare the performance of these algorithms on this function. Details about
+the dataset for this problem is given below in \cref{sec:data}. Note that this is a constrained
+optimization problem and your design choices in the
+algorithm need to reflect this. As this seems like a problem with integer
+solutions, consider how you can change CMA to reflect this property. As we are
+interested in black-box optimization algorithms, we assume we do not know
+anything about the problem structure. This means that using a randomly generated
+population around \(\mathbf{x}_0 =\mathbf{0}\)---the vector of zeros---to
+initialize the algorithm is a good idea.
+
+Finally, after answering all the questions above and implementing your
+algorithm, explore the design choices (be it parameters or operators) on the
+performance of the algorithms.
+\subsection{Settings}
+\label{sec:data}
+There are two data sets--A, B. Each data set will be posted on Compass as
+simple \texttt{numpy npz} files with the knapsack capacity (total weight of the
+knapsack), number of different items (which are all assumed to be distinct in
+the 0/1 knapsack problem so you \textbf{do not} need to worry about \emph{choosing} same
+items), and their values + weights. For convenience you can read the
+information using \texttt{numpy}'s \texttt{load} function, shown in the snippet below:
+
+\section{The following resouces may prove useful:}
+\label{sec:references}
+\begin{itemize}
+\item Paper describing the governing equations, numerical algorithm and optimization
+of a slithering snake, found \href{https://royalsocietypublishing.org/doi/full/10.1098/rsos.171628}{in this link}.
+\item The CMA-ES tutorial @ Arxiv, found \href{https://arxiv.org/pdf/1604.00772.pdf}{here}
+\item More information on timestepping schemes found \href{https://cg.informatik.uni-freiburg.de/course\_notes/sim\_02\_particles.pdf}{at this link}
+\end{itemize}
+\end{document}

@@ -394,3 +394,7 @@ _minted*/
 
 # Ignore the resources folder
 resources/
+
+# Ignore mp4 and png
+*.mp4
+*.png

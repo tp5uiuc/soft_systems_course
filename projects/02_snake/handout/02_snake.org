@@ -1,0 +1,120 @@
+#+TITLE: Project 2: Modeling and optimization of a slithering snake
+#+SUBTITLE: ME498: Computational modeling and optimization
+#+AUTHOR: Mattia Gazzola
+#+OPTIONS:   H:3 num:t toc:nil date:nil ::t |:t ^:{} -:t f:t *:t <:t
+#+LATEX_HEADER: \usepackage{cleveref}
+
+*Issue Date* : \today
+
+*Teaching Assistant* : Tejaswin Parthasarathy, ~tp5@illinois.edu~
+
+*Submission Date/Time*: Wednesday 11:59 PM, 27 March, 2019
+
+*Submission Instructions*:
+ - You need to submit both your presentation (as ~.pdf~, ~.ppt[x]~ or ~.key~) and code
+   (as ~.py~ or ~.ipynb~) on Compass, in separate archived files (see below)
+ - Submit your code file(s) packaged as a ~.zip~ or ~.tar.gz~ files (please do not use
+   ~.7z~ or other formats) and name the compressed file as ~<net_id>_code_02~
+ - Submit your presentation file(s) packaged as a ~.zip~ or ~.tar.gz~ files (please do not use
+   ~.7z~ or other formats) and name the compressed file as ~<net_id>_slides_02~
+
+\newpage
+
+* Guidelines
+  General advice that pertains to solving the dynamics of an idealized
+  slithering snake:
+  1. Validate your code (i.e. test that it captures the physics) before doing
+     any optimization on your snake model. Some sensible cases for validation are
+     discussed later on.
+  2. You will need to couple the physical simulations that you develop in this
+     project with the optimizer---hence develop code keeping this requirement in mind.
+  3. Use the CMAes class/function that you developed as part of the previous
+	 project to run the optimization campaign.
+  4. We will evaluate your work based on your understanding and findings, and
+	 not on the code quality. However since you are learning ~Python~, it is
+	 always a good idea to code efficiently. Use canned algorithms in ~numpy~ or
+	 ~scipy~ wherever possible.
+  5. You are free to consult any material you want (including but not limited to
+	 resources in [[cref:sec:references]]). However you are expected to follow the
+	 Student Code on academic integrity---plagiarism will not be tolerated!
+
+* A soft snake
+** Definition
+   In ~Python~, implement a code for computing the mechanics of soft filaments
+   using Cosserat rod theory, mirroring the in-class discussion. Construct a
+   model of a slithering snake using this implementation and furthermore
+   optimize the gait of the snake for achieving maximal forward speed.
+
+   *BONUS* : Visualize any/all of your results using the [[http://www.povray.org/][PovRay]] raytracing
+   library or its ~Python~ interface---[[https://github.com/Zulko/vapory][Vapory]].
+** Details
+*** Governing equations
+**** Cosserat rod model
+	 The following are the equations that you need to implement in your code.
+	 Note that these equations are derived *after* appropriate simplification as
+	 detailed in the next subsection.
+**** Numerical discretization
+	 Pick the same.
+*** Simplifications to the governing equations
+**** First simplification is done by throwing away useless terms.
+**** Set e = 1
+*** Validation
+	Timoshenko Beam
+
+	The parameters for this particular problem are ...
+*** Modeling muscular activity and friction
+	- Parametrization of muscles
+	- Including Friction as external force.
+*** Gait optimization for maximal forward speed
+
+   More details about the 0/1 Knapsack problem are contained in the lecture slides.
+   Alternatively, the [[https://en.wikipedia.org/wiki/Knapsack_problem][Wikipedia]] page also has a lot of information about this
+   problem. Quoting the introductory text,
+ #+begin_quote
+ " The knapsack problem or rucksack problem is a problem in combinatorial
+ optimization: Given a set of items, each with a weight and a value, determine
+ the number of each item to include in a collection so that the total weight is
+ less than or equal to a given limit and the total value is as large as possible.
+ It derives its name from the problem faced by someone who is constrained by a
+ fixed-size knapsack and must fill it with the most valuable items. "
+ #+end_quote
+
+   Your task is to find an optimal distribution of items to carry, that
+   maximizes the overall value while adhering to the weight limit, using both
+   - GA
+   - CMA
+   and compare the performance of these algorithms on this function. Details about
+   the dataset for this problem is given below in [[cref:sec:data]]. Note that this is a constrained
+   optimization problem and your design choices in the
+   algorithm need to reflect this. As this seems like a problem with integer
+   solutions, consider how you can change CMA to reflect this property. As we are
+   interested in black-box optimization algorithms, we assume we do not know
+   anything about the problem structure. This means that using a randomly generated
+   population around \( \mathbf{x}_0 =\mathbf{0}\)---the vector of zeros---to
+   initialize the algorithm is a good idea.
+
+   Finally, after answering all the questions above and implementing your
+   algorithm, explore the design choices (be it parameters or operators) on the
+   performance of the algorithms.
+** Settings
+:PROPERTIES:
+:CUSTOM_ID: sec:data
+:END:
+
+  There are two data sets--A, B. Each data set will be posted on Compass as
+  simple ~numpy npz~ files with the knapsack capacity (total weight of the
+  knapsack), number of different items (which are all assumed to be distinct in
+  the 0/1 knapsack problem so you *do not* need to worry about /choosing/ same
+  items), and their values + weights. For convenience you can read the
+  information using ~numpy~'s ~load~ function, shown in the snippet below:
+
+* The following resouces may prove useful:
+:PROPERTIES:
+:CUSTOM_ID: sec:references
+:END:
+- Paper describing the governing equations, numerical algorithm and optimization
+  of a slithering snake, found [[https://royalsocietypublishing.org/doi/full/10.1098/rsos.171628][in this link]].
+- The CMA-ES tutorial @ Arxiv, found [[https://arxiv.org/pdf/1604.00772.pdf][here]]
+- More information on timestepping schemes found [[https://cg.informatik.uni-freiburg.de/course_notes/sim_02_particles.pdf][at this link]]
+- [[http://young.physics.ucsc.edu/115/leapfrog.pdf][This link]] on a short but gentle introduction to symplectic time integration
+ schemes accompanied by [[http://www2.math.ethz.ch/education/bachelor/seminars/fs2008/nas/crivelli.pdf][this link]] that compares many other schemes to the same.

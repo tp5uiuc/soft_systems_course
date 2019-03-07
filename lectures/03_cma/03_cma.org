@@ -599,7 +599,21 @@
 	  - Robot invitro: https://www.youtube.com/watch?v=fjTd06L-9bQ
 	  - Knifefish : https://www.youtube.com/watch?v=3XjgZbs0t2g
 	  - https://blog.openai.com/evolution-strategies/
-
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- Mario video : interesing solutions
+	  - Why optimal? See what it is doing. It waits for mushroom bullet
+	  - 0:35 complex paths
+	  - Stupidity: at 0.02. IT does not wait. Maybe the user programmed for time
+        to completion too.
+	  - Stupidit at 0.14 too
+	  - Waits for bullet at 0.18
+	  - Waits for bllet at 0.29
+	  - 0.35 is just awesome
+	  - Waits for shroom at 0.40
+	  - Waits for bullet at 0.45, 0.49
 * Footnotes
 
 [fn:4] [[https://www.slideshare.net/OsamaSalaheldin2/cmaes-presentation][CMAes overview, Slideshare]]

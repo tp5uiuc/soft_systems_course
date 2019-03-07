@@ -7,8 +7,8 @@
 
 #+STARTUP: beamer
 #+LATEX_CLASS: beamer
-#+LATEX_CLASS_OPTIONS: [presentation]
-# #+LATEX_CLASS_OPTIONS: [notes]
+# #+LATEX_CLASS_OPTIONS: [presentation]
+#+LATEX_CLASS_OPTIONS: [notes]
 #+LATEX_HEADER:\usetheme[progressbar=frametitle]{metropolis}
 #+LATEX_HEADER:\usepackage{tikz}
 #+LATEX_HEADER:\usepackage{tikz-3dplot}
@@ -454,7 +454,7 @@
 
 	 \[R_{z}(\theta)={\begin{bmatrix}\cos \theta &\sin \theta &0\\-\sin
 	 \theta &\cos\theta &0\\0&0&1\\\end{bmatrix}} \]
-   - *DEMO*
+   - *ACTIVITY*
 ** But what about arbitrary rotations?
 	- Rotations about arbitrary axes with arbitrary angles?
 ***                                                                :B_column:
@@ -548,7 +548,7 @@
 	- We only need the *action* of \( \bv{Q} \) on \(\gv{x}\)
 	- Some means/formalisms to achieve these are
 	  - Rotation matrices (gives \( \bv{Q} \) explicitly )
-	  - Euler axes and angle \( \gv{r} = \theta \hat{\gv{e}} \)
+	  - \(\spot<2>{\text{Euler axes and angle } \gv{r} = \theta \hat{\gv{e}} }\)
 	  - Euler rotations (precession, nutation, rotation)
 	  - Quaternions (\(w, \gv{r}\))
 	- (dis)Advantages are spread equally, although some are more equal than the others*
@@ -564,17 +564,273 @@
 	#+ATTR_LATEX: :width 0.45\textwidth
 	[[file:images/euler_rot.pdf]]
 
-** TODO Rotations about fixed axis : Euler angles
-** TODO Rotation using Euler angles : Rodrigues formula
-** TODO Rotation using Euler angles : Rodrigues formula contd.
+** Rotations about fixed axis : Euler axis-angle
+*** Single rotation about an axis---\( \hat{\gv{e}} \) vector
+	- Axis : unit vector which remains unchanged by the rotation
+	- Note : Only two dofs, by normality condition
+	- Unique, for any given rotation, except for the sign
+*** Rotation through scalar \( \theta \)                            :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	- Unique, sign determined by axis \(\hat{\gv{e}} \)
+*** \( \hat{\gv{r}} = \theta \hat{\gv{e}} \)                        :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:BEAMER_col: 0.6
+	:END:
+	- Called /Rotation vector/ or /Euler vector/
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_col: 0.3
+	:END:
+	#+CAPTION: Euler axis-angle
+	#+ATTR_LATEX: :width 0.45\textwidth
+	[[file:images/euler_axis.pdf]]
+** Rotations about fixed axis : Euler axis-angle
+*** Advantages
+	- Easy to understand/code up
+	- Convenient while dealing with rigid body motions
+	- Conversion to rotation matrices straightforward (and is so for all other
+      representations as well)
+*** Disadvantages
+	- Combining successive rotations not straightforward (and breaks vector addition)
+	- Corner cases when dealing with \( \theta = 0 \) and signs of \(
+      \hat{\gv{e}} \)
+** Rotation using Euler angles : Rodrigues formula
+*** Rodrigues formula
+	- Named after [[https://en.wikipedia.org/wiki/Olinde_Rodrigues][Olinde Rodrigues]]
+	- Is an efficient algorithm to rotate a vector in space, given \( \theta \)
+      and \( \hat{\gv{e}} \).
+	- Gives the exponential map that effects a transformation from the
+      axis-angle representation (our case!) to rotation matrices
+	- Basically gives us \( \bv{Q} \) given \( \theta \hat{\gv{e}} \).
+	\[ \mathbf {R} =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \]
+	where \( \mathbf{K}\) is the cross product matrix, discussed last class \(
+	\mathbf{K}\gv{v} = \hat{\gv{e}} \times \gv{v} \)
+** Rotation matrix from Rodrigues formula : structure and intuition
+	\[ \mathbf {R} =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \]
+   We need \( \bv{R} \) above to satisfy properties of a rotation matrix. Let's verify:
+   - \( \bv{R}(0) = \bv{I} \)
+   - \( \bv{R}(\theta)\bv{R}(\phi) = \bv{R}(\theta+\phi)\)
+   - \( \bv{R}\bv{R}^T = \bv{R}^T\bv{R} = \bv{I}\)
+   We note that this operator always exists and is unique for given axis-angle
+   (hence its form).
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- Use k^4 = -k^2 in the rr^T thing
+	- Use k^T = -k.
+** Simplification using sympy
+   #+begin_src python :results output :exports both :eval never-export
+	 import sympy as sp
+	 from sympy.simplify.fu import TR8, TR9, TR10i
+	 x, y, k = sp.symbols('x y k')
+	 expr_x = 1 + sp.sin(x)*k + (1-sp.cos(x))*k**2
+	 expr_y = 1 + sp.sin(y)*k + (1-sp.cos(y))*k**2
+	 expr_n = sp.fu(expr_x * expr_y,
+					measure=lambda x: -x.count_ops())
+	 # expr = TR8(expr_x * expr_y)
+	 # print(TR9(expr))
+	 print(expr_n)
+   #+end_src
+
+   #+RESULTS:
+   : k**4*cos(x)*cos(y) - 2*k**4*cos(x/2 - y/2)*cos(x/2 + y/2) + k**4 + 2*k**3*sin(x/2 + y/2)*cos(x/2 - y/2) - k**3*sin(x + y) + k**2*sin(x)*sin(y) - 2*k**2*cos(x/2 - y/2)*cos(x/2 + y/2) + 2*k**2 + 2*k*sin(x/2 + y/2)*cos(x/2 - y/2) + 1
+
+** Rotation using Euler angles : Rodrigues formula (geometry)
+   But where did it come from?
+   *GEOMETRY* (part I)
+	#+CAPTION: Geometrical construction for deriving the Rodrigues rotation formula
+	#+ATTR_LATEX: :width 0.45\textwidth
+	[[file:images/rodrigues.pdf]]
+\[ \gv{v}_{\mathrm {rot} } =\cos \theta \,\gv{v} +(1-\cos \theta
+)(\gv {k} \cdot \gv {v} )\gv {k} +\sin \theta \,\gv {k} \times
+\gv {v} \]
+** Rotation using Euler angles : Rodrigues formula (geometry)
+   *GEOMETRY* (part II)
+   Given
+  \[ \gv {v}_{\mathrm {rot} } =\cos \theta \,\gv {v} +(1-\cos \theta
+  )(\hat{\gv {k}} \cdot {\gv{v}} ) \hat{\gv{k}} +\sin \theta \,\hat{\gv{k}} \times
+  \gv {v} \]
+
+  With \( \mathbf{K}\gv{v} = \hat{\gv{k}} \times \gv{v} \), we have \(\mathbf{K}\left(
+  \mathbf{K} \gv{v}\right) =  \hat{\gv{k}} \times \hat{\gv{k}} \times \gv{v}
+  = (\hat{\gv{k}} \cdot \gv{v}) \hat{\gv{k}} - (\hat{\gv{k}} \cdot \hat{\gv{k}})
+  \hat{v} \) (Using vector triple product).
+
+  Substitute in the original equation,
+  \[  \gv{v}_{\mathrm {rot} }=\gv {v} +(\sin \theta )\gv {K} \gv {v}
+  +(1-\cos \theta )\gv {K} ^{2}\gv {v} \,,\quad \|\gv {K} \|_{2}=1
+  \]
+
+  Now factor \( \gv{v} \) from the equation to get \( \gv{v}_{\mathrm {rot} } = \mathbf{R}\gv{v}\)
+** Digression: ODEs
+   - To further understand the Rodrigues rotation formula (and how it relates
+     to solving \( \frac{\partial \bv{d}_j}{\partial t} = \omega \times \bv{d}_j
+     \) ), we digress a bit and deal with ordinary differential equations (and
+     their solutions)
+   - The next lecture also deals with the same issues (time-stepping and
+     numerical stability) and the fundamentals are the same.
+*** Solve the following ODE                                       :B_example:
+	:PROPERTIES:
+	:BEAMER_ACT: <1->
+	:BEAMER_env: example
+	:END:
+	 \[ \frac{dx}{dt} = 2x \]
+*** We can't!                                                  :B_alertblock:
+	:PROPERTIES:
+	:BEAMER_env: alertblock
+	:BEAMER_ACT: <2->
+	:END:
+	 - Uniqueness and existence?
+	 - Initial conditions?
+** Digression: simple ODEs
+*** Solve the following ODE                                       :B_example:
+	:PROPERTIES:
+	:BEAMER_env: example
+	:END:
+	 \[ \frac{dx}{dt} = 2x \quad x(0) = 1 \]
+*** We can!                                                         :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	\[ x(t) = e^{2t}\]
+** Digression: system of simple ODEs
+*** Solve the following ODE                                       :B_example:
+	:PROPERTIES:
+	:BEAMER_env: example
+	:END:
+	 \[ \begin{bmatrix}\dot{x} \\ \dot{y} \end{bmatrix} =
+	 \begin{bmatrix} 5 & 0 \\ 0 & 3 \end{bmatrix} =
+	 \begin{bmatrix}{x} \\ {y} \end{bmatrix} \quad x(0) = 1, y(0) = 2\]
+*** We can solve this too                                           :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	\[ x(t) = e^{5t} \quad y(t) = 2e^{3t} \]
+
+	More importantly,
+	\[ \gv{x}(t) = e^{\bv{A}t}\gv{x}(0)\]
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- Explain mateix exponential to these dudes
+** Digression: changing it up a bit
+*** Solve the following ODE                                       :B_example:
+	:PROPERTIES:
+	:BEAMER_env: example
+	:END:
+	 \[ \begin{bmatrix}\dot{x} \\ \dot{y} \end{bmatrix} =
+	 \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix} =
+	 \begin{bmatrix}{x} \\ {y} \end{bmatrix} \quad x(0) = 1, y(0) = 0\]
+*** We can solve this too!                                          :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:BEAMER_ACT: <2->
+	:END:
+	\[ x(t) = cos{t} \quad y(t) = \sin{t} \]
+	*OR*
+	\[ x(\theta) = cos{\theta} \quad y(\theta) = \sin{\theta} \]
+*** Matrix exponential                                         :B_alertblock:
+	:PROPERTIES:
+	:BEAMER_env: alertblock
+	:BEAMER_ACT: <3->
+	:END:
+	We still retain \[ \gv{x}(\theta) = e^{\bv{A}\theta}\gv{x}(0) \]
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- Use hamiltonian. That is dy/dx = x/y and then integrate
+** Digression: changing it up a bit
+*** Solve the following ODE                                       :B_example:
+	:PROPERTIES:
+	:BEAMER_env: example
+	:END:
+	 \[ \begin{bmatrix}\dot{x} \\ \dot{y} \end{bmatrix} =
+	 \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix} =
+	 \begin{bmatrix}{x} \\ {y} \end{bmatrix} \quad x(0) = 1, y(0) = 0\]
+*** What changed the solutions from exponentials to trigonometric terms? :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	- The skew-symmetry of the matrix!
+	- More importantly, a skew-symmetric matrix has a pair of imaginary
+      eigenvalues \( \pm j \theta \)
+	- We know \( \mathrm{Re}{(e^{j \theta})} = \cos(\theta) \), which is exactly
+      what we see...
+	- *IDEA* : Matrix exponentials can also be used to perform rotations!
+	- Then, can you connect it back to why \( \frac{\partial \bv{d}_j}{\partial t} = \omega \times \bv{d}_j
+     \) performs a rotation?
+** Rotation using Euler angles : Rodrigues formula (algebra)
+   With \( \mathbf{K}\gv{v} = \hat{\gv{k}} \times \gv{v} \), we have
+\[ \bv{R}=\exp(\theta \bv {K} )=\sum _{k=0}^{\infty }{\frac {(\theta \bv
+{K} )^{k}}{k!}}= \bv{I} + \theta \bv {K} + {\frac {1}{2!}}(\theta \bv {K}
+)^{2} + {\frac {1}{3!}}(\theta \bv {K} )^{3} + \cdots  \]
+
+  Because of skew-symmetry and orthogonality, by Cayley-Hamilton theorem we have, \(
+  \mathbf {K} ^{3}=-\mathbf {K}, \mathbf {K}^{4}=-\mathbf{K}^2,\mathbf
+  {K}^{5}=\mathbf{K},\mathbf{K}^{6}=\mathbf{K}^2
+  \).
+
+  With this cyclic pattern continuing for \( k \to \infty \), we have
+  \(
+  \bv{R}=\bv{I}+\left(\theta -{\frac {\theta ^{3}}{3!}}+{\frac {\theta
+  ^{5}}{5!}}-\cdots \right)\mathbf{K} +\left({\frac {\theta ^{2}}{2!}}-{\frac
+  {\theta ^{4}}{4!}} + {\frac {\theta ^{6}}{6!}}-\cdots \right) \mathbf{K} ^{2}
+  \)
+
+  or equivalently
+
+  \( \mathbf {R} =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \)
+** Rotation : Rodrigues formula implementation
+   - We have seen how the matrix exponential can give rise to rotation.
+   - Let's implement this operation in our framework
+   \[ \mathbf {R} =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \]
+   , \( \bv{K} \) being the now-familiar skew-symmetric matrix having vector elements
+   \[ \mathbf {K} = \begin{bmatrix}\,\,0&\!-k_{3}&\,\,\,k_{2}\\\,\,\,k_{3}&0&\!-k_{1}\\\!-k_{2}&\,\,k_{1}&\,\,0\end{bmatrix}
+   \]
+   - *ACTIVITY*
+** Rodrigues formula : The inverse operator
+*** What about the inverse operation?
+	Given the rotation matrix \( \bv{R}\)
+	  - Identify \( \theta \)
+	  - Identify \( \hat{\gv{e}}\), the axis
+*** Is it useful?
+	Very. Especially when:
+	- computing the angle by which two frames differ (especially in graphics)
+	- there are governing equations that need differences of, rather than
+      angles themselves (invariance principles)
+*** How to do it?
+	Using the matrix logarithm operator, which relies on properties of the
+	rotation matrix...
+** Rodrigues formula : The inverse operator
+*** Formula for \( \theta \)
+	\[ \theta = \arccos\left( \frac{\text{Tr}(\mathbf{R}) - 1}{2}\right) \]
+	Why?
+	 - trace of a matrix is invariant and \( = \sum \lambda_i \).
+	 - For a rotation matrix, \( \lambda = {1, e^{\pm j \theta}} \)
+	 - \therefore \( \sum \lambda_i = 1 + 2 \cos(\theta) \)
+*** Once \( \theta \) is known, we can find \(\hat{\gv{e}}\)...
+** Rodrigues formula : The inverse operator
+*** Finding \(\hat{\gv{e}}\)...
+	Use properties of \( \mathbf{R}\)
+   \[ \mathbf {R} =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \]
+   Transposing, using \( \mathbf{K}^T = -\mathbf{K} \) and \(  (\mathbf{K}^2)^{T} = \mathbf{K}^2 \)
+   \[ \mathbf {R}^T =\mathbf {I} - (\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \]
+   Subtracting both the equations,
+   \[ \mathbf{K} = \left( \frac{\mathbf {R} - \mathbf {R}^T}{2 \sin \theta} \right) \]
+
 ** TODO Rotations using Euler angles: compositions
    - Show Rz * Ry * Rx
    - Put formula for the same here
    -
    - Is it commutative (does the order matter)
    - Extrinsic or Intrinsic
-** TODO Other options
-
 * Footnotes
 
 [fn:4] Wikimedia, CC3.0 license
