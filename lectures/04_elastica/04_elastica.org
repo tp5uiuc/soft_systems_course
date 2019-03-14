@@ -7,8 +7,8 @@
 
 #+STARTUP: beamer
 #+LATEX_CLASS: beamer
-# #+LATEX_CLASS_OPTIONS: [presentation]
-#+LATEX_CLASS_OPTIONS: [notes]
+#+LATEX_CLASS_OPTIONS: [presentation]
+# #+LATEX_CLASS_OPTIONS: [notes]
 #+LATEX_HEADER:\usetheme[progressbar=frametitle]{metropolis}
 #+LATEX_HEADER:\usepackage{tikz}
 #+LATEX_HEADER:\usepackage{tikz-3dplot}
@@ -795,6 +795,18 @@
    \[ \mathbf {K} = \begin{bmatrix}\,\,0&\!-k_{3}&\,\,\,k_{2}\\\,\,\,k_{3}&0&\!-k_{1}\\\!-k_{2}&\,\,k_{1}&\,\,0\end{bmatrix}
    \]
    - *ACTIVITY*
+** Rotation : Rodrigues formula IRL
+   - In mechanics, frame rotations are omnipresent
+   - One familiar real life example is when an elastic rod experiences a
+     torsional force
+	#+CAPTION: Euler rotations
+	#+ATTR_LATEX: :width 0.45\textwidth
+	[[file:images/twisted_bar.png]]
+   - Let's see this in our framework too...
+   - *DEMO*
+   - It was possible to code the frames up that way (linearly), because of the
+     spatial rate of change of the frame angle.
+   - *Curvature*
 ** Rodrigues formula : The inverse operator
 *** What about the inverse operation?
 	Given the rotation matrix \( \bv{R}\)
@@ -824,13 +836,19 @@
    \[ \mathbf {R}^T =\mathbf {I} - (\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \]
    Subtracting both the equations,
    \[ \mathbf{K} = \left( \frac{\mathbf {R} - \mathbf {R}^T}{2 \sin \theta} \right) \]
+** Summary
+   In this lecture, we
+   - understood basic linear/affine transformatinos relevant in mechanics
+   - investigated rotations, and interpreted them as basis-change
+     transformations
+   - saw properties on \( \gv{d}, \bv{Q} \) that linked them back to rotation
+   - learnt (+ implemented) a couple (more importantly, the Rodrigues formula)
+     of ways to rotate basis frames
+** Temporal/Spatial rates of change
+   But what about temporal/spatial changes in rotation. i.e. given a frame, and
+   given its /change/, how do we predict nearby frames (in time and space?)
 
-** TODO Rotations using Euler angles: compositions
-   - Show Rz * Ry * Rx
-   - Put formula for the same here
-   -
-   - Is it commutative (does the order matter)
-   - Extrinsic or Intrinsic
+   *DEMO*
 * Footnotes
 
 [fn:4] Wikimedia, CC3.0 license

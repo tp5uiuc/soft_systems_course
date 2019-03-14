@@ -1,4 +1,4 @@
-#+TITLE: Project 2: Modeling and optimization of a slithering snake
+#+TITLE: Project 2 + 3: Modeling and optimization of a slithering snake
 #+SUBTITLE: ME498: Computational modeling and optimization
 #+AUTHOR: Mattia Gazzola
 #+OPTIONS:   H:3 num:t toc:nil date:nil ::t |:t ^:{} -:t f:t *:t <:t
@@ -8,7 +8,7 @@
 
 *Teaching Assistant* : Tejaswin Parthasarathy, ~tp5@illinois.edu~
 
-*Submission Date/Time*: Wednesday 11:59 PM, 27 March, 2019
+*Submission Date/Time*: Wednesday 11:59 PM, 01 May, 2019
 
 *Submission Instructions*:
  - You need to submit both your presentation (as ~.pdf~, ~.ppt[x]~ or ~.key~) and code
@@ -49,64 +49,531 @@
    library or its ~Python~ interface---[[https://github.com/Zulko/vapory][Vapory]].
 ** Details
 *** Governing equations
-**** Cosserat rod model
+	*Cosserat rod model*
 	 The following are the equations that you need to implement in your code.
 	 Note that these equations are derived *after* appropriate simplification as
 	 detailed in the next subsection.
-**** Numerical discretization
-	 Pick the same.
+	 #+begin_export latex
+	 \begin{eqnarray}
+	 \frac{\partial \mathbf{r}}{\partial t} &=& \mathbf{v}\label{eq:velfinal} \\
+	 \frac{\partial \mathbf{d}_j}{\partial t} &=& (\mathbf{Q}^T\boldsymbol{\omega}_{\mathcal{L}}) \times \mathbf{d}_j,~~~~~j=1,2,3\label{eq:framefinal}\\
+	 dm \cdot \frac{\partial^2 \mathbf{r}}{\partial t ^2} &=& \underbrace{\frac{\partial}{\partial \hat{s}} \left(\frac{\mathbf{Q}^T\hat{\mathbf{S}}\boldsymbol{\sigma}_{\mathcal{L}}}{1}\right)d\hat{s}}_{\text{{shear/stretch} internal force}} +\underbrace{\mathbf{F}\label{eq:linmomentfinal}}_{\text{ext. force}}\\
+	 \frac{d\hat{\mathbf{J}}}{e} \cdot \frac{\partial \boldsymbol{\omega}_{\mathcal{L}}}{\partial t} &=& \underbrace{\frac{\partial}{\partial \hat{s}}\left(\frac{\hat{\mathbf{B}}\hat{\boldsymbol{\kappa}}_{\mathcal{L}}}{1^3}\right)d\hat{s} + \frac{\hat{\boldsymbol{\kappa}}_{\mathcal{L}}\times\hat{\mathbf{B}}\hat{\boldsymbol{\kappa}}_{\mathcal{L}}}{1^3}d\hat{s}}_{\text{{bend/twist} internal couple}}~~~+ \underbrace{\left(\mathbf{Q}\mathbf{t}\times\hat{\mathbf{S}}\boldsymbol{\sigma}_{\mathcal{L}}\right)d\hat{s}}_{\text{{shear/stretch} internal couple}}\nonumber\\
+	 &&+ \underbrace{\mathbf{C}_{\mathcal{L}}}_{\text{ext. couple}},\label{eq:angmomentfinal}
+	 \end{eqnarray}
+	 #+end_export
+     where \( dm=\rho \hat{A} d\hat{s}=\rho A ds \) is the infinitesimal mass
+     element, and \( d\hat{\mathbf{J}}=\rho\hat{\mathbf{I}} d\hat{s} \) is the
+     infinitesimal mass second moment of inertia. Note that both
+     initial and boundary conditions are problem dependent.
+
+	 #+ATTR_LATEX: :width 1\textwidth :thickness 0.01pt
+	 -----
+
+	 \noindent *Numerical discretization*
+	 Numerically discretize the above equations according to the discussion in
+	 class, using nodal masses and elemental frames. Implement frame rotations/
+	 transformations using the Rodrigues rotation formula, using code from the
+	 hands-on session on rotations. Utilize the energy-preserving second-order
+	 (in position and velocity) position-Verlet scheme, following the details on
+	 the hands-on session on timestepping schemes.
+
 *** Simplifications to the governing equations
-**** First simplification is done by throwing away useless terms.
-**** Set e = 1
+	- The first simplification performed above involves a crude
+      approximation---we simply remove the Lagrangian transport and unsteady
+      dilatation terms from the angular momentum evolution equation[[ref:eq:angmomentfinal]].
+	- The second simplification comes from explicitly constraining \( e = 1\).
+      This means you *DO NOT* need quantities in the reference and current
+      configuration---they are always identical. This means that you do not
+      need hatted (\( \hat{.} \)) and non-hatted matrices/quantities.
+      Implementation-wise, you will define constant matrices and reuse them
+      throughout all the elements. We note that this approximation is only
+      valid in the specific example of slithering snake that we are interested in.
+	- As we will later see, rolling/lateral friction is neglected.
 *** Validation
-	Timoshenko Beam
+	Once you are confident that all your operators (~Python~  functions) are
+	performing the right task, it is prudent to validate your code against
+	physical cases with known analytical (or numerical/experimental) solutions.
+	One such example is the deformation of a cantilever beam under an applied
+	load (and you are free to choose other cases too, if you so wish).
 
-	The parameters for this particular problem are ...
-*** Modeling muscular activity and friction
-	- Parametrization of muscles
-	- Including Friction as external force.
-*** Gait optimization for maximal forward speed
+	In this problem, you clamp one end of the beam $\hat{s}=0$ , while applying a load \( F
+ 	\) to the free end of the beam $\hat{s}=\hat{L}$. This is shown in [[ref:p1_fig]] below, taken
+ 	from the first link in [[ref:sec:references]]. In this case, analytical solutions dervied from the Timoshenko (and
+ 	Euler-Bernoulli) theory exists, which relies on the assumption of small
+ 	deflections, so that the horizontal coordinate $x$ along the direction
+ 	$\mathbf{k}$ can be approximated by the arc-length $\hat{s}$.
 
-   More details about the 0/1 Knapsack problem are contained in the lecture slides.
-   Alternatively, the [[https://en.wikipedia.org/wiki/Knapsack_problem][Wikipedia]] page also has a lot of information about this
-   problem. Quoting the introductory text,
- #+begin_quote
- " The knapsack problem or rucksack problem is a problem in combinatorial
- optimization: Given a set of items, each with a weight and a value, determine
- the number of each item to include in a collection so that the total weight is
- less than or equal to a given limit and the total value is as large as possible.
- It derives its name from the problem faced by someone who is constrained by a
- fixed-size knapsack and must fill it with the most valuable items. "
- #+end_quote
+    #+NAME: p1_fig
+	#+CAPTION: Validation---Deformation of a cantilever beam
+	#+ATTR_LATEX: :width 0.9\textwidth
+	[[file:images/figure_11.pdf]]
+	Considering the rod has length
+ 	$\hat{L}$, constant cross sectional area $\hat{A}$ , area second moment of
+ 	inertia about the axis $\mathbf{j}=\mathbf{k}\times\mathbf{i}$ to be
+ 	$\hat{I}_1$, Young's and shear moduli $E$ and $G$, the analytical solution is
 
-   Your task is to find an optimal distribution of items to carry, that
-   maximizes the overall value while adhering to the weight limit, using both
-   - GA
-   - CMA
-   and compare the performance of these algorithms on this function. Details about
-   the dataset for this problem is given below in [[cref:sec:data]]. Note that this is a constrained
-   optimization problem and your design choices in the
-   algorithm need to reflect this. As this seems like a problem with integer
-   solutions, consider how you can change CMA to reflect this property. As we are
-   interested in black-box optimization algorithms, we assume we do not know
-   anything about the problem structure. This means that using a randomly generated
-   population around \( \mathbf{x}_0 =\mathbf{0}\)---the vector of zeros---to
-   initialize the algorithm is a good idea.
+	\[ y=-\frac{3F}{4\hat{A}G}\hat{s} -
+	\frac{F\hat{L}}{2E\hat{I}_1}\hat{s}^2 + \frac{F}{6E\hat{I}_1}\hat{s}^3 \]
 
-   Finally, after answering all the questions above and implementing your
-   algorithm, explore the design choices (be it parameters or operators) on the
-   performance of the algorithms.
-** Settings
-:PROPERTIES:
-:CUSTOM_ID: sec:data
-:END:
+	If the shear modulus $G$ approaches infinity or if the ratio
+	$3E\hat{I}_1/(4\hat{L}^2\hat{A}G)\ll 1$, then the Timoshenko model in the
+	static case reduces to the Euler-Bernoulli approximation, yielding
+	\[ y= - \frac{F\hat{L}}{2E\hat{I}_1}\hat{s}^2 +
+	\frac{F}{6E\hat{I}_1}\hat{s}^3 \]
 
-  There are two data sets--A, B. Each data set will be posted on Compass as
-  simple ~numpy npz~ files with the knapsack capacity (total weight of the
-  knapsack), number of different items (which are all assumed to be distinct in
-  the 0/1 knapsack problem so you *do not* need to worry about /choosing/ same
-  items), and their values + weights. For convenience you can read the
-  information using ~numpy~'s ~load~ function, shown in the snippet below:
+	You can then compare your numerical model with these results by carrying out
+	simulations of the cantilever beam shown in [[ref:p1_fig]], with generous number
+	of elements and an appropriate \( dt \). You should recover the results
+	obtained from Timoshenko theory, shown in [[ref:p1_fig]] for these parameters:
+
+	#+CAPTION: Parameters for the Timoshenko beam validation
+	#+NAME: timoshenko_params
+	| Parameters                              | Value                               |
+	|-----------------------------------------+-------------------------------------|
+	| Rod density \(\rho\)                    | \( \SI{5e3}{\kg \m^{-3}}\)          |
+	| Young's modulus \( E \)                 | \( \SI{1e6}{\Pa} \)                 |
+	| Shear modulus \( G\)                    | \( \SI{1e4}{\Pa} \)                 |
+	| Downward force \( F \)                  | \( \SI{15}{\N}     \)               |
+	| Rod Length \( L \)                      | \( \SI{3}{\m}     \)                |
+	| Rod radius \( r \)                      | \( \SI{0.25}{\m}     \)             |
+	| Dissipation constant \( \gamma \)       | \( \SI{0.1}{\kg\per\m\per\second}\) |
+	| Simulation time \( T \)                 | \( \SI{5e3}{\second}\)              |
+	| Number of discretization points \( n \) | 100                                 |
+	| Time step \( dt \)                      | \( \SI{3e-4}{\second}\)             |
+	|-----------------------------------------+-------------------------------------|
+
+	Notice that if you change one of these parameters such that \(
+	3E\hat{I}_1/(4\hat{L}^2\hat{A}G)\ll 1 \), you should also recover the
+	results of the Euler-Bernoulli theory (Say by setting \( E = G = \SI{1e5}{\Pa}
+	\) ).
+
+	#+ATTR_LATEX: :width 1\textwidth :thickness 0.01pt
+	-----
+ 	*Initial conditions*: Notice that in this case, the initial
+ 	condition constrains the rod to be straight, with its axis (and hence all
+ 	elemental frames) pointing in the \(\mathbf{i} \) direction. Setting the spatial location
+ 	of the equispaced nodes/frames initially then, is pretty straightforward. Additionally at the
+ 	start, all nodes have translational and angular velocities set to \( \mathbf{0} \), in the
+ 	appropriate units.
+
+	#+ATTR_LATEX: :width 1\textwidth :thickness 0.01pt
+	-----
+ 	*Boundary conditions*: Notice that in this case, the boundary
+ 	condition constrains the elemental frame (and its angular velocity) at \(
+ 	\hat{s} = 0.0\) to retain its initial configuration. Furthermore at this
+ 	location, the node is time invariant---hence its location is fixed, and its
+ 	velocity always \( \mathbf{0} \).
+*** Towards a slithering snake
+	*Muscular activity* To model muscular activity, we express it as torques
+     acting along the body. The magnitude $A_m$ of this torque is a traveling
+     wave propagating head to tail along the filament
+
+	\[ A_m=\beta_m(\hat{s})\cdot\sin\left(\frac{2\pi}{T_m} t +
+											\frac{2\pi}{\lambda_m}
+											\hat{s}\right) \]
+	where $t$ is time, $T_m$ and $\lambda_m$ are,
+	respectively, the activation period and wavelength. In the equation above,
+	the amplitude of the traveling wave is represented by the cubic B-spline \(
+	\beta(\hat{s}) \) characterized by \( N_m \) control points \(
+	(\hat{S}_i,\beta_i) \) with \( i=0,\dots,N_m-1 \), as illustrated in
+	[[ref:fig_spline]]. The first and last control points are fixed so that $(\hat{s}_0,\beta_0)=(0,0)$
+	and $(\hat{s}_{N_m-1},\beta_{N_m-1})=(\hat{L},0)$, therefore assuming the
+	ends of the deforming body to be free.
+
+    #+NAME: fig_spline
+	#+CAPTION: B-spline parametrization for modeling muscular activity using torques. We exhibit the case with \( N_m = 8\) here.
+	#+ATTR_LATEX: :width 0.9\textwidth
+	[[file:images/figure_03.pdf]]
+
+	We then prescribe this muscular activity as an internal torque activation of
+	the form
+	\[ \boldsymbol{\tau}^m_{\mathcal{L}} = \mathbf{Q}(A_m\mathbf{d}_1) \]
+	assuming $\mathbf{d}_2$ and $\mathbf{d}_3$ to be coplanar to the ground.
+	This contribution is directly added to the internal torque
+	$\boldsymbol{\tau}_{\mathcal{L}}$ resulting from solving the Cosserat equations.
+
+	The cubic B-spline function with the appropriate boundary conditions has
+	been implemented for you and is available as a function from the scriptfile
+	~b_spline.py~. A typical use-case is shown in the code [[ref:list_spline]]
+	below, which produces the spline shown in [[ref:python_spline]].
+
+
+	#+NAME: setup_bloc
+	#+begin_src python :results output :exports none :session doc_style
+	  from matplotlib import pyplot as plt
+	  import seaborn as sns
+
+	  ## Set rc parameters
+	  sns.set_style(
+		  "ticks", {
+			  "axes.facecolor": "1.0",
+			  'axes.linewidth': 10.0,
+			  'axes.edgecolor': 'k',
+			  'axes.axisbelow': True,
+			  'axes.grid': True,
+			  'axes.spines.right': True,
+			  'axes.spines.top': True,
+			  'grid.color': [0.8, 0.8, 0.8],
+			  'grid.linestyle': '--',
+			  'xtick.color': 'k',
+			  'xtick.direction': u'in',
+			  'xtick.major.size': 10.0,
+			  'xtick.minor.size': 6.0,
+			  'ytick.color': 'k',
+			  'ytick.direction': u'in',
+			  'ytick.major.size': 10.0,
+			  'ytick.minor.size': 6.0
+		  })
+	  sns.set_context("paper", rc={"figure.figsize": (10, 5)})
+
+	  plt.rcParams['text.usetex'] = 'True'
+	  # plt.rcParams['font.serif'] = 'Palatino'
+	  plt.rcParams['font.size'] = 16
+	  plt.rcParams['axes.labelsize'] = 12
+	  plt.rcParams['axes.labelweight'] = 'bold'
+	  plt.rcParams['axes.titlesize'] = 16
+	  plt.rcParams['xtick.labelsize'] = 12
+	  plt.rcParams['ytick.labelsize'] = 12
+	  plt.tight_layout(pad=0.5)
+	#+end_src
+
+	#+RESULTS: setup_bloc
+	: Python 3.7.2 (default, Jan 31 2019, 16:06:50)
+	: [Clang 8.0.0 (clang-800.0.42.1)] on darwin
+	: Type "help", "copyright", "credits" or "license" for more information.
+	: >>> python.el: native completion setup loaded
+
+	#+NAME: list_spline
+	#+CAPTION: B-spline code snippet
+	#+ATTR_LATEX: :options fontsize=\scriptsize
+	#+begin_src python :results file :exports both :eval never-export :session doc_style
+	  import numpy as np
+	  from matplotlib import pyplot as plt
+	  from bspline import snake_bspline
+
+	  # Length of centerline
+	  l_centre = 1.0
+	  # Non-zero coefficients of spline, set by you
+	  t_coeff = np.array([0.1, 0.3, 0.15, 0.22, 0.25, 0.1])
+	  # See function documentation for more details
+	  my_spline, ctr_pts, ctr_coeffs = snake_bspline(t_coeff, keep_pts=True)
+
+	  s = np.linspace(0.0, l_centre, 200)
+
+	  # Figure beautification
+	  fig, ax = plt.subplots(figsize=(8,2))
+	  ax.set_aspect('equal')
+	  ax.set_xlim(0.0, 1.0)
+	  ax.set_ylim(0.0, 0.4)
+	  ax.set_xlabel(r'$\hat{s}$')
+	  ax.set_ylabel(r'$\beta_m(\hat{s})$')
+
+	  # Plot the spline along as function of centerline
+	  ax.plot(s, my_spline(s))
+
+	  # Plot the control points of the spline too
+	  ax.plot(ctr_pts, ctr_coeffs, 'kx')
+
+	  # Export
+	  FILE_NAME = 'images/snake_spline.pdf'
+	  fig.savefig(FILE_NAME, bbox_inches='tight')
+	  FILE_NAME
+	#+end_src
+
+	#+CAPTION: The spline generated by the script ~b_spline.py~
+	#+NAME: python_spline
+	#+ATTR_LATEX: :width 1.0\textwidth
+	#+RESULTS: list_spline
+	[[file:images/snake_spline.pdf]]
+
+	#+ATTR_LATEX: :width 1\textwidth :thickness 0.01pt
+	-----
+	*Contact with the wall*: The wall (or ground) contact is modeled as an external
+	response force experienced by the rod $\mathbf{F}^w_{\perp}$ that balances
+	the sum of all forces $\mathbf{F}_{\perp}$ that push the rod against the
+	wall, and is complemented by other two components which help prevent
+	possible interpenetration due to numerical errors. The interpenetration
+	distance $\epsilon$ triggers a normal elastic response proportional to the
+	stiffness of the wall \( k_{w}\), while a dissipative term related to the
+	normal velocity component of the filament with respect to the wall accounts
+	for a damping force proportional to $\gamma_w$, so that the overall wall
+	response is
+	\[ \mathbf{F}^w_{\perp}= H(\epsilon)\cdot(-\mathbf{F}_{\perp} +
+	k_w\epsilon-\gamma_w\mathbf{v}\cdot
+	\mathbf{u}^w_{\perp})\mathbf{u}^w_{\perp} \]
+	where $H(\epsilon)$ denotes the Heaviside function and ensures that a wall
+	force is produced only in case of contact ($\epsilon\ge0$). Here
+	$\mathbf{u}^w_{\perp}$ is the boundary outward normal (evaluated at the
+	contact point, that is the contact location for which the normal passes
+	through the center of mass of the element), and $k_w$ and $\gamma_w$ are,
+	respectively, the wall stiffness and dissipation coefficients.
+
+	Once wall contact is modeled, you can run some test cases to see
+	whether it works. As the response is linear, when \( \epsilon > 0\),
+	consider running the following three cases while recording the force on the
+	cylinder:
+    - A rod with nodal mass \( dm \) resting horizontally on the ground (which
+      is also at rest), when
+      uniform gravity \( g = \SI{9.81}{\m\per\s^2} \) acts in the vertical
+      direction (i.e, in the wall normal direction). In
+      this case, the wall force should equal the force due to gravity for static
+      equilibrium, i.e. \( \mathbf{F}^w_{\perp}= \)
+	- Now turn gravity off in the scenario above, but initialize the rod such
+      that it has some interpenetration \( \epsilon \) with the ground (once
+      again, in the wall normal direction). If the
+      wall stiffness is \( k_w \), then the instantaneous wall response should
+      record in your solver as \( k_w \epsilon \).
+	- To check the damping force, we envision two cases shown below. In both
+      cases gravity is turned off:
+	  + The rod lies on the ground similar to the first case, but it now has a
+        uniform velocity \( v \) in the ground coplanar direction (say
+        horizontal). In this case, the wall response should record zero (or
+        values close to zero).
+	  + If however, the uniform velocity \(v\) now acts in the wall normal
+        direction and tries to penetrate the rod into the ground, then the
+        instantaneous wall normal response should read \( \gamma_w v \) (or
+        values close to the same, accounting for interpenetration \( \epsilon\) ).
+
+	#+ATTR_LATEX: :width 1\textwidth :thickness 0.01pt
+	-----
+	*Anisotropic friction*: The modeling of friction should closely follow
+	the in-class discussions. Once the isotropic friction law is setup using
+	the Amonton--Coloumb law, anisotropy can be included by changing the
+	friction coefficients based on the direction of locomotion.
+    For this project, you can *neglect* lateral/rolling friction.
+	# The line above is only in the new version
+
+*** The slithering snake
+	With all the components in place, we can assemble them together to model a
+	snake. For this case, the muscular activity
+	is modeled as an internal torque, calculated as a parametrized B-spline, as mentioned
+	before. We first discuss initial and boundary conditions:
+
+# For ease of implementation, we will discuss two benchmark cases
+# 	pertaining to a snake, to test the harmonious integration of rod
+# 	mechanics, muscular activity, wall contact, isotropic and anisotropic
+# 	friction. For both these cases, the muscular activity
+# 	is modeled as internal torques, as a parametrized B-spline, as mentioned
+# 	before. The initial and boundary conditions are also specified, and we discuss
+# 	them first
+
+	#+ATTR_LATEX: :width 1\textwidth :thickness 0.01pt
+	-----
+	*Initial conditions* The rod representing the snake is initialized coplanar
+	to the ground, with equispaced nodes along the forward direction. At the start, \(
+	\mathbf{d}_1 \) is assumed
+	to point in the wall-normal direction and so \( \mathbf{d}_2, \mathbf{d}_3
+	\) point in the coplanar direction. We also remind you that \( \mathbf{d}_3 \) is
+	set to points along the body centerline coordinate, at the start. All nodal
+	translational velocities and elemental angular velocities are initialized as zero.
+
+	#+ATTR_LATEX: :width 1\textwidth :thickness 0.01pt
+	-----
+	*Boundary conditions* With the torque profile imposed by the B-spline, we
+	need not specify boundary conditions on the snake (aka Free boundary conditions).
+
+	#+ATTR_LATEX: :width 1\textwidth :thickness 0.01pt
+	-----
+	*Muscle activity* We consider a *six* parameter B-spline,
+	with \( \beta_{i=0,5}=0 \) to model the muscle activity.
+
+	#+ATTR_LATEX: :width 1\textwidth :thickness 0.01pt
+	-----
+	*Additional validation* If you are not confident with your snake model, you
+	can refer to the first link in [[ref:sec:references]] for more validation cases or alternatively
+	ask the TA.
+
+    # Original documnet included more validation
+	# But mattia did not want it
+
+	# #+ATTR_LATEX: :width 1\textwidth :thickness 0.01pt
+	# -----
+	# *Absence of slithering in the presence of symmetries* The first case for
+	# validation pertains to investigating the trajectory of the center of mass of
+	# the snake, when including a symmetric actuation and isotropic friction.
+	# Consider the case of muscle actuation modeled as a symmetric six parameter B-spline,
+	# with \( \beta_{i=0,5}=0 \), \( \beta_1 = \beta_4\) and \(\beta_2 =\beta_3
+	# \). Also set the wavenumber \( 2\pi/ \lambda_m = 0\), which resembles a
+	# standing wave actuation. Furthermore, we first include isotropic friction
+	# coefficients (all forward \(\mu^f\), backward \(\mu^b\) and lateral (rolling)
+	# \(\mu^r\) are the same). In this case, the snake center of mass should not
+	# move over any activation cycle. We look for this behavior in our code, with
+	# the parameters listed in [[ref:tab_sym_snake_params]]. This is shown in
+	# [[ref:fig_snake]] (a,b). To encourage one-to-one comparison with this figure, we
+	# also provide the dataset used to plot (b) above. You can use ~numpy~'s
+	# ~loadtxt~ function to import them to your ~Python~ environment.
+	# [[Cref:list_snakedata]] shows an example:
+
+	# #+CAPTION: Parameters for the symmetricaly activated snake with isotropic friction
+	# #+NAME: tab_sym_snake_params
+	# | Parameters                                                  | Value                                       |
+	# |-------------------------------------------------------------+---------------------------------------------|
+	# | Total mass \(m\)                                            | \( \SI{1}{\kg}\)                            |
+	# | Young's modulus \( E \)                                     | \( \SI{1e7}{\Pa} \)                         |
+	# | Shear modulus \( G\)                                        | \( 2E/3\;\si{\Pa} \)                        |
+	# | Shear/Stretch matrix \( \mathbf{S} \)                       | \( 1 \times 10^{5} \mathbf{I} \; \si{\N} \) |
+	# | Bend/Twist matrix \( \mathbf{B} \)                          | diag\((EI_1, EI_2, GI_3) \si{\N\per\m^2}\)  |
+	# | Rod length \( L \)                                          | \( \SI{0.5}{\m}     \)                      |
+	# | Rod radius \( r \)                                          | \( \SI{0.025}{\m}     \)                    |
+	# | Muscular activation period \( T_m \)                        | \( \SI{1}{\second}\)                        |
+	# | Dissipation constant \( \gamma \)                           | \( \SI{0.1}{\kg\per\m\per\second}\)         |
+	# | Acceleration due to gravity normal to ground \( g \)        | \SI{9.81}{\m \per \s^2}                     |
+	# | Static friction coefficient\( \mu^f_s = \mu^r_s=\mu^b_s \)  | 0.2                                         |
+	# | Kinetic friction coefficient\( \mu^f_k = \mu^r_k=\mu^b_k \) | 0.1                                         |
+	# | Friction threshold velocity \( v_{\epsilon}\)               | \SI{1e-8}{\m\per\s}                         |
+	# | Ground stiffness \(k_w \)                                   | \SI{1}{\kg \per \s^2}                       |
+	# | Ground viscous dissipation                                  | \SI{1e-6}{\kg \per \s}                      |
+	# | Torque B-spline coefficients \(\beta_{i=0, \dots, 5} \)     | \( \{0,10,15,15,10,0\} \si{\N\m}\)          |
+	# | Wavenumber  \( \dfrac{2\pi}{\lambda}\)                      | \SI{0}{\per\m}                              |
+	# | Number of discretization points \( n \)                     | 100                                         |
+	# | Time step \( dt \)                                          | \( \SI{1e-5}{\second}\)                     |
+	# |-------------------------------------------------------------+---------------------------------------------|
+
+    # #+NAME: fig_snake
+	# #+CAPTION: Snake locomotion in the isotropic versus anisotropic friction case. (a) Gait envelope computed over the 10th muscular activation cycle in the case of isotropic friction. The blue triangle denotes the location of the snake's center of mass at time $t=0$, reported as reference. (b) Lateral (blue) and forward (red) velocities as functions of time normalized by the activation period $T_m$ in the case of isotropic friction. (c) Gait envelope computed over the 10th muscular activation cycle in the case of anisotropic friction. The blue triangle denotes the location of the snake's center of mass at time $t=0$, reported as reference. (d) Lateral (blue) and forward (red) velocities as functions of time normalized by the activation period $T_m$ in the case of anisotropic friction.
+	# #+ATTR_LATEX: :width 1.0\textwidth
+	# [[file:images/figure_18.pdf]]
+
+
+	# #+NAME: list_snakedata
+	# #+CAPTION: Importing the snake dataset
+	# #+ATTR_LATEX: :options fontsize=\scriptsize
+	# #+begin_src python :results output :exports code :eval never-export
+	#   import numpy as np
+
+	#   # my_data is a (x, 3) time series data
+	#   # The first columnd my_data[:,0] contains the time
+	#   # The second columnd my_data[:,1] contains the forward snake velocity
+	#   # The third columnd my_data[:,2] contains the lateral snake velocity
+	#   my_data = np.loadtxt('isotropic_snake.dat')
+	# #+end_src
+
+	# #+ATTR_LATEX: :width 1\textwidth :thickness 0.01pt
+	# -----
+	# *Slithering in the presence of asymmetries*  In the case above, if we
+	# instead include anisotropic friction coefficients (forward \(\mu^f\),
+	# backward \(\mu^b\) and lateral/sideways \(\mu^s\) are all different), we
+	# should see the snake move albeit in a slow fashion. We look for this
+	# behavior in our code, with the parameters retained from
+	# [[ref:tab_sym_snake_params]]. However we now change the static
+	# $\mu^f_s=0.2$, $\mu^r_s=2\mu^f_s$, $\mu^b_s=20\mu^f_s$ and kinetic
+	# $\mu^f_k=0.1$, $\mu^r_k=2\mu^f_k$, $\mu^b_k=20\mu^f_k$ friction coefficients
+	# in this (anisotropic) case. Your snake should now exhibit small, but
+	# non-negligible movement in the forward direction, as seen in [[ref:fig_snake]]
+	# (c,d). Once again, the time-series data for the forward and lateral
+	# velocities is provided for comparison in the file ~anisotropic_snake.dat~, which can be
+	# read in to ~Python~ similar to ~isotropic_snake.dat~.
+
+*** Gait optimization for maximal forward velocity
+	We are now (almost) ready to tackle the optimization problem of finding the
+	maximal forward velocity for a model snake. The code setup, initial and
+	boundary conditions follow from the previous section, including the
+	six coefficient spline parameterization.
+    # The rod parameters for this case however, are different and given in [[ref:tab_opt_snake_params]].
+    The rod parameters for this case are given in [[ref:tab_opt_snake_params]].
+
+	#+CAPTION: Parameters for the snake to be optimized for maximal forward velocity
+	#+NAME: tab_opt_snake_params
+	| Parameters                                                  | Value                                         |
+	|-------------------------------------------------------------+-----------------------------------------------|
+	| Rod density \(\rho\)                                        | \( \SI{5e3}{\kg \m^{-3}}\)                    |
+	| Young's modulus \( E \)                                     | \( \SI{1e7}{\Pa} \)                           |
+	| Shear modulus \( G\)                                        | \( 2E/3\;\si{\Pa} \)                          |
+	| Shear/Stretch matrix \( \mathbf{S} \)                       | diag\((4GA/3, 4GA/3, 2GA/3) \si{\N\per\m^2}\) |
+	| Bend/Twist matrix \( \mathbf{B} \)                          | diag\((EI_1, EI_2, GI_3) \si{\N\per\m^2}\)    |
+	| Rod length \( L \)                                          | \( \SI{1}{\m}     \)                          |
+	| Rod radius \( r \)                                          | \( \SI{0.025}{\m}     \)                      |
+	| Muscular activation period \( T_m \)                        | \( \SI{1}{\second}\)                          |
+	| Dissipation constant \( \gamma \)                           | \( \SI{5}{\kg\per\m\per\second}\)             |
+	| Acceleration due to gravity normal to ground \( g \)        | \SI{9.81}{\m \per \s^2}                       |
+	| Forward kinetic friction coefficient\( \mu^f_k \)           | \( 1.019368 \)                                |
+	| Backward kinetic friction coefficient \( \mu^b_k\)          | \(1.5 \cdot  \mu^f_k \)                       |
+	| Forward static friction coefficient\( \mu^f_s \)            | \(2 \cdot  \mu^f_k     \)                     |
+	| Backward static friction coefficient \( \mu^b_s\)           | \(1.5 \cdot  \mu^f_s      \)                  |
+	| Friction threshold velocity \( v_{\epsilon}\)               | \SI{1e-8}{\m\per\s}                           |
+	| Ground stiffness \(k_w \)                                   | \SI{1}{\kg \per \s^2}                         |
+	| Ground viscous dissipation                                  | \SI{1e-6}{\kg \per \s}                        |
+	| Number of discretization points \( n \)                     | 50                                            |
+	| Time step \( dt \)                                          | \( \SI{2.5e-5}{\second}\)                     |
+	|-------------------------------------------------------------+-----------------------------------------------|
+
+	# If rollng friction is included
+	# | Lateral (rolling) kinetic friction coefficient \( \mu^r_k\) | \(2 \cdot  \mu^f_k \)                         |
+	# | Lateral (rolling) static friction coefficient \( \mu^r_s\)  | \(2 \cdot  \mu^f_s       \)                   |
+
+	#+ATTR_LATEX: :width 1\textwidth :thickness 0.01pt
+	-----
+	*Coupling with CMAes* : With these parameters, you can now run an optimization
+     campaign using CMAes, to find an optimal gait that maximizes the forward
+     velocity \( v^{\text{fwd}}_{\text{max}}\) over one activation cycle. That
+     is, you are required to find the spline coefficients and wavelength:
+	 \[ \beta_{i} \quad i=1,2,3,4 \quad \text{and} \quad \lambda_m \]
+	 with \( \beta_{i=0} = \beta_{i=5} = \SI{0}{\N\m} \) identically. Think
+     about the fitness function for this problem, and any bounds that you would
+     like to place on the parameters to be optimized (for example, we ran it
+     with \( |\beta|^{\text{max}}_{i=0,\dots,5} = \SI{50}{\N\m}\) ). The
+     optimized parameters in our case (including lateral friction) were
+	 \[ \beta_{i=0,\dots,5}=\{0,17.4, 48.5, 5.4, 14.7, 0\} \quad \text{and}
+     \quad \lambda_m = \SI{0.97}{m} \]
+	 which gives an average forward velocity of \(
+     v^{\text{fwd}}_{\text{max}}\simeq \SI{0.6}{\m\per\s} \), which
+     compares well to real-life snakes*. This
+     is shown in [[ref:fig_opt_snake]], and should (ideally) not be far from the final velocity
+     that your implementation gives as well (considering that you are making a
+     lot of assumptions). Once again, to encourage comparison
+     with our results, the forward and lateral velocities of the optimal snake
+     is attached in the file ~optimized_snake.dat~, and can be read into your
+     ~Python~ environment, using ~numpy~'s ~loadtxt~ function, as shown in [[ref:list_snakedata]].
+
+	#+NAME: list_snakedata
+	#+CAPTION: Importing the snake dataset
+	#+ATTR_LATEX: :options fontsize=\scriptsize
+	#+begin_src python :results output :exports code :eval never-export
+	  import numpy as np
+
+	  # my_data is a (x, 3) time series data
+	  # The first columnd my_data[:,0] contains the time
+	  # The second columnd my_data[:,1] contains the forward snake velocity
+	  # The third columnd my_data[:,2] contains the lateral snake velocity
+	  my_data = np.loadtxt('optimized_snake.dat')
+	#+end_src
+
+	#+NAME: fig_opt_snake
+	#+CAPTION: Optimal lateral undulation gait. (a, b, c, d) Instances at different times of a snake characterized by the identified optimal gait. (e) Evolution of the fitness function $f=v^{\text{fwd}}_{\text{max}}$ as function of the number of generations produced by CMA-ES. Solid blue, solid red and dashed black lines represent, respectively, the evolution of $f$ corresponding to the best solution, the best solution within the current generation, and the mean generation value. (f) Scaled forward (red) and lateral (blue) center of mass velocities versus normalized time. (g) Gait envelope over one oscillation period $T_m$. Red lines represent head and tail displacement in time.
+	#+ATTR_LATEX: :width 1.0\textwidth
+	[[file:images/figure_13.pdf]]
+
+** Expected submission
+  We expect you to submit your code and presentation. In your presentation,
+  please try and include all your validation cases, information on your
+  optimization campaign (CMAes fitness function, bounds on parameters, time
+  interval for optimization etc), performance of CMA on this problem and finally
+  the results obtained. Other information such as timing data from your code
+  (i.e. time for a single function evaluation) etc. can also be included.
+* A soft X
+  #+begin_export latex
+  {\large \textbf{This section is compulsary for students taking the course for four credit
+  hours and is optional for those taking the course for three credit hours}}.
+  #+end_export
+** Solve for X
+   Think of an physical problem/application in which the modeling capabilities
+   that you learnt in this course can come in handy, and design, using Cosserat
+   rod(s), a setup that can be used to study/solve the problem you have in mind.
+   This problem/application can be inspired from your research (or) even
+   something you are really curious about (a few examples will be given in the
+   class, but we will brainstorm with you about potential project ideas and
+   their feasibility).
+** Optimize for X
+   Once you have a preliminary design that partially/fully solves your problem,
+   you need to see whether you can do /better/. You are then expected to setup an
+   inverse design problem, define what's /better/ in your case and use the
+   optimization techniques that you have learnt thus far, to /evolve/ new
+   designs.
+** Understand X
+   After you have arrived at a /good/ design, try and understand what makes it
+   /good/. While this may not be straightforward in all cases, tracking the designs
+   that CMAes evolves can give you some intution as to why your design may be optimal.
 
 * The following resouces may prove useful:
 :PROPERTIES:
@@ -118,3 +585,11 @@
 - More information on timestepping schemes found [[https://cg.informatik.uni-freiburg.de/course_notes/sim_02_particles.pdf][at this link]]
 - [[http://young.physics.ucsc.edu/115/leapfrog.pdf][This link]] on a short but gentle introduction to symplectic time integration
  schemes accompanied by [[http://www2.math.ethz.ch/education/bachelor/seminars/fs2008/nas/crivelli.pdf][this link]] that compares many other schemes to the same.
+* Compass Instructions
+*Project 2*
+In this project, you will implement a computational soft mechanics code (in Python) and construct a near-realistic model of a slithering snake. You will also hook it up to a stochastic optimization algorithm (CMAes) to find a gait that maximizes the forward speed, under some given conditions.
+
+\noindent *Project 3*
+Students taking the course for four credit hours additionally need to﻿﻿ think of a model problem/application which they can solve using the implemented code. You also need to develop an inverse design study to find a better (optimal?) solution that tackles the same problem, and try and determine why the solution is optimal.
+
+More information enclosed in the attached files.

@@ -11,6 +11,24 @@ def snake_bspline(t_coeff, l_centerline=1.0, keep_pts=False):
     """ Generates a bspline object that plots the spline interpolant for
     any vector x. Optionally takes in a centerline length, set to 1.0 by
     default and keep_pts for keeping record of control points
+
+    Parameters
+    ----------
+    t_coeff : np.array
+        The spline coefficients, denoted by :math:`beta_i`. Note that the first
+        and the last values are set to zero by default.
+    l_centreline : float
+        The length of the centerline in meters.
+    keep_pts : boolean, optional
+        If True, we keep record of control point and coefficients at those points
+        by returned as a (3, ) tuple. If False, returns only the splibe object.
+        Defaults to False.
+
+    Returns
+    -------
+    spline : scipy.interpolate.Bspline class
+        A spline class that can be called as spline(x), where x are the points at
+        which the spline needs to be evaluated.
     """
     # Divide into n_control_pts numbrer of points (n_ctr_pts-1) regions
     control_pts = l_centerline * np.linspace(0.0, 1.0, t_coeff.shape[0])
