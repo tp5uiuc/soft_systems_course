@@ -1,0 +1,327 @@
+% Created 2019-03-14 Thu 11:54
+% Intended LaTeX compiler: pdflatex
+\documentclass[presentation]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{awesomebox}
+\usepackage{booktabs}
+\usepackage{placeins}
+\usepackage{siunitx}
+\usepackage{minted}
+\usetheme[progressbar=frametitle]{metropolis}
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+\usepackage{spot}
+\newcommand{\gv}[1]{\ensuremath{\mbox{\boldmath$ #1 $}}}
+\newcommand{\bv}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\bigqm}[1][1]{\text{\larger[#1]{\text{?}}}}
+\newcommand{\order}[1]{\mathcal O \left( #1 \right)} % order of magnitude
+\definecolor{scarlet}{rgb}{1.0, 0.13, 0.0}
+\definecolor{shamrockgreen}{rgb}{0.0, 0.62, 0.38}
+\definecolor{royalblue}{rgb}{0.25, 0.41, 0.88}
+\usetheme{default}
+\author{\emph{Tejaswin Parthasarathy}, Mattia Gazzola}
+\date{\today}
+\title{Elastica : Timesteppers}
+\subtitle{ME498: Comp. modeling \& optimization}
+\hypersetup{
+ pdfauthor={\emph{Tejaswin Parthasarathy}, Mattia Gazzola},
+ pdftitle={Elastica : Timesteppers},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.0.50 (Org mode 9.2)},
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\section{Time-marching algorithms}
+\label{sec:org3b086a4}
+\begin{frame}[label={sec:org5728d5d}]{Motivation}
+\begin{example}[Solve the following ODE]
+\[ \frac{dx}{dt} = 2x \quad x(0) = 1 \]
+\end{example}
+\begin{block}{We can!}
+\[ x(t) = e^{2t}\]
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:org464cc33}]{Motivation}
+\begin{example}[Solve the following ODE]
+\[ \frac{dx}{dt} = \sin(\cos x^{\frac{4}{3}}) + 4\sin^2(t) \quad x(0) = 1 \]
+\end{example}
+
+\begin{block}<2->{We can!}
+Use a time-marching algorithm that can solve the above equation, albeit numerically
+\end{block}
+\end{frame}
+\begin{frame}[label={sec:orgb5ff825}]{Introduction}
+\begin{itemize}
+\item As seen in the last lecture, all our (temporal/spatial) rate of frame change
+vectors (that effect rotations) are precisely of this form
+\end{itemize}
+
+More generally, we can solve problems of the form
+\[ \frac{\partial \mathbf{u}}{\partial t} = \mathbf{F}(\mathbf{u}, t) \]
+which is a partial differential equation (PDE), wherein \(\mathbf{F}\) is
+any arbitrary function.
+\end{frame}
+\begin{frame}[label={sec:orgaae2e48}]{Introduction}
+\begin{itemize}
+\item We investigate three different (classes of) time-marching algorithms for
+autonomous problems (?!):
+\begin{itemize}
+\item Euler method (or Euler forward)
+\item Runge-Kutta-4/RK4 (multi-stage methods)
+\item Position Verlet (symplectic, area preserving) integrators
+\end{itemize}
+\item We develop time marching methods that compute approximations to \(u(t)\)
+at specfic time points, \(t_0, t_1, \cdots, t_n\).
+\begin{itemize}
+\item We only consider a uniform timestep size \(dt  \rightarrow t^n = n \cdot
+       dt\).
+\end{itemize}
+\item Finally, we \emph{compare} these methods based on general and problem-specific properties\ldots{}
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:orgc55516c}]{Deriving Euler's forward method\footnote{Wikimedia}}
+\begin{columns}
+\begin{column}{0.5\columnwidth}
+\begin{itemize}
+\item Simplest timestepping scheme
+\item First-order approximation at time \(t_0\)
+\begin{itemize}
+\item Geometrical description
+\item Taylor series expansion
+\end{itemize}
+\end{itemize}
+\end{column}
+\begin{column}{0.4\columnwidth}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\textwidth]{images/euler_geometry.pdf}
+\caption{Geometrical desciption of Euler's method}
+\end{figure}
+\end{column}
+\end{columns}
+
+\[ u(t_{0}+dt)=u(t_{0})+dtu'(t_{0})+{\frac {1}{2}}dt^{2}u''(t_{0})+O(dt^{3}). \]
+\begin{itemize}
+\item First order because local slope approximation is \(\order{dt}\)
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org88c8539}]{General time stepping schemes}
+\begin{itemize}
+\item General schemes approximate the next iterate \(t^{n+1}\) using:
+\end{itemize}
+\[ \mathbf{u}^{n+1} = \sum_{i=0}^{k} \alpha_i \mathbf{u}^{n-i} + \sum_{j=0}^{r} \beta_j \frac{\partial \mathbf{u}^{n-j}}{\partial t} \]
+which for \(k=1\) and \(r=0\) looks something along these lines:
+\[ \mathbf{u}^{n+1} = \alpha_0 \mathbf{u}^{n} + \alpha_1 \mathbf{u}^{n-1} + \beta_0 \frac{\partial \mathbf{u}^{n}}{\partial t} \]
+\begin{itemize}
+\item Derivation of schemes other than Euler method follow a similar line of reasoning, while
+details vary\footnote{By a \alert{lot}}
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:org4d43e43}]{Some time stepping schemes\footnote{Oleg Alexandrov, Public Domain, Wikimedia}}
+With \(\dot{x} = f(x)\),
+\begin{block}{Euler forward}
+\[ x^{n+1} = x^{n} + f(x^{n})dt \]
+\end{block}
+\begin{columns}
+\begin{column}{0.5\columnwidth}
+\begin{block}{Midpoint method}
+\begin{equation*}
+\begin{aligned}
+x^{*}&= x^{n} + f({x}^{n}) \cdot \frac{dt}{2} \\
+x^{n+1} &= x + f({x}^{*}) \cdot dt \\
+\end{aligned}
+\end{equation*}
+\end{block}
+\end{column}
+\begin{column}{0.4\columnwidth}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\textwidth]{images/midpoint_method.png}
+\caption{Geometrical desciption of the midpoint method}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[label={sec:orge536a50}]{Some time stepping schemes}
+\begin{block}{Runge Kutta-4}
+\begin{equation*}
+\begin{aligned}
+{k}_1 &= {f}({x}^{n}) \cdot dt \\
+{k}_2 &= {f}({x}^{n} + 0.5 \cdot {k}_1)\cdot dt \\
+{k}_3 &= {f}({x}^{n} + 0.5 \cdot {k}_2)\cdot dt \\
+{k}_4 &= {f}({x}^{n} + 0.5 \cdot {k}_3)\cdot dt \\
+{x}^{n+1} &= {x}^{n} + \frac{{k}_1+2{k}_2+2{k}_3+{k}_4}{6}
+\end{aligned}
+\end{equation*}
+\end{block}
+\begin{block}{Position/Velocity Verlet}
+\begin{itemize}
+\item Later on we introduce these two schemes in the context of integrating
+second order ODEs
+\end{itemize}
+\end{block}
+\end{frame}
+\begin{frame}[label={sec:org3b00ad4}]{Function evaluations}
+\begin{itemize}
+\item Our first attempt at comparing schemes is the number of functional
+evaluations for one time step\ldots{}
+\item Why? \(f(x)\) can be expensive to evaluate (e.g. calculating the effect
+of the energy diffusion on millions to billions of
+grid points in an astrophysical simulation)
+\item Comparing schemes,
+\end{itemize}
+\begin{table}[htbp]
+\caption{\label{tab_sym_snake_params}
+Number of function evaluations for schemes}
+\centering
+\begin{tabular}{lr}
+\toprule
+Scheme & \(n[f(x)]\)\\
+\midrule
+Euler & 1\\
+Midpoint & 2\\
+RK4 & 4\\
+Verlet* & 1\\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{frame}
+\begin{frame}[label={sec:org1ebdd23}]{Convergence}
+\begin{definition}[Order of accuracy]
+The numerical solution \(\mathbf{u}\) is said to be \(n^{\text{th}}\)-order
+accurate if the error, \(e(dt):=\lVert\tilde{\mathbf{u}}-\mathbf{u} \rVert\)
+is proportional to the step-size \(dt\), to the \(n^{\text{th}}\) power. That
+is
+\[ e(dt)=\lVert\tilde{\mathbf{u}}-\mathbf{u} \rVert\leq C(dt)^{n} \]
+where the constant \(C\) is independent of \(dt\) and usually depends on
+the solution \(\mathbf{u}\)
+\end{definition}
+ In the big O notation an \(n^{\text{th}}\)-order accurate numerical method
+ is notated as
+\[ \lVert\tilde{\mathbf{u}}-\mathbf{u} \rVert = \order{h^n}\]
+\end{frame}
+\begin{frame}[label={sec:org8dd0942}]{Convergence : Importance}
+\begin{columns}
+\begin{column}{0.4\columnwidth}
+\begin{block}{First order}
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\(dt\) & \(e(dt)\)\\
+\midrule
+10\textsuperscript{-1} & 1\\
+10\textsuperscript{-2} & 10\textsuperscript{-1}\\
+10\textsuperscript{-3} & 10\textsuperscript{-2}\\
+10\textsuperscript{-4} & 10\textsuperscript{-3}\\
+10\textsuperscript{-5} & 10\textsuperscript{-4}\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{block}
+\end{column}
+\begin{column}{0.4\columnwidth}
+\begin{block}{Second order}
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\(dt\) & \(e(dt)\)\\
+\midrule
+10\textsuperscript{-1} & 1\\
+10\textsuperscript{-2} & 10\textsuperscript{-2}\\
+10\textsuperscript{-3} & 10\textsuperscript{-4}\\
+10\textsuperscript{-4} & 10\textsuperscript{-6}\\
+10\textsuperscript{-5} & 10\textsuperscript{-8}\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{block}
+\end{column}
+\begin{column}{0.4\columnwidth}
+\begin{block}{Fourth order}
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\(dt\) & \(e(dt)\)\\
+\midrule
+10\textsuperscript{-1} & 1\\
+10\textsuperscript{-2} & 10\textsuperscript{-4}\\
+10\textsuperscript{-3} & 10\textsuperscript{-8}\\
+10\textsuperscript{-4} & 10\textsuperscript{-12}\\
+10\textsuperscript{-5} & 10\textsuperscript{-16}\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{block}
+\end{column}
+\end{columns}
+\end{frame}
+\begin{frame}[label={sec:orgfeb0071}]{Convergence : Implementation}
+\begin{block}{Model problem definition}
+Let's solve this problem, and test out methods for convergence:
+\[ \frac{dy}{dt} = -y \quad,\quad  y(0) = 1 \]
+which as we know has the analytical solution \(\tilde{y}(t) = e^{-t}\) \(\rightarrow\)
+error known at every \(dt\)
+
+Notice:
+\begin{itemize}
+\item We choose a simple problem to understand performance/convergence
+\begin{itemize}
+\item More complicated problems usually follow suit
+\end{itemize}
+\item We are solving an eigenvalue problem, just like the last lecture (rotations)
+\end{itemize}
+
+\alert{ACTIVITY}
+\end{block}
+\end{frame}
+\begin{frame}[label={sec:org0495dea}]{Order of accuracy : Results}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.6\textwidth]{code/ooa.pdf}
+\caption{Schemes exhibit different orders of accuracy}
+\end{figure}
+\end{frame}
+\begin{frame}[label={sec:org623f32c}]{Order of accuracy : Results}
+\begin{table}[htbp]
+\caption{\label{tab_sym_snake_params}
+Order of accuracy for different schemes}
+\centering
+\begin{tabular}{lr}
+\toprule
+Scheme & \(n(f(x))\)\\
+\midrule
+Euler & 1\\
+Midpoint & 2\\
+RK4 & 4\\
+Verlet* & ?\\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{frame}
+\begin{frame}[label={sec:orgd702f37}]{Energy preserving scheme}
+\begin{itemize}
+\item Give definition of harmonic oscillator here too (just picture and equations)
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:org26d9d8b}]{Summary : give properties in a table}
+\end{frame}
+\end{document}

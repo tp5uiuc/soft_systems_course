@@ -1,0 +1,259 @@
+#+TITLE: Elastica : Timesteppers
+#+AUTHOR: /Tejaswin Parthasarathy/, Mattia Gazzola
+#+SUBTITLE: ME498: Comp. modeling & optimization
+#+BEAMER_FRAME_LEVEL: 2
+# #+BEAMER_HEADER: \institute[INST]{Institute\\\url{http://www.institute.edu}}
+# #+BEAMER_HEADER: \titlegraphic{\includegraphics[height=1.5cm]{test}}
+
+#+STARTUP: beamer
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation]
+# #+LATEX_CLASS_OPTIONS: [notes]
+#+LATEX_HEADER:\usetheme[progressbar=frametitle]{metropolis}
+#+LATEX_HEADER:\usepackage{tikz}
+#+LATEX_HEADER:\usepackage{tikz-3dplot}
+#+LATEX_HEADER:\usepackage{spot}
+#+LATEX_HEADER:\newcommand{\gv}[1]{\ensuremath{\mbox{\boldmath$ #1 $}}}
+#+LATEX_HEADER:\newcommand{\bv}[1]{\ensuremath{\mathbf{#1}}}
+#+LATEX_HEADER:\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+#+LATEX_HEADER:\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+#+LATEX_HEADER:\newcommand{\bigqm}[1][1]{\text{\larger[#1]{\text{?}}}}
+#+LATEX_HEADER:\newcommand{\order}[1]{\mathcal O \left( #1 \right)} % order of magnitude
+#+LATEX_HEADER:\definecolor{scarlet}{rgb}{1.0, 0.13, 0.0}
+#+LATEX_HEADER:\definecolor{shamrockgreen}{rgb}{0.0, 0.62, 0.38}
+#+LATEX_HEADER:\definecolor{royalblue}{rgb}{0.25, 0.41, 0.88}
+#+OPTIONS:   H:2 num:t toc:nil ::t |:t ^:{} -:t f:t *:t <:t
+#+OPTIONS:   tex:t d:nil todo:t pri:nil tags:nil
+#+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col) %8BEAMER_OPT(Opt)
+* Time-marching algorithms
+** Motivation
+*** Solve the following ODE                                       :B_example:
+	:PROPERTIES:
+	:BEAMER_env: example
+	:END:
+	 \[ \frac{dx}{dt} = 2x \quad x(0) = 1 \]
+*** We can!                                                         :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	\[ x(t) = e^{2t}\]
+
+** Motivation
+*** Solve the following ODE                                       :B_example:
+	:PROPERTIES:
+	:BEAMER_env: example
+	:END:
+	 \[ \frac{dx}{dt} = \sin(\cos x^{\frac{4}{3}}) + 4\sin^2(t) \quad x(0) = 1 \]
+
+*** We can!                                                         :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:BEAMER_ACT: <2->
+	:END:
+	Use a time-marching algorithm that can solve the above equation, albeit numerically
+** Introduction
+   - As seen in the last lecture, all our (temporal/spatial) rate of frame change
+     vectors (that effect rotations) are precisely of this form
+
+   More generally, we can solve problems of the form
+   \[ \frac{\partial \mathbf{u}}{\partial t} = \mathbf{F}(\mathbf{u}, t) \]
+   which is a partial differential equation (PDE), wherein \( \mathbf{F} \) is
+   any arbitrary function.
+** Introduction
+   - We investigate three different (classes of) time-marching algorithms for
+     autonomous problems (?!):
+	 - Euler method (or Euler forward)
+	 - Runge-Kutta-4/RK4 (multi-stage methods)
+	 - Position Verlet (symplectic, area preserving) integrators
+   - We develop time marching methods that compute approximations to \( u(t) \)
+     at specfic time points, \( t_0, t_1, \cdots, t_n \).
+	 - We only consider a uniform timestep size \( dt  \rightarrow t^n = n \cdot
+       dt \).
+   - Finally, we /compare/ these methods based on general and problem-specific properties...
+** Deriving Euler's forward method[fn:1]
+*** text                                                           :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.5
+	:END:
+	- Simplest timestepping scheme
+	- First-order approximation at time \( t_0 \)
+	  - Geometrical description
+	  - Taylor series expansion
+*** images                                                         :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.4
+	:END:
+
+	#+CAPTION: Geometrical desciption of Euler's method
+	#+ATTR_LATEX: :width 0.8\textwidth
+	[[file:images/euler_geometry.pdf]]
+
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+	\[ u(t_{0}+dt)=u(t_{0})+dtu'(t_{0})+{\frac {1}{2}}dt^{2}u''(t_{0})+O(dt^{3}). \]
+	- First order because local slope approximation is \( \order{dt} \)
+
+** General time stepping schemes
+   - General schemes approximate the next iterate \( t^{n+1} \) using:
+   \[ \mathbf{u}^{n+1} = \sum_{i=0}^{k} \alpha_i \mathbf{u}^{n-i} + \sum_{j=0}^{r} \beta_j \frac{\partial \mathbf{u}^{n-j}}{\partial t} \]
+   which for $k=1$ and $r=0$ looks something along these lines:
+   \[ \mathbf{u}^{n+1} = \alpha_0 \mathbf{u}^{n} + \alpha_1 \mathbf{u}^{n-1} + \beta_0 \frac{\partial \mathbf{u}^{n}}{\partial t} \]
+   - Derivation of schemes other than Euler method follow a similar line of reasoning, while
+     details vary[fn:2]
+** Some time stepping schemes[fn:3]
+  With \(\dot{x} = f(x) \),
+*** Euler forward
+	\[ x^{n+1} = x^{n} + f(x^{n})dt \]
+*** Midpoint method                                                 :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:BEAMER_COL: 0.5
+	:END:
+	#+begin_export latex
+	\begin{equation*}
+	\begin{aligned}
+	x^{*}&= x^{n} + f({x}^{n}) \cdot \frac{dt}{2} \\
+	x^{n+1} &= x + f({x}^{*}) \cdot dt \\
+	\end{aligned}
+	\end{equation*}
+	#+end_export
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.4
+	:END:
+	#+CAPTION: Geometrical desciption of the midpoint method
+	#+ATTR_LATEX: :width 0.8\textwidth
+	[[file:images/midpoint_method.png]]
+
+** Some time stepping schemes
+*** Runge Kutta-4                                                   :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	#+begin_export latex
+	\begin{equation*}
+	\begin{aligned}
+	{k}_1 &= {f}({x}^{n}) \cdot dt \\
+	{k}_2 &= {f}({x}^{n} + 0.5 \cdot {k}_1)\cdot dt \\
+	{k}_3 &= {f}({x}^{n} + 0.5 \cdot {k}_2)\cdot dt \\
+	{k}_4 &= {f}({x}^{n} + 0.5 \cdot {k}_3)\cdot dt \\
+	{x}^{n+1} &= {x}^{n} + \frac{{k}_1+2{k}_2+2{k}_3+{k}_4}{6}
+	\end{aligned}
+	\end{equation*}
+	#+end_export
+*** Position/Velocity Verlet
+	- Later on we introduce these two schemes in the context of integrating
+      second order ODEs
+** Function evaluations
+	- Our first attempt at comparing schemes is the number of functional
+      evaluations for one time step...
+	- Why? \( f(x) \) can be expensive to evaluate (e.g. calculating the effect
+      of the energy diffusion on millions to billions of
+      grid points in an astrophysical simulation)
+	- Comparing schemes,
+	#+CAPTION: Number of function evaluations for schemes
+	#+NAME: tab_sym_snake_params
+	| Scheme   | \( n[f(x)] \) |
+	|----------+---------------|
+	| Euler    |             1 |
+	| Midpoint |             2 |
+	| RK4      |             4 |
+	| Verlet*  |             1 |
+** Convergence
+*** Order of accuracy                                          :B_definition:
+	:PROPERTIES:
+	:BEAMER_env: definition
+	:END:
+	The numerical solution \( \mathbf{u} \) is said to be \( n^{\text{th}} \)-order
+	accurate if the error, \( e(dt):=\lVert\tilde{\mathbf{u}}-\mathbf{u} \rVert \)
+	is proportional to the step-size \( dt \), to the \( n^{\text{th}} \) power. That
+	is
+	\[ e(dt)=\lVert\tilde{\mathbf{u}}-\mathbf{u} \rVert\leq C(dt)^{n} \]
+    where the constant \( C \) is independent of \( dt \) and usually depends on
+	the solution \( \mathbf{u}\)
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+ 	In the big O notation an \(n^{\text{th}}\)-order accurate numerical method
+ 	is notated as
+	\[ \lVert\tilde{\mathbf{u}}-\mathbf{u} \rVert = \order{h^n}\]
+** Convergence : Importance
+*** First order :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:BEAMER_COL: 0.4
+	:END:
+	| \( dt \) | \( e(dt) \) |
+	|----------+-------------|
+	| 10^{-1}  | 1           |
+	| 10^{-2}  | 10^{-1}     |
+	| 10^{-3}  | 10^{-2}     |
+	| 10^{-4}  | 10^{-3}     |
+	| 10^{-5}  | 10^{-4}     |
+*** Second order :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:BEAMER_COL: 0.4
+	:END:
+	| \( dt \) | \( e(dt) \) |
+	|----------+-------------|
+	| 10^{-1}  | 1           |
+	| 10^{-2}  | 10^{-2}     |
+	| 10^{-3}  | 10^{-4}     |
+	| 10^{-4}  | 10^{-6}     |
+	| 10^{-5}  | 10^{-8}     |
+*** Fourth order :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:BEAMER_COL: 0.4
+	:END:
+	| \( dt \) | \( e(dt) \) |
+	|----------+-------------|
+	| 10^{-1}  | 1           |
+	| 10^{-2}  | 10^{-4}     |
+	| 10^{-3}  | 10^{-8}     |
+	| 10^{-4}  | 10^{-12}    |
+	| 10^{-5}  | 10^{-16}    |
+** Convergence : Implementation
+*** Model problem definition
+  Let's solve this problem, and test out methods for convergence:
+  \[ \frac{dy}{dt} = -y \quad,\quad  y(0) = 1 \]
+  which as we know has the analytical solution \( \tilde{y}(t) = e^{-t} \) \rightarrow
+  error known at every \( dt \)
+
+  Notice:
+   - We choose a simple problem to understand performance/convergence
+	 - More complicated problems usually follow suit
+   - We are solving an eigenvalue problem, just like the last lecture (rotations)
+
+  *ACTIVITY*
+** Order of accuracy : Results
+   #+CAPTION: Schemes exhibit different orders of accuracy
+   #+ATTR_LATEX: :width 0.6\textwidth
+   file:code/ooa.pdf
+** Order of accuracy : Results
+	#+CAPTION: Order of accuracy for different schemes
+	#+NAME: tab_sym_snake_params
+	| Scheme   | \( n(f(x)) \) |
+	|----------+---------------|
+	| Euler    |             1 |
+	| Midpoint |             2 |
+	| RK4      |             4 |
+	| Verlet*  |             ? |
+** Energy preserving scheme
++ Give definition of harmonic oscillator here too (just picture and equations)
+** TODO Summary : give properties in a table
+
+* Footnotes
+
+[fn:3] Oleg Alexandrov, Public Domain, Wikimedia
+
+[fn:2] By a *lot*
+
+[fn:1] Wikimedia

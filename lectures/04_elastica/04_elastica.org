@@ -704,7 +704,7 @@
 	:BEAMER_env: example
 	:END:
 	 \[ \begin{bmatrix}\dot{x} \\ \dot{y} \end{bmatrix} =
-	 \begin{bmatrix} 5 & 0 \\ 0 & 3 \end{bmatrix} =
+	 \begin{bmatrix} 5 & 0 \\ 0 & 3 \end{bmatrix} \cdot
 	 \begin{bmatrix}{x} \\ {y} \end{bmatrix} \quad x(0) = 1, y(0) = 2\]
 *** We can solve this too                                           :B_block:
 	:PROPERTIES:
@@ -718,14 +718,14 @@
 	:PROPERTIES:
 	:BEAMER_env: note
 	:END:
-	- Explain mateix exponential to these dudes
+	- Explain matrix exponential to these dudes
 ** Digression: changing it up a bit
 *** Solve the following ODE                                       :B_example:
 	:PROPERTIES:
 	:BEAMER_env: example
 	:END:
 	 \[ \begin{bmatrix}\dot{x} \\ \dot{y} \end{bmatrix} =
-	 \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix} =
+	 \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix} \cdot
 	 \begin{bmatrix}{x} \\ {y} \end{bmatrix} \quad x(0) = 1, y(0) = 0\]
 *** We can solve this too!                                          :B_block:
 	:PROPERTIES:
@@ -745,14 +745,14 @@
 	:PROPERTIES:
 	:BEAMER_env: note
 	:END:
-	- Use hamiltonian. That is dy/dx = x/y and then integrate
+	- Use Hamiltonian. That is dy/dx = x/y and then integrate
 ** Digression: changing it up a bit
 *** Solve the following ODE                                       :B_example:
 	:PROPERTIES:
 	:BEAMER_env: example
 	:END:
 	 \[ \begin{bmatrix}\dot{x} \\ \dot{y} \end{bmatrix} =
-	 \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix} =
+	 \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix} \cdot
 	 \begin{bmatrix}{x} \\ {y} \end{bmatrix} \quad x(0) = 1, y(0) = 0\]
 *** What changed the solutions from exponentials to trigonometric terms? :B_block:
 	:PROPERTIES:
@@ -818,9 +818,9 @@
 	- there are governing equations that need differences of, rather than
       angles themselves (invariance principles)
 *** How to do it?
-	Using the matrix logarithm operator, which relies on properties of the
+	Using the *matrix logarithm* \( \log(\cdot)\) operator, which relies on properties of the
 	rotation matrix...
-** Rodrigues formula : The inverse operator
+** Rodrigues formula : The logarithm operator
 *** Formula for \( \theta \)
 	\[ \theta = \arccos\left( \frac{\text{Tr}(\mathbf{R}) - 1}{2}\right) \]
 	Why?
@@ -828,7 +828,7 @@
 	 - For a rotation matrix, \( \lambda = {1, e^{\pm j \theta}} \)
 	 - \therefore \( \sum \lambda_i = 1 + 2 \cos(\theta) \)
 *** Once \( \theta \) is known, we can find \(\hat{\gv{e}}\)...
-** Rodrigues formula : The inverse operator
+** Rodrigues formula : The logarithm operator
 *** Finding \(\hat{\gv{e}}\)...
 	Use properties of \( \mathbf{R}\)
    \[ \mathbf {R} =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \]
@@ -838,15 +838,15 @@
    \[ \mathbf{K} = \left( \frac{\mathbf {R} - \mathbf {R}^T}{2 \sin \theta} \right) \]
 ** Summary
    In this lecture, we
-   - understood basic linear/affine transformatinos relevant in mechanics
+   - understood basic linear/affine transformations relevant in mechanics
    - investigated rotations, and interpreted them as basis-change
      transformations
    - saw properties on \( \gv{d}, \bv{Q} \) that linked them back to rotation
    - learnt (+ implemented) a couple (more importantly, the Rodrigues formula)
      of ways to rotate basis frames
 ** Temporal/Spatial rates of change
-   But what about temporal/spatial changes in rotation. i.e. given a frame, and
-   given its /change/, how do we predict nearby frames (in time and space?)
+   What about temporal/spatial changes in rotation? i.e. given a frame, and
+   given its /change/, how do we predict nearby frames (in time and space)?
 
    *DEMO*
 * Footnotes
