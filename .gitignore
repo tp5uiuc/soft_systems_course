@@ -398,3 +398,6 @@ resources/
 # Ignore mp4 and png
 *.mp4
 *.png
+
+# Ignore html gile too
+*.html

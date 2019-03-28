@@ -11,7 +11,8 @@
 # #+LATEX_CLASS_OPTIONS: [notes]
 #+LATEX_HEADER:\usetheme[progressbar=frametitle]{metropolis}
 #+LATEX_HEADER:\usepackage{tikz}
-#+LATEX_HEADER:\usepackage{tikz-3dplot}
+#+LATEX_HEADER:\usepackage{pgfplots}
+#+LATEX_HEADER:\pgfplotsset{compat=newest}
 #+LATEX_HEADER:\usepackage{spot}
 #+LATEX_HEADER:\newcommand{\gv}[1]{\ensuremath{\mbox{\boldmath$ #1 $}}}
 #+LATEX_HEADER:\newcommand{\bv}[1]{\ensuremath{\mathbf{#1}}}
@@ -59,6 +60,20 @@
    \[ \frac{\partial \mathbf{u}}{\partial t} = \mathbf{F}(\mathbf{u}, t) \]
    which is a partial differential equation (PDE), wherein \( \mathbf{F} \) is
    any arbitrary function.
+** Examples
+   - Population dynamics (Lotka-Volterra)
+	 \[ \begin{aligned}
+	  y'_1 &= y_1 (\alpha_1 - \beta_1 y_2) \quad \text{(prey)} \\
+	  y'_2 &= y_2 (-\alpha_2 + \beta_2 y_1) \quad \text{(predator)}
+	  \end{aligned} \]
+   - Chemical reactions (stiff)
+   - Newton's equations of motion (our focus)
+	 \[  m\ddot{\gv{x}} = F(\gv{x},t) \]
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- Need not be time variable
 ** Introduction
    - We investigate three different (classes of) time-marching algorithms for
      autonomous problems (?!):
@@ -66,11 +81,30 @@
 	 - Runge-Kutta-4/RK4 (multi-stage methods)
 	 - Position Verlet (symplectic, area preserving) integrators
    - We develop time marching methods that compute approximations to \( u(t) \)
-     at specfic time points, \( t_0, t_1, \cdots, t_n \).
+     at specfic time points, \( t^0, t^1, \cdots, t^n \).
 	 - We only consider a uniform timestep size \( dt  \rightarrow t^n = n \cdot
        dt \).
    - Finally, we /compare/ these methods based on general and problem-specific properties...
-** Deriving Euler's forward method[fn:1]
+** Problem statement
+   - Need function \( \gv{u} : [0, T] \to \mathbb{R}^n \) so that
+	 - \( \gv{u}^{(k)}(t) = \gv{f}(t, \gv{u}, \gv{u}', \cdots , \gv{u}^{(k-1)}) \) (*explicit*)
+     or
+	 - \( \gv{f}(t, \gv{u}, \gv{u}', \cdots , \gv{u}^{(k-1)}, \gv{u}^{(k)}) = \gv{0} \) (*implicit*)
+	 where we find a solution to a \(k\)-th order ordinary differential
+     equation. Typically \( k = 1,2 \)
+   - Meaningful only when accompanied by \( k \) initial conditions
+** Some properties of ODEs
+   - *Autonomous* ODE?
+	 - \( \gv{f} \) does not explicitly depend on time \(t\)
+	 - An ODE can be made autonomous by introducing an extra variable (More on
+       this later)
+   - *Linear* ODE?
+	 - \( \gv{f}(\gv{u}, t) =  \bv{A}(t)\gv{u} + \underbrace{\gv{b}}_{\text{forcing}} \)
+   - *Linear, homogenous* ODE?
+	 - \( \gv{f}(\gv{u}, t) =  \bv{A}(t)\gv{u}\)
+   - *Constant-coefficient* ODE?
+	 - \( \gv{f}(\gv{u}, t) =  \bv{A}\gv{u}\)
+** Numerical methods: Euler's forward method [fn:1]
 *** text                                                           :B_column:
 	:PROPERTIES:
 	:BEAMER_env: column
@@ -94,20 +128,22 @@
 	:PROPERTIES:
 	:BEAMER_env: ignoreheading
 	:END:
-	\[ u(t_{0}+dt)=u(t_{0})+dtu'(t_{0})+{\frac {1}{2}}dt^{2}u''(t_{0})+O(dt^{3}). \]
+	\[ u(t_{0}+dt)=u(t_{0})+dt \cdot u'(t_{0})+{\frac {1}{2}}dt^{2} \cdot u''(t_{0})+O(dt^{3}). \]
 	- First order because local slope approximation is \( \order{dt} \)
 
-** General time stepping schemes
-   - General schemes approximate the next iterate \( t^{n+1} \) using:
-   \[ \mathbf{u}^{n+1} = \sum_{i=0}^{k} \alpha_i \mathbf{u}^{n-i} + \sum_{j=0}^{r} \beta_j \frac{\partial \mathbf{u}^{n-j}}{\partial t} \]
-   which for $k=1$ and $r=0$ looks something along these lines:
-   \[ \mathbf{u}^{n+1} = \alpha_0 \mathbf{u}^{n} + \alpha_1 \mathbf{u}^{n-1} + \beta_0 \frac{\partial \mathbf{u}^{n}}{\partial t} \]
+** General explicit time stepping schemes
+   - Explicit schemes approximate the next iterate \( t^{n+1} \) using:
+   \[ \gv{u}^{n+1} = \sum_{i=0}^{k} \alpha_i \gv{u}^{n-i} + \sum_{j=0}^{r} \beta_j \frac{\partial \gv{u}^{n-j}}{\partial t} \]
+	 which for $k=1$ and $r=0$ looks something along these lines:
+   \[ \gv{u}^{n+1} = \alpha_0 \gv{u}^{n} + \alpha_1 \gv{u}^{n-1} + \beta_0 \frac{\partial \gv{u}^{n}}{\partial t} \]
    - Derivation of schemes other than Euler method follow a similar line of reasoning, while
      details vary[fn:2]
-** Some time stepping schemes[fn:3]
+** Some more time stepping schemes[fn:3]
   With \(\dot{x} = f(x) \),
 *** Euler forward
-	\[ x^{n+1} = x^{n} + f(x^{n})dt \]
+	\[ x^{n+1} = x^{n} + f(x^{n}) \cdot dt \]
+*** Euler backward
+	\[ x^{n+1} = x^{n} + f(x^{n+1}) \cdot dt \]
 *** Midpoint method                                                 :B_block:
 	:PROPERTIES:
 	:BEAMER_env: block
@@ -126,11 +162,11 @@
 	:BEAMER_env: column
 	:BEAMER_COL: 0.4
 	:END:
-	#+CAPTION: Geometrical desciption of the midpoint method
+	#+CAPTION: Midpoint method
 	#+ATTR_LATEX: :width 0.8\textwidth
 	[[file:images/midpoint_method.png]]
 
-** Some time stepping schemes
+** Some more time stepping schemes
 *** Runge Kutta-4                                                   :B_block:
 	:PROPERTIES:
 	:BEAMER_env: block
@@ -155,35 +191,56 @@
 	- Why? \( f(x) \) can be expensive to evaluate (e.g. calculating the effect
       of the energy diffusion on millions to billions of
       grid points in an astrophysical simulation)
-	- Comparing schemes,
 	#+CAPTION: Number of function evaluations for schemes
 	#+NAME: tab_sym_snake_params
-	| Scheme   | \( n[f(x)] \) |
-	|----------+---------------|
-	| Euler    |             1 |
-	| Midpoint |             2 |
-	| RK4      |             4 |
-	| Verlet*  |             1 |
-** Convergence
-*** Order of accuracy                                          :B_definition:
+	| Scheme    | \( n[f(x)] \) |
+	|-----------+---------------|
+	| Euler fwd |             1 |
+	| Euler bwd |        Solve! |
+	| Midpoint  |             2 |
+	| RK4       |             4 |
+	| Verlet*   |             1 |
+** Convergence/ Consistency
+  Suppose the numerical solution at some time \( t \) is \( \gv{u} \), and the
+  exact solution at the same time is \( \tilde{\gv{u}} \).
+*** Convergence                                                :B_definition:
 	:PROPERTIES:
 	:BEAMER_env: definition
 	:END:
-	The numerical solution \( \mathbf{u} \) is said to be \( n^{\text{th}} \)-order
-	accurate if the error, \( e(dt):=\lVert\tilde{\mathbf{u}}-\mathbf{u} \rVert \)
-	is proportional to the step-size \( dt \), to the \( n^{\text{th}} \) power. That
-	is
-	\[ e(dt)=\lVert\tilde{\mathbf{u}}-\mathbf{u} \rVert\leq C(dt)^{n} \]
-    where the constant \( C \) is independent of \( dt \) and usually depends on
-	the solution \( \mathbf{u}\)
+	A numerical method is said to be convergent if the numerical solution
+	approaches the exact solution as the step size \( dt \) goes to 0.
 ***                                                         :B_ignoreheading:
 	:PROPERTIES:
 	:BEAMER_env: ignoreheading
 	:END:
- 	In the big O notation an \(n^{\text{th}}\)-order accurate numerical method
+	The methods we just looked at are all convergent.
+*** Consistency                                                :B_definition:
+	:PROPERTIES:
+	:BEAMER_env: definition
+	:END:
+	A numerical method is said to be consistent if the error, \(
+	e_{dt}:=\lVert\tilde{\gv{u}}-\gv{u} \rVert \) is such that
+	\[ \lim_{dt \to 0} \frac{e_{dt}}{dt} = 0\]
+** Order of convergence
+*** Order of accuracy                                          :B_definition:
+	:PROPERTIES:
+	:BEAMER_env: definition
+	:END:
+	The numerical solution \( \gv{u} \) is said to be \( p^{\text{th}} \)-order
+	accurate if the error, \( e(dt):=\lVert\tilde{\gv{u}}-\gv{u} \rVert \)
+	is proportional to the step-size \( dt \), to the \( p^{\text{th}} \) power. That
+	is
+	\[ e(dt)=\lVert\tilde{\gv{u}}-\gv{u} \rVert\leq C(dt)^{p} \]
+    where the constant \( C \) is independent of \( dt \) and usually depends on
+	the solution \( \gv{u}\)
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+ 	In the big O notation an \(p^{\text{th}}\)-order accurate numerical method
  	is notated as
-	\[ \lVert\tilde{\mathbf{u}}-\mathbf{u} \rVert = \order{h^n}\]
-** Convergence : Importance
+	\[ \lVert\tilde{\gv{u}}-\gv{u} \rVert = \order{h^p}\]
+** Order of convergence : Importance
 *** First order :B_block:
 	:PROPERTIES:
 	:BEAMER_env: block
@@ -220,7 +277,7 @@
 	| 10^{-3}  | 10^{-8}     |
 	| 10^{-4}  | 10^{-12}    |
 	| 10^{-5}  | 10^{-16}    |
-** Convergence : Implementation
+** Order of convergence : Implementation
 *** Model problem definition
   Let's solve this problem, and test out methods for convergence:
   \[ \frac{dy}{dt} = -y \quad,\quad  y(0) = 1 \]
@@ -240,17 +297,461 @@
 ** Order of accuracy : Results
 	#+CAPTION: Order of accuracy for different schemes
 	#+NAME: tab_sym_snake_params
-	| Scheme   | \( n(f(x)) \) |
-	|----------+---------------|
-	| Euler    |             1 |
-	| Midpoint |             2 |
-	| RK4      |             4 |
-	| Verlet*  |             ? |
-** Energy preserving scheme
-+ Give definition of harmonic oscillator here too (just picture and equations)
-** TODO Summary : give properties in a table
+	| Scheme   | \( p \) |
+	|----------+---------|
+	| Euler    |       1 |
+	| Midpoint |       2 |
+	| RK4      |       4 |
+	| Verlet*  |       ? |
+** Bottomline
+   - Order of accuracy is a measure of "goodness" of algorithm
+   - Higher-order accurate algorithms commit less error for a given \( h \).
+   - But they are costly (in terms number of function evaluations, and
+     ultimately number of operations performed)
+** Higher order ODEs [fn:4]
+   We consider a harmonic oscillator, i.e. a linear spring-mass system:
+   \[ \ddot{x} + \omega^2 x = 0\]
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.6
+	:END:
+	- \( \omega^2 = \frac{k}{m} \equiv 1\)
+	- Consider \( x(0) = 1, \dot{x}(0) = 0  \) (need two ICs)
+	- Solution is analytically known to be
+	\[ x(t) = \cos(t) \quad \dot{x}(t) = -\sin(t) \]
+	- Notice : solution is bounded
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.4
+	:END:
+	#+CAPTION: Harmonic oscillator
+	#+ATTR_LATEX: :width 1.0\textwidth
+	[[file:images/oscillator_spring.png]]
 
+** Conservation laws in typical higher order ODEs
+   The system is *Hamiltonian* as the energy is conserved:
+   \[ \underbrace{H(x(t), \dot{x}(t))}_{\text{Hamiltonian/total energy}} = \underbrace{x^2(t)}_{\text{Potential energy}} +
+   \underbrace{\dot{x}^2(t)}_{\text{Kinetic energy}} \equiv 1\]
+
+   The solution can be represented in the time domain (left) or in the phase
+   portrait (right)
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.5
+	:END:
+	#+begin_export latex
+	 \begin{center}
+	 \begin{tikzpicture}[scale=0.62]
+		\begin{axis}%
+		[grid=both,
+		minor tick num=4,
+		grid style={line width=.1pt, draw=gray!10},
+		major grid style={line width=.2pt,draw=gray!50},
+		axis lines=middle,
+		domain=0:7,
+		x label style={at={(axis description cs:1.1,0.5)},anchor=east},
+		y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south},
+		xlabel={t},
+		ylabel={u(t)},
+		title style={at={(0.5,0)},anchor=north,yshift=-0.1},
+		title={Time domain},
+		enlargelimits={abs=0.2}
+		]
+		  \addplot[samples=200,smooth,scarlet,line width=2pt]{cos(deg(x))};
+		  \addplot[samples=200,smooth,royalblue,line width=2pt]{-sin(deg(x))};
+		  \legend{$x(t)$,$\dot{x}(t)$}
+		\end{axis}
+	 \end{tikzpicture}
+	 \end{center}
+	#+end_export
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.5
+	:END:
+	#+begin_export latex
+	 \begin{center}
+	 \begin{tikzpicture}[scale=0.62]
+		\begin{axis}%
+		[grid=both,
+		minor tick num=4,
+		grid style={line width=.1pt, draw=gray!10},
+		major grid style={line width=.2pt,draw=gray!50},
+		axis lines=middle,
+		xmin=-1.1, xmax=1.1, ymin=-1.1, ymax=1.1,
+		axis equal,
+		x label style={at={(axis description cs:1.1,0.5)},anchor=east},
+		y label style={at={(axis description cs:0.5,1.1)},anchor=south},
+		xlabel={\textcolor{scarlet}{x}},
+		ylabel={\textcolor{royalblue}{$\dot{x}$}},
+		title style={at={(0.5,0)},anchor=north,yshift=-0.1},
+		title={Phase portrait},
+		enlargelimits={abs=0.2}
+		]
+		  \draw[line width=2] (axis cs: 0, 0) circle [radius=1];
+		\end{axis}
+	 \end{tikzpicture}
+	 \end{center}
+	#+end_export
+
+** Conversion to lower order ODE
+   Let's convert the second order ODE to two first order ODEs, by considering \(
+   y = \dot{x} \Rightarrow \)
+   \[ \begin{pmatrix} \dot{x} \\ \dot{y} \end{pmatrix} = \begin{bmatrix} 0 & 1\\-1
+   & 0 \end{bmatrix} \begin{pmatrix} {x} \\ {y} \end{pmatrix} \]
+
+   - You can reuse the same schemes!
+   - Alternatively, we can develop schemes for the second order equation
+     directly *Example*
+
+*** Position Verlet scheme
+	- For integrating equations similar to \( \ddot{\gv{x}} = \gv{f}(\gv{x})\),
+      with \( \gv{y} = \dot{\gv{x}} \)
+	#+begin_export latex
+	\begin{equation*}
+	\begin{aligned}
+	\gv{x}^* &= \gv{x}^n + 0.5\cdot dt \cdot \gv{y}^n \\
+	\gv{y}^{n+1} &= \gv{y}^n + dt \cdot \gv{f}\left( \gv{x}^*\right) \\
+	\gv{x}^{n+1} &= \gv{x}^* + 0.5\cdot dt \cdot \gv{y}^{n+1}
+	\end{aligned}
+	\end{equation*}
+	#+end_export
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- Show derivation using
+	\[ f(x+h) = f(x) + f'(x)h + f''(x)h^2/2! + \cdots \quad
+	f(x - h) = f(x) - f'(x) h + f''(x)h^2/2! + \cdots \]
+	and add them up
+** More schemes
+   Another example of a scheme for this model equation is
+*** Velocity Verlet algorithm
+	#+begin_export latex
+	\begin{equation*}
+	\begin{aligned}
+	\gv{y}^* &= \gv{y}^n + 0.5\cdot dt \cdot \gv{f}\left( \gv{x}^n\right) \\
+	\gv{x}^{n+1} &= \gv{x}^{n} + dt \cdot \gv{y}^{*} \\
+	\gv{y}^{n+1} &= \gv{y}^* + dt \cdot \gv{f}\left( \gv{x}^{n+1}\right) \\
+	\end{aligned}
+	\end{equation*}
+	#+end_export
+*** How do these schemes fare?
+	- Position and Velocity Verlet have \( p = 2 \) (second-order accurate) for
+      both position \( \gv{x} \) and velocity \( \gv{y} \)
+	- But Position Verlet has only *one* function evaluation!
+** Energy-preserving/symplectic schemes
+*** Why do we even care about these schemes?
+	- Clearly, RK4 has higher order of convergence and it must be better?
+*** Answer
+	- Position and Velocity Verlet schemes are symplectic (area-preserving) schemes
+	- They preserve in the phase-portrait of a Hamiltonian system \Rightarrow
+      They always conserve energy by design!
+
+  *ACTIVITY*
+** Energy-preserving/symplectic schemes
+	- The harmonic equation arises from Newton's fundamental laws of motion,
+      without dissipative forces \Rightarrow energy needs to be conserved
+	- RK4 slowly dissipates energy \Rightarrow unphysical!
+	- Euler forward increases energy without bounds, even when physics dictates
+      bounded solutions (counter examples?)
+	- Verlet schemes conserve energy even for large \( dt \)
+	  - There are still errors (it still has \( p = 2\) ) in the /phase/
+	  - *DEMO*
+** But why is it energy preserving?[fn:5]
+   - Because it preserves the are in the \( x-p \) phase space (thus the area-preserving
+     property seen earlier)
+   - Why area preservation? \Rightarrow *Liouville's theorem*
+   - On one application of the time-stepping scheme (map), an initial rectangle
+	with side lengths \( dx , dp \) gets stretched to a parallelogram with
+	sides \( dx^\prime, dp^\prime\)
+
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.6
+	:END:
+
+	New area \( dA^\prime = \det \bv{J} dA\), where \( \bv{J} \) is
+	\[ \bv{J} =	\begin{bmatrix}
+	\frac{\partial x^\prime}{\partial x} & \frac{\partial x^\prime}{\partial p}  \\
+	\frac{\partial p^\prime}{\partial x} & \frac{\partial p^\prime}{\partial p}  \\
+	\end{bmatrix} \]
+
+	In the case of symplectic schemes, we require \( \det \bv{J} = 1 \)
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_COL: 0.4
+	:BEAMER_env: column
+	:END:
+	#+CAPTION: Area preservation
+	#+ATTR_LATEX: :width 1.0\textwidth
+	[[file:images/area_preserve.png]]
+** Area preserviation of Verlet and Euler algorithms
+   From a different perspective,
+   \( \begin{pmatrix} \delta x_1 \\ \delta v_1 \end{pmatrix} = \bv{J}\begin{pmatrix} \delta x_0
+   \\ \delta v_0 \end{pmatrix} \)
+   where subscripts denote number of applications of the time-stepping scheme.
+   Break it down to
+   \( \bv{J} = \bv{C}\bv{B}\bv{A} \).
+*** Euler forward                                              :B_alertblock:
+	:PROPERTIES:
+	:BEAMER_env: alertblock
+	:BEAMER_COL: 0.5
+	:END:
+	#+begin_export latex
+	\begin{equation*}
+	\begin{aligned}
+	\bv{A} &= \begin{bmatrix} 1 & h\\ hF^\prime(x_0) & 1 \end{bmatrix}\\
+	\bv{B} &= \begin{bmatrix} 1 & 0\\ 0 & 1 \end{bmatrix} \\
+	\bv{C} &= \begin{bmatrix} 1 & 0\\ 0 & 1 \end{bmatrix}
+	\end{aligned}
+	\end{equation*}
+	#+end_export
+*** Position verlet                                            :B_alertblock:
+	:PROPERTIES:
+	:BEAMER_env: alertblock
+	:BEAMER_COL: 0.5
+	:END:
+	#+begin_export latex
+	\begin{equation*}
+	\begin{aligned}
+	\bv{A} &= \begin{bmatrix} 1 & \tfrac{h}{2}\\ 0 & 1 \end{bmatrix}\\
+	\bv{B} &= \begin{bmatrix} 1 & 0 \\ hF^\prime(x_{1/2}) & 1 \end{bmatrix}\\
+	\bv{C} &= \begin{bmatrix} 1 & \tfrac{h}{2}\\ 0 & 1 \end{bmatrix}\\
+	\end{aligned}
+	\end{equation*}
+	#+end_export
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+	Calculate \( \det \bv{J} \)...
+** Bottomline
+   - The evolution of dynamics of the soft filament also relies on some form of energy
+     conservation (translational/rotational/bending/twist/shear/stretch) as the
+     governing equations are Newton's laws
+   - We need symplectic algorithms for maintaining relevance to the physical world
+
+ *Counterpoint* In reality, there is always dissipation (frictional forces,
+  viscous forces, drag forces not included in either of the above, etc.)
+** Why did forward Euler blow-up?
+   - Because it was unstable...related to the stability of a method (alternatively instability)
+*** Euler forward algorithm                                         :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	- Find out what happens to the numerical solution using forward Euler when applied to
+	  \( \dot{y}(t) = \lambda y(t)\)
+	- Why? Eigenvalue problem, easy to extend analysis to general matrices
+	#+begin_export latex
+	\begin{equation*}
+	\begin{aligned} y_k & = y_{k-1} + h \lambda y_{k-1} \\ &= (1 + h
+	\lambda)y_{k-1} \\ &= (1 + h \lambda)^{k}y_{0}
+	\end{aligned}
+	\end{equation*}
+	#+end_export
+	- So stability \Leftrightarrow \( \abs{1 + h \lambda} \leq 1\)
+** Why did forward Euler blow-up?
+   - \( \abs{1 + h \lambda}\) is the *amplification factor*
+   - The condition on the amplification factor implies the existence of a
+     *stability region* in the complex plane
+   - *DEMO*
+   #+NAME: stability_region_bloc
+   #+begin_src python :exports results :results file :session stable :eval never-export
+	 import numpy as np
+	 from matplotlib import pyplot as plt
+	 import seaborn as sns
+
+	 ## Set rc parameters
+	 sns.set_style(
+		 "ticks", {
+			 "axes.facecolor": "1.0",
+			 'axes.linewidth': 10.0,
+			 'axes.edgecolor': 'k',
+			 'axes.axisbelow': True,
+			 'axes.grid': True,
+			 'axes.spines.right': True,
+			 'axes.spines.top': True,
+			 'grid.color': [0.8, 0.8, 0.8],
+			 'grid.linestyle': '--',
+			 'xtick.color': 'k',
+			 'xtick.direction': u'in',
+			 'xtick.major.size': 10.0,
+			 'xtick.minor.size': 6.0,
+			 'ytick.color': 'k',
+			 'ytick.direction': u'in',
+			 'ytick.major.size': 10.0,
+			 'ytick.minor.size': 6.0
+		 })
+	 sns.set_context("paper", rc={"figure.figsize": (10, 5)})
+
+	 plt.rcParams['text.usetex'] = 'True'
+	 plt.rcParams['font.serif'] = 'Fira Sans'
+	 plt.rcParams['font.size'] = 16
+	 plt.rcParams['axes.labelsize'] = 12
+	 plt.rcParams['axes.labelweight'] = 'bold'
+	 plt.rcParams['axes.titlesize'] = 16
+	 plt.rcParams['xtick.labelsize'] = 12
+	 plt.rcParams['ytick.labelsize'] = 12
+	 plt.tight_layout(pad=0.5)
+
+	 FILE_NAME = 'images/stability.pdf'
+	 fig, axes = plt.subplots(1,3)
+
+	 # Plot euler forward in the first
+	 z = np.exp(1j* np.pi * np.linspace(0.0, 2.0, 200, endpoint=True))
+	 r = z - 1
+	 axes[0].set_xlabel(r'$\mathrm{Re}$')
+	 axes[0].set_ylabel(r'$\mathrm{Im}$')
+	 axes[0].set_title(r'Euler forward')
+	 axes[0].set_aspect('equal')
+	 axes[0].plot(np.real(r), np.imag(r))
+	 axes[0].set_xlim(-2.5, 0.5)
+	 axes[0].set_ylim(-1.5, 1.5)
+	 axes[0].spines['left'].set_position('zero')
+	 axes[0].spines['right'].set_color('none')
+	 axes[0].spines['bottom'].set_position('zero')
+	 axes[0].spines['top'].set_color('none')
+	 axes[0].grid(True)
+
+	 # Plot euler backward in the second
+	 r = z + 1
+	 axes[1].set_xlabel(r'$\mathrm{Re}$')
+	 axes[1].set_ylabel(r'$\mathrm{Im}$')
+	 axes[1].set_title(r'Euler backward')
+	 axes[1].set_aspect('equal')
+	 axes[1].plot(np.real(r), np.imag(r))
+	 axes[1].set_xlim(-0.5, 2.5)
+	 axes[1].set_ylim(-1.5, 1.5)
+	 axes[1].spines['left'].set_position('zero')
+	 axes[1].spines['right'].set_color('none')
+	 axes[1].spines['bottom'].set_position('zero')
+	 axes[1].spines['top'].set_color('none')
+	 axes[1].grid(True)
+
+
+	 # Plot RK4 in the third
+	 w = 0
+	 W = 0
+	 for i in range(1, z.shape[0]):
+		 w = w - (1.0 + w + 0.5*w**2 + w**3/6. + w**4/24. - z[i]**4)/ (1.0 + w + 0.5*w**2 + w**3/6.)
+		 W = np.hstack((W, w))
+	 axes[2].set_xlabel(r'$\mathrm{Re}$')
+	 axes[2].set_ylabel(r'$\mathrm{Im}$')
+	 axes[2].set_title(r'RK4')
+	 axes[2].set_aspect('equal')
+	 axes[2].plot(np.real(W), np.imag(W))
+	 axes[2].set_xlim(-3.0, 1.0)
+	 axes[2].set_ylim(-3.5, 3.5)
+	 axes[2].spines['left'].set_position('zero')
+	 axes[2].spines['right'].set_color('none')
+	 axes[2].spines['bottom'].set_position('zero')
+	 axes[2].spines['top'].set_color('none')
+	 axes[2].grid(True)
+
+
+	 fig.savefig(FILE_NAME, bbox_inches='tight')
+	 FILE_NAME
+   #+end_src
+
+   #+RESULTS: stability_region_bloc
+   [[file:images/stability.pdf]]
+
+** What about backward Euler?
+*** Backward Euler algorithm                                        :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	- Find out what happens to the numerical solution using backward Euler when applied to
+	  \( \dot{y}(t) = \lambda y(t)\)
+	#+begin_export latex
+	\begin{equation*}
+	\begin{aligned} y_k & = y_{k-1} + h \lambda y_{k} \\
+	y_k (1 - h \lambda) &= y_{k-1} \\
+	y_k &= \frac{1}{(1 - h \lambda)}y_{k} \\
+	y_k &= \left( \frac{1}{1 - h \lambda} \right)^k y_{0}
+	\end{aligned}
+	\end{equation*}
+	#+end_export
+	- So stability \Leftrightarrow \( \abs{1 - h \lambda} \geq 1\)
+	- Backward Euler can be stable even when the ODE is not!
+	- *DEMO*
+** What about Verlet ?
+*** Can it blow up?                                                 :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+*** It can!                                                         :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:BEAMER_ACT: <2->
+	:END:
+	 - But only for non-hamiltonian systems
+	 - For hamiltonian systems, it always conserves a positive semi-definite
+       quantity and hence can not blow up
+** Bottomline
+   - Stability is another measure of how "good" a time-marching algorithm is
+   - For *explicit* schemes, main concern in time-step selection is usually
+     *stability* (but also accuracy)
+   - For *implicit* schemes, *accuracy* determines the time-step selection
+** Stiff ODEs
+*** What are stiff problems?
+	- Hard to define exactly
+	- Usually when there are *multiple time scales* in our problem
+*** DEMO                                                       :B_alertblock:
+	:PROPERTIES:
+	:BEAMER_env: alertblock
+	:END:
+	- In the above demo, stiffness results from the presence of a fast decay
+      component, but slow evolution of the total solution (slow--fast time scale)
+	- In the case of a stable ODE system \( \dot{\gv{y}}(t) = \bv{J}_{f}(\gv{y}(t))
+      \)
+	  stiffness can arise if \( \bv{J}_f\) has eigenvalues of very different
+      magnitude (what is this called again?)
+** Stiff ODEs
+	- Why not just /small/ or /large/ magnitude?
+	  - Because discrepancy in time scales is the problem
+	  - If all time scales are similar, then we can deal with that one time
+        scale (non-dimensionalization of the problem helps)
+	  - If there are many, then some (usually fast ones) may be considered uninteresting.
+*** Explicit methods
+	 - What was the problem in applying explicit methods to stiff problems?
+	   - Fastest time scale governs timestep \Rightarrow small timesteps
+         \Rightarrow inefficient.
+	 - *Accuracy* (in terms of capturing the slow timescale) could be achieved
+       with large timesteps
+	 - *Stability* demands a small time step
+** Stiff ODEs
+*** Implicit methods
+	 - Large time steps?
+	   - Definitely.
+	 - *Stability* is not a problem
+	 - *Accuracy* suffers.
+*** So even here we have an issue.
+*** Bottomline
+	Stiff problems are hard to tackle (there are still ingenious ways to
+	partially offset the cost of solving a stiff problem)
+
+** TODO Summary : give properties in a table
+	#+CAPTION: Properties of different explicit schemes
+	#+NAME: tab_sym_snake_params
+	| Scheme   | \( p \) | \( n[f(x)] \) | Energy preserving? |
+	|----------+---------+---------------+--------------------|
+	| Euler    |       1 |             1 | No                 |
+	| Midpoint |       2 |             2 | No                 |
+	| RK4      |       4 |             4 | No                 |
+	| Verlet   |       2 |             1 | Yes                |
+** Credits
+*** A good chunk of the material in these slides are taken from Prof. Andreas Kloeckner's CS450 lectures
 * Footnotes
+
+[fn:5] Peter Young, [[https://young.physics.ucsc.edu/242/leapfrog.pdf][Course Notes:Physics 115/242]]
+
+[fn:4] Unknown source
 
 [fn:3] Oleg Alexandrov, Public Domain, Wikimedia
 

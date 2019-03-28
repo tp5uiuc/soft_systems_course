@@ -1,5 +1,41 @@
 * Needs to be done
 - Timestepper
+  - Introduce consistency/convergence first and discuss
+  - Then finish order of accuracy part
+	- Say Verlet is something you need second order ODEs to hae
+  - Energy preserving schemes
+	- Introduce harmonic oscillator
+	  - Look at order and talk about number of initial conditions needed (and why)
+	- Show how second order ODE is a system of first order ODEs
+	  - Present the other choice too (discretize a second order ODE)
+	- Demonstration
+	  - First using fine dt
+	  - then coarse dt
+  - Introduce stability citing Euler forward (growing exponentially)
+	- Show stability for Euler forward (in class derivation)
+	- Show region of stability
+	- Other types of stability (L-stable, A-stable, \alpha-stable)
+	- Why it showed up in our problem (stiffness)
+- Spatial discretization
+  - Derivatives and Integrals
+  - Finite Difference, Finite Element, Finite Volume, Spectral Element (Fourier,
+    etc), Pseudospectral ...
+  - Concentrate on Finite difference (easiest)
+  - Derivatives (Look at Andreas's slides)
+	- Model problem : Some BVP
+	  - Leave initial conditions blank and ask quesions?
+	  - Then show what the boundary values are
+	- First order difference scheme derived (Euler forward)
+	  - Activity of coding up a first derivative, first order central difference scheme
+	- Second order : Taylor expansion dervation
+	  - Activity of coding up a second derivative, second order central difference scheme
+	- Same thing: consistency/convergence, order of convergence, stability is
+      complicated (say there is no growth, but if you have a time-boundary value
+      problem, then its more to do with that)
+	- Introduce periodic boundary conditions and show the same thing applies
+	- Show accuracy of different second order schemes (in this periodic setting)
+	- Introduce the operator in elastica (and note that they know how to do it)
+  - Integration
 - Traveling wave
 - Elastica + CMA coupling : some examples
 - Povray tutorial (document with povray setup)
@@ -8,8 +44,9 @@
 - Some exercises on eigenvalues and eigenvectors
   - Like an ipynb notebook that illustrates eigenvalues for general matrices
   - Schedule after coding up the GA session?
-- Add one more example forcing function (gravity) for example in the timestepper
+- Add one more example forcing function (two-body gravitational problem) for example in the timestepper
 demonstration
+- At the start of every chapter give a compendium of references (books)
 
 * Rough plans for lectures
 ** 01: Introduction to shell, setup python
