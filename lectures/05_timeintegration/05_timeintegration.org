@@ -672,7 +672,7 @@
 	\begin{equation*}
 	\begin{aligned} y_k & = y_{k-1} + h \lambda y_{k} \\
 	y_k (1 - h \lambda) &= y_{k-1} \\
-	y_k &= \frac{1}{(1 - h \lambda)}y_{k} \\
+	y_k &= \frac{1}{(1 - h \lambda)}y_{k-1} \\
 	y_k &= \left( \frac{1}{1 - h \lambda} \right)^k y_{0}
 	\end{aligned}
 	\end{equation*}
