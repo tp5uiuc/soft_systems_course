@@ -77,9 +77,9 @@
 ** Introduction
    - We investigate three different (classes of) time-marching algorithms for
      autonomous problems (?!):
-	 - Euler method (or Euler forward)
+	 - Euler's method (or Euler forward/backward)
 	 - Runge-Kutta-4/RK4 (multi-stage methods)
-	 - Position Verlet (symplectic, area preserving) integrators
+	 - Position Verlet (symplectic, area preserving integrators)
    - We develop time marching methods that compute approximations to \( u(t) \)
      at specfic time points, \( t^0, t^1, \cdots, t^n \).
 	 - We only consider a uniform timestep size \( dt  \rightarrow t^n = n \cdot
@@ -177,7 +177,7 @@
 	{k}_1 &= {f}({x}^{n}) \cdot dt \\
 	{k}_2 &= {f}({x}^{n} + 0.5 \cdot {k}_1)\cdot dt \\
 	{k}_3 &= {f}({x}^{n} + 0.5 \cdot {k}_2)\cdot dt \\
-	{k}_4 &= {f}({x}^{n} + 0.5 \cdot {k}_3)\cdot dt \\
+	{k}_4 &= {f}({x}^{n} + {k}_3)\cdot dt \\
 	{x}^{n+1} &= {x}^{n} + \frac{{k}_1+2{k}_2+2{k}_3+{k}_4}{6}
 	\end{aligned}
 	\end{equation*}
@@ -405,7 +405,7 @@
 
    - You can reuse the same schemes!
    - Alternatively, we can develop schemes for the second order equation
-     directly *Example*
+     directly : *Example using Taylor series*
 
 *** Position Verlet scheme
 	- For integrating equations similar to \( \ddot{\gv{x}} = \gv{f}(\gv{x})\),
@@ -435,7 +435,7 @@
 	\begin{aligned}
 	\gv{y}^* &= \gv{y}^n + 0.5\cdot dt \cdot \gv{f}\left( \gv{x}^n\right) \\
 	\gv{x}^{n+1} &= \gv{x}^{n} + dt \cdot \gv{y}^{*} \\
-	\gv{y}^{n+1} &= \gv{y}^* + dt \cdot \gv{f}\left( \gv{x}^{n+1}\right) \\
+	\gv{y}^{n+1} &= \gv{y}^* + 0.5\cdot dt \cdot \gv{f}\left( \gv{x}^{n+1}\right) \\
 	\end{aligned}
 	\end{equation*}
 	#+end_export
@@ -462,7 +462,7 @@
 	  - There are still errors (it still has \( p = 2\) ) in the /phase/
 	  - *DEMO*
 ** But why is it energy preserving?[fn:5]
-   - Because it preserves the are in the \( x-p \) phase space (thus the area-preserving
+   - Because it preserves the area in the \( x-p \) phase space (thus the area-preserving
      property seen earlier)
    - Why area preservation? \Rightarrow *Liouville's theorem*
    - On one application of the time-stepping scheme (map), an initial rectangle
@@ -736,7 +736,7 @@
 	Stiff problems are hard to tackle (there are still ingenious ways to
 	partially offset the cost of solving a stiff problem)
 
-** TODO Summary : give properties in a table
+** Summary
 	#+CAPTION: Properties of different explicit schemes
 	#+NAME: tab_sym_snake_params
 	| Scheme   | \( p \) | \( n[f(x)] \) | Energy preserving? |

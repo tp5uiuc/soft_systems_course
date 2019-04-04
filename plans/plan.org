@@ -47,7 +47,7 @@
 - Add one more example forcing function (two-body gravitational problem) for example in the timestepper
 demonstration
 - At the start of every chapter give a compendium of references (books)
-
+- Make figures in tikz for better consistency
 * Rough plans for lectures
 ** 01: Introduction to shell, setup python
 ** 02: Intro to Python + Jupyter notebook : Till lists

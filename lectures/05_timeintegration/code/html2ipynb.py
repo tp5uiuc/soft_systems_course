@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 # response = urllib.request.urlopen(url)
 #  for local html file
 response = open(
-    "/Users/tp5/Desktop/Masters_Resources/teaching/ME498_CMO/lectures/05_timeintegration/code/andreas_code/stiffness.html"
+    "/Users/tp5/Desktop/Masters_Resources/teaching/ME498_CMO/lectures/05_timeintegration/code/andreas_code/FloatingpointvsFiniteDifferences.html"
 )
 text = response.read()
 
