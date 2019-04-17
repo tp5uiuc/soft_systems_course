@@ -1,0 +1,19 @@
+#+TITLE: PovRay : Tutorials
+#+SUBTITLE: ME498: Computational modeling and optimization
+#+AUTHOR: Mattia Gazzola
+#+OPTIONS:   H:1 num:t toc:nil date:nil ::t |:t ^:{} -:t f:t *:t <:t
+#+LATEX_HEADER: \usepackage{cleveref}
+
+*Issue Date* : \today
+
+*Teaching Assistant* : Tejaswin Parthasarathy, ~tp5@illinois.edu~
+
+Here are some tutorials for getting familiar with ~PovRay~. As mentioned in
+class, I will be giving you some scripts to do the rendering of the snake from
+your ~Python~ implementation:
+- Nice gentle introduction : http://theringlord.org/derakoninstructions/povtute.html
+- This video series :
+https://www.youtube.com/playlist?list=PLlW5kivBxMYtCFiSnhlhceFsTSCeuJImm
+- The basic tutorials from the official PovRay site: https://www.povray.org/documentation/3.7.0/t2_0.html
+- This site is the Godfather of all sites PovRay:
+  http://f-lohmueller.de/pov_tut/pov__eng.htm and has many tricks, tips and tutorials
