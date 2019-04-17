@@ -401,3 +401,7 @@ resources/
 
 # Ignore html gile too
 *.html
+
+# Ignore grading folder
+projects/01_optimization/grading/
+projects/01_optimization/user_submissions/

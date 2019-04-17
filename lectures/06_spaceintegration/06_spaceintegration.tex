@@ -1,4 +1,4 @@
-% Created 2019-04-03 Wed 23:11
+% Created 2019-04-16 Tue 12:08
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation]{beamer}
 \usepackage[utf8]{inputenc}
@@ -50,8 +50,8 @@
 
 \maketitle
 \section{Introduction}
-\label{sec:org783b98f}
-\begin{frame}[label={sec:orgc2b18a6}]{Integration and differentiation of functions}
+\label{sec:org15759a5}
+\begin{frame}[label={sec:org625a4f3}]{Integration and differentiation of functions}
 More specifically numerical integration (\alert{quadrature}) and differentiation
 \begin{block}{Integration}
 Given \(a, b, f\) compute a numerical approximation to
@@ -65,7 +65,7 @@ Given \(a, b, f\) compute a numerical approximation to
 Again we assume \(f\) is smooth enough (\(C^{r}\;\in\;[a,b]\))
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org11e870a}]{Where are these useful?}
+\begin{frame}[label={sec:org2c049b2}]{Where are these useful?}
 \begin{block}{Everywhere!}
 \begin{itemize}
 \item We \emph{integrated} quantitites in time in the last lecture (IVPs and
@@ -75,7 +75,7 @@ finite differences/volume/element, spectral element and so on\ldots{})
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:orgba16af2}]{Outline}
+\begin{frame}[label={sec:orgf482f7c}]{Outline}
 \begin{itemize}
 \item More about quadrature, and what to look for in a quadrature rule
 \item Simple (yet effective) quadrature schemes and their derivation
@@ -84,8 +84,8 @@ finite differences/volume/element, spectral element and so on\ldots{})
 \end{itemize}
 \end{frame}
 \section{Quadrature}
-\label{sec:orgd524e58}
-\begin{frame}[label={sec:orgdf37675}]{Interpolatory quadrature}
+\label{sec:org7fbcb5d}
+\begin{frame}[label={sec:org7048947}]{Interpolatory quadrature}
 \begin{itemize}
 \item Design a quadrature method based on interpolation of values
 \item \alert{Why?} Typically values are known at few points in simulations
@@ -102,7 +102,7 @@ combination of few function values
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org47a5c6b}]{What do we look for in a quadrature rule?}
+\begin{frame}[label={sec:orgd9b0caa}]{What do we look for in a quadrature rule?}
 While designing quadrature rules, you are concerned about
 \begin{itemize}
 \item Accuracy (how correct is your answer, and whats the convergence)
@@ -112,7 +112,7 @@ While designing quadrature rules, you are concerned about
 
 Choose \(x_i\) and \(\omega_i\) to minimize error \(\abs{\tilde{I} -I_h }\) while reducing number of function evaluations and robust to numerical errors
 \end{frame}
-\begin{frame}[label={sec:org39b15fa}]{Midpoint and Trapezoidal rules}
+\begin{frame}[label={sec:orgd6b6e88}]{Midpoint and Trapezoidal rules}
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.8\textwidth]{images/midpoint.jpg}
@@ -125,7 +125,7 @@ Choose \(x_i\) and \(\omega_i\) to minimize error \(\abs{\tilde{I} -I_h }\) whil
 \[ I_h = \frac{(b-a)}{2} \left( f(a) + f(b) \right) \]
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org8da16e8}]{Midpoint rule}
+\begin{frame}[label={sec:orge23f000}]{Midpoint rule}
 Suppose \(x \in [a,b]\) we have with Taylor series about \(c = \frac{a +
    b}{2}\)
 \[ \begin{aligned} f(x) &= f(c) + (x-c) f^\prime(c) +
@@ -139,7 +139,7 @@ Integrate this
 Error is then:
 \[ e_h  = \frac{h^3}{24}f^{\prime\prime}(c) + \frac{h^5}{1920}f^{iv}(c) + \cdots\]
 \end{frame}
-\begin{frame}[label={sec:org3d6cbf0}]{Trapezoidal rule}
+\begin{frame}[label={sec:orgac0a866}]{Trapezoidal rule}
 Suppose \(x \in [a,b]\) we have with Taylor series about \(c = \frac{a +
    b}{2}\)
 \[ \begin{aligned} f(a) &= f(c) - \frac{h}{2} f^\prime(c) +
@@ -157,7 +157,7 @@ Error is then:
 \[ e_h  = \frac{h^3}{12}f^{\prime\prime}(c) + \frac{h^5}{480}f^{iv}(c) + \cdots\]
 \alert{Twice} that of midpoint rule!
 \end{frame}
-\begin{frame}[label={sec:org01ceaf0},fragile]{Other quadrature rules}
+\begin{frame}[label={sec:org457c219},fragile]{Other quadrature rules}
  \begin{itemize}
 \item Many other better interpolatory (i.e. not only linear) quadrature rules exist\ldots{}
 \item If nodes are equispaced and interpolation is done using polynomials
@@ -170,7 +170,7 @@ points \(\Rightarrow\) \alert{Gaussian} quadrature
 \item (Un)fortunately, we will not be discussing all of them in this course
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org9c1f3f2}]{How do these perform?}
+\begin{frame}[label={sec:org193a505}]{How do these perform?}
 \alert{DEMO}
 \begin{itemize}
 \item Notice we have the \(2x\) errors showing up in numerics as well
@@ -185,7 +185,7 @@ points \(\Rightarrow\) \alert{Gaussian} quadrature
 \item \alert{Composite rules}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org44ce78e}]{Composite rules in quadrature}
+\begin{frame}[label={sec:org1ec4ef3}]{Composite rules in quadrature}
 \begin{itemize}
 \item Approximate function using many piecewise linears and sum up their
 contributions across all such approximations
@@ -241,7 +241,7 @@ contributions across all such approximations
 \end{tikzpicture}
 \end{center}
 \end{frame}
-\begin{frame}[label={sec:org7e2539b}]{Composition using Trapezoidal rule}
+\begin{frame}[label={sec:org67e5604}]{Composition using Trapezoidal rule}
 \[ \begin{aligned} I_{\text{CT}} &= h \left[ \sum_{i=1}^{n-1} f_i +
    \frac{1}{2}(f_0 + f_n) \right] \\
    &= \sum_{i=1}^{n}\frac{h}{2} \left[ f_{i-1} + f_{i}\right] \\
@@ -256,7 +256,7 @@ contributions across all such approximations
    &= \tilde{I} + \frac{h^2}{12} \left[ f^\prime(b) - f^\prime(a) \right] + h.o.t.
    \end{aligned}\]
 \end{frame}
-\begin{frame}[label={sec:org6ccc349}]{Composite rules in quadrature}
+\begin{frame}[label={sec:org2856913}]{Composite rules in quadrature}
 \begin{itemize}
 \item \alert{Observation} We lose an order of accuracy in cumulation!
 \item Is this seen numerically? \alert{DEMO}
@@ -265,7 +265,7 @@ contributions across all such approximations
 \item But, we get good estimates of the integral (especially for polynomials)
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org2d52d05}]{Integrand dependence}
+\begin{frame}[label={sec:org5ab78d4}]{Integrand dependence}
 \begin{itemize}
 \item Does it depend on the function being integrated?
 \item \alert{DEMO}
@@ -279,14 +279,14 @@ contributions across all such approximations
 \end{itemize}
 we may get better/worse performance\ldots{}
 \end{frame}
-\begin{frame}[label={sec:orgdd3dddf}]{Stability of quadrature}
+\begin{frame}[label={sec:org7111bb9}]{Stability of quadrature}
 \begin{itemize}
 \item We won't explicitly dicuss stability
 \item \alert{Rule of thumb}---no negative weights in interpolatory quadrature
 \item All discussed quadrature rules are stable
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org3f920b5}]{Soft mechanics framework}
+\begin{frame}[label={sec:orgde94351}]{Soft mechanics framework}
 Many temporal and spatial integrations. More explicitly,
 
 \[ \spot<2>{\begin{aligned}
@@ -307,9 +307,46 @@ Many temporal and spatial integrations. More explicitly,
 \begin{block}<3->{\(\mathcal{A}^{h}\) using trapezoidal quadrature}
 \end{block}
 \end{frame}
+\begin{frame}[label={sec:org1c0b18f}]{The \(\mathcal{A}^{h}\) operator}
+Define the \(\mathcal{A}^{h}\) operator as:
+\[ \mathbf{y}_{j=1, \ldots, N+1}=\mathcal{A}^{h}\left(\mathbf{x}_{i=1, \ldots
+   N}\right)=\left\{\begin{array}{ll}{\frac{\mathbf{x}_{1}}{2}} & {\text { if }
+   j=1} \\ {\frac{\mathbf{x}_{j}+\mathbf{x}_{j-1}}{2}} & {\text { if } 1<j \leq
+   N} \\ {\frac{\mathbf{x}_{N}}{2}} & {\text { if } j=N+1}\end{array}\right. \]
+\end{frame}
+\begin{frame}[label={sec:org3b1fa5c},fragile]{The \(\mathcal{A}^{h}\) operator}
+ Implementation using \texttt{numpy}
+\begin{minted}[,fontsize=\scriptsize]{python}
+import numpy as np
+
+# Modified trapezoidal integration
+def modified_trapz(t_x):
+    """ Modified trapezoidal integration"""
+    # Pads a 0 at the start of an array
+    temp = np.pad(t_x, (1,0), 'constant', constant_values=(0,0))
+    # Using roll calculate the integral (ghost node of 0)
+    return 0.5*(temp + np.roll(temp, -1))
+
+# data
+a = np.tile(np.arange(5,), 10)
+b = modified_trapz(a)
+\end{minted}
+\end{frame}
+\section{Interlude}
+\label{sec:org5efd01e}
+\begin{frame}[label={sec:org579faf8}]{Some questions about the project}
+\begin{enumerate}
+\item Position-verlet timestepping
+\item Keeping track of nodal and elemental quantities
+\item Implementing contact as a damped linear spring-mass force
+\item Project 3 concepts
+\item Implement code in logical steps
+\item Make use of the resources given to you
+\end{enumerate}
+\end{frame}
 \section{Differentiation}
-\label{sec:org15ffa98}
-\begin{frame}[label={sec:orge1f50c6}]{Derivatives}
+\label{sec:orged7c2df}
+\begin{frame}[label={sec:org30f39b1}]{Derivatives}
 \begin{itemize}
 \item Frequently we need to take derivatives of functions (sampled at
 unique points)
@@ -325,7 +362,7 @@ we once again perform a linear weighted combination of few function values
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org2d8883a}]{Example}
+\begin{frame}[label={sec:org5658ddf}]{Example}
 An example illustrating the simplest FD formula (recall the timestepping lecture)
 \begin{example}[First principles]
 \[ f^{\prime}(x) = \lim_{h \to 0} \frac{f(x+h) - f(x) }{h}\]
@@ -333,7 +370,7 @@ Finite differences stop before the limit is reached (i.e. they have finite
 \(h\) )
 \end{example}
 \end{frame}
-\begin{frame}[label={sec:orga6ec999}]{Considerations for differentiation schemes?}
+\begin{frame}[label={sec:org1ecc690}]{Considerations for differentiation schemes?}
 While designing differentiation schemes, you are concerned about
 \begin{itemize}
 \item Cost (i.e. function evaluations)
@@ -345,7 +382,7 @@ While designing differentiation schemes, you are concerned about
 These issues are sometimes subtle (because of the nature of differentiation),
 and so we need to be careful\ldots{}
 \end{frame}
-\begin{frame}[label={sec:orgb551822}]{Schemes for first-order derivatives}
+\begin{frame}[label={sec:orgeb17e07}]{Schemes for first-order derivatives}
 Using Taylor series expansion, you can obtain arbitrary-order derivatives
 with arbitrary-order convergence. Some examples to approximate \(\frac{df(x)}{dx}\) are shown below ( \(\delta\) represents discrete
 differences)
@@ -360,7 +397,7 @@ differences)
 \end{example}
 \end{frame}
 
-\begin{frame}[label={sec:org248e4c1}]{Schemes for higher-order derivatives}
+\begin{frame}[label={sec:org28fa0a0}]{Schemes for higher-order derivatives}
 Examples for second order derivatives
 \begin{example}[Forward differences]
 \[ \frac{\delta^2 f(x)}{\delta x^2} = \frac{f(x)-2f(x+h)+f(x+2h)}{1h^{2}} \]
@@ -372,7 +409,7 @@ Examples for second order derivatives
 \[ \frac{\delta^2 f(x)}{\delta x^2} = \frac{f(x+h)-2f(x)+f(x-h)}{1h^{2}} \]
 \end{example}
 \end{frame}
-\begin{frame}[label={sec:orgc98cbce}]{What do these do?}
+\begin{frame}[label={sec:org05fd137}]{What do these do?}
 \begin{block}{More schemes}
 Take a look at \href{http://web.media.mit.edu/\~crtaylor/calculator.html}{MIT Finite Difference Calculator} (sympy also has this
 capability) and build your own schemes!
@@ -395,7 +432,7 @@ derivatives of these polynomials\ldots{}
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org47fa12f}]{How do these perform (accuracy) ?}
+\begin{frame}[label={sec:orgc6fc09c}]{How do these perform (accuracy) ?}
 \alert{DEMO} using calculation of \(\frac{df}{dx}\)
 \begin{itemize}
 \item Order of accuracy depends upon the Taylor series representation (\alert{Taylor
@@ -411,11 +448,11 @@ for the same width of stencil
 \item Lots of freedom to design own schemes\ldots{}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org7e5ab32}]{Round-off errors}
+\begin{frame}[label={sec:orga95b403}]{Round-off errors}
 \begin{block}{Why discuss round-off errors?}
 \begin{itemize}
 \item Round-off errors : errors in precisely representing numbers on a computer
-\item Finite precision effects where not important in quadrature, but are so in
+\item Finite precision effects were not important in quadrature, but are in
 differentation.
 \item \alert{Why}? Numerical differentation is susceptible to:
 \begin{itemize}
@@ -435,7 +472,7 @@ double precision we can show
 	f}{h} + \order{h^2} \]
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org03a4fbf}]{Caution!!!}
+\begin{frame}[label={sec:orgfc2b6ab}]{Caution!!!}
 In an ideal world, we should not be taking derivatives of functions
 numerically:
 \begin{itemize}
@@ -447,7 +484,7 @@ and under-resolved simulations) can explode \alert{DEMO}
 \item Numerical differentiation : subject to cancellation and round-off errors \alert{DEMO}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:orgcc03dff}]{Soft mechanics framework}
+\begin{frame}[label={sec:org1cef3c7}]{Soft mechanics framework}
 Many spatial differentiations. More explicitly,
 
 \[ \spot<2>{\begin{aligned}
@@ -463,6 +500,36 @@ Many spatial differentiations. More explicitly,
 	\hat{\mathcal{D}}_i\right) + \left(\mathbf{Q}_i\mathbf{t}_i\times\hat{\mathbf{S}}_i\boldsymbol{\sigma}^i_{\mathcal{L}}\right)\hat{\ell}_i\\
 	&+ \mathbf{C}^i_{\mathcal{L}},\quad i=[1,n] \end{aligned}}\]
 \begin{block}<3->{\(\Delta^{h}\) using finite differences}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:orge5366ac}]{The \(\Delta^{h}\) operator}
+Define the \(\Delta^{h}\) operator as:
+\[\mathbf{y}_{j=1, \ldots, N+1}=\Delta^{h}\left(\mathbf{x}_{i=1, \ldots,
+   N}\right)=\left\{\begin{array}{ll}{\mathbf{x}_{1}} & {\text { if } j=1}
+   \\ {\mathbf{x}_{j}-\mathbf{x}_{j-1}} & {\text { if } 1<j \leq N}
+   \\ {-\mathbf{x}_{N}} & {\text { if } j=N+1}\end{array}\right. \]
+\end{frame}
+\begin{frame}[label={sec:org8cd01d1},fragile]{The \(\Delta^{h}\) operator}
+ Implementation using \texttt{numpy}
+\begin{minted}[,fontsize=\scriptsize]{python}
+import numpy as np
+
+# Modified trapezoidal integration
+def modified_diff(t_x):
+    """ Modified trapezoidal integration"""
+    # Pads a 0 at the end of an array
+    temp = np.pad(t_x, (0,1), 'constant', constant_values=(0,0))
+    # Using roll calculate the diff (ghost node of 0)
+    return (temp - np.roll(temp, 1))
+
+# data
+a = np.tile(np.arange(5,), 10)
+b = modified_diff(a)
+\end{minted}
+\end{frame}
+\begin{frame}[label={sec:org08928ce}]{Credits}
+\begin{block}{A good chunk of the material in these slides are taken from Prof. Andreas Kloeckner's CS450 lectures and Prof. Paul Fischer's TAM470 lectures}
 \end{block}
 \end{frame}
 \end{document}
