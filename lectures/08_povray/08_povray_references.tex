@@ -1,4 +1,4 @@
-% Created 2019-04-16 Tue 19:55
+% Created 2019-04-18 Thu 20:04
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -22,11 +22,11 @@
 \usepackage{cleveref}
 \author{Mattia Gazzola}
 \date{}
-\title{PovRay : Tutorials\\\medskip
+\title{PovRay : Setup and Tutorials\\\medskip
 \large ME498: Computational modeling and optimization}
 \hypersetup{
  pdfauthor={Mattia Gazzola},
- pdftitle={PovRay : Tutorials},
+ pdftitle={PovRay : Setup and Tutorials},
  pdfkeywords={},
  pdfsubject={},
  pdfcreator={Emacs 27.0.50 (Org mode 9.2)},
@@ -38,6 +38,41 @@
 
 \textbf{Teaching Assistant} : Tejaswin Parthasarathy, \texttt{tp5@illinois.edu}
 
+\section{Setup}
+\label{sec:org9167742}
+Installing \texttt{PovRay} is straightforward in a nix system. Some ways are:
+
+\begin{itemize}
+\item If you are running \texttt{Ubuntu}, you can install the \texttt{PovRay} executable and
+libraries using the \texttt{apt} module, like so:
+
+\begin{minted}[]{sh}
+# fetches up-to-date package information from
+  #the ubuntu aptitude repository
+sudo apt-get update
+
+# upgrades all packages
+sudo apt-get upgrade
+
+# install python3, if not already there
+sudo apt-get install povray
+\end{minted}
+If you are running Windows, please use the Linux subsystem that you setup at
+the beginning of this semester to invoke the above commands.
+
+\item If you are running other distros (\texttt{Debian} etc.), invoke the appropriate package
+manager, with the same commands above.
+
+\item Alternatively, if you are on \texttt{MacOS} or \texttt{Linux} based systems and are using
+\texttt{Homebrew/Linuxbrew}, then install \texttt{PovRay} using:
+\begin{minted}[]{sh}
+# install povray, if not already there
+brew install povray
+\end{minted}
+\end{itemize}
+
+\section{Tutorials}
+\label{sec:orgb02bc39}
 Here are some tutorials for getting familiar with \texttt{PovRay}. As mentioned in
 class, I will be giving you some scripts to do the rendering of the snake from
 your \texttt{Python} implementation:
