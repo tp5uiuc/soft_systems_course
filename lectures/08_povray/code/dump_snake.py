@@ -96,6 +96,10 @@ def test_dump():
     data_arr = np.vstack((x_vals, y_vals, z_vals))
     dump_snake_to_povray(0, data_arr, radius, prefix)
 
+    y_vals = 0.1 * np.cos(5 * np.pi * x_vals)
+    data_arr = np.vstack((x_vals, y_vals, z_vals))
+    dump_snake_to_povray(1000, data_arr, radius, prefix)
+
 
 if __name__ == "__main__":
     test_dump()

@@ -13,7 +13,6 @@ EOM
 main() {
   # set up working variables
   dir="$1"
-  echo ${dir}
   if [ ! -d "$dir" ]; then
 	printf '%s\n' "${dir} does not exist" >&2
 	# write error message to stderr
@@ -46,9 +45,9 @@ main() {
   sed -i -e ${sedstring} *.pov
 
   # loop over all povray files and produce images
-  for f in $dir/*.pov
-  do
-	echo "processing $f file..."
+  set +f
+  for f in *.pov; do
+	echo "processing ${f} file..."
 
 	# Uses Parameter expansion
 	# Read here if more interested
@@ -57,7 +56,7 @@ main() {
 	filenamenoext=${filenameonly%.*}
 
 	# Run povray and move
-	povray -h${res_height}-w${res_width} quality=11 antialias=on $filenameonly
+	povray -h${res_height}-w${res_width} quality=11 antialias=on ${filenameonly}
 	mv ${filenamenoext}.png $images
 
   done
