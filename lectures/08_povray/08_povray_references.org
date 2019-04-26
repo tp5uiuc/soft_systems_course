@@ -9,11 +9,10 @@
 *Teaching Assistant* : Tejaswin Parthasarathy, ~tp5@illinois.edu~
 
 * Setup
-  Installing ~PovRay~ is straightforward in a nix system. Some ways are:
+  Installing ~PovRay~ is straightforward in a *nix system. Some ways are:
 
   - If you are running ~Ubuntu~, you can install the ~PovRay~ executable and
 	libraries using the ~apt~ module, like so:
-
    #+begin_src sh :exports code
 	  # fetches up-to-date package information from
       #the ubuntu aptitude repository
@@ -22,21 +21,40 @@
 	  # upgrades all packages
 	  sudo apt-get upgrade
 
-	  # install python3, if not already there
+	  # install povray, if not already there
 	  sudo apt-get install povray
    #+end_src
-	If you are running Windows, please use the Linux subsystem that you setup at
-	the beginning of this semester to invoke the above commands.
+   Beware that you may run into this issue:
+
+   ~povray: cannot open the user configuration file /home/.povray/3.7/povray.conf: No such file or directory~
+
+   Running this command in your home directory (as borrowed from [[https://askubuntu.com/questions/628496/using-pov-ray-installed-via-the-apt][this SO thread]]
+    ) seems to resolve this issue.
+
+   ~ln -s /etc/povray/ .povray~
+
+  - If you are running ~Ubuntu~, you can also install the ~PovRay~ executable and
+	libraries using the directions provided in [[http://www.povray.org/download/linux.php][this official installation link]].
+  - Alternatively you can install compile from source following the step-by-step
+    instructions posted [[https://askubuntu.com/a/414192][in this Stack Overflow answer]].
+
+  If you are running Windows, you can
+
+  - Use the Linux subsystem that you setup at the beginning of this semester to
+    invoke the commands listed for ~Ubuntu~ users above.
+  - Directly install the Povray binary from [[http://www.povray.org/download/][here]]. I do not recommend this option
+    as the scripts that I have uploaded requires some variant of ~sh~, not found
+    in a Windows environment.
 
   - If you are running other distros (~Debian~ etc.), invoke the appropriate package
 	manager, with the same commands above.
-
   - Alternatively, if you are on ~MacOS~ or ~Linux~ based systems and are using
 	~Homebrew/Linuxbrew~, then install ~PovRay~ using:
    #+begin_src sh :exports code
 	 # install povray, if not already there
 	 brew install povray
    #+end_src
+   Note that ~MacOS~ users can also compile code from source (similar to ~Ubuntu~ users)
 
 * Tutorials
 Here are some tutorials for getting familiar with ~PovRay~. As mentioned in
@@ -48,3 +66,87 @@ https://www.youtube.com/playlist?list=PLlW5kivBxMYtCFiSnhlhceFsTSCeuJImm
 - The basic tutorials from the official PovRay site: https://www.povray.org/documentation/3.7.0/t2_0.html
 - This site is the Godfather of all sites PovRay:
   http://f-lohmueller.de/pov_tut/pov__eng.htm and has many tricks, tips and tutorials
+* ~ffmpeg~ setup
+  Installing ~ffmpeg~ is also straightforward in a *nix system. We will be
+  requiring ~ffmpeg~ to stitch together images created by ~PovRay~ to create
+  animations.
+
+  - If you are running ~Ubuntu~, you should already have it installed. If not
+    (there is no preinstalled ~ffmpeg~ in ~Ubuntu 14.04~),
+    run	the following commands using the ~apt~ module, like so:
+   #+begin_src sh :exports code
+	 # Add external repository containing ffmpeg
+	 sudo add-apt-repository ppa:mc3man/trusty-media
+
+	 # fetches up-to-date package information from
+	 # the ubuntu aptitude repository
+	 sudo apt-get update
+
+	 # upgrades all packages
+	 sudo apt-get upgrade
+
+	 # install ffmpeg, if not already there
+	 sudo apt-get install ffmpeg
+   #+end_src
+
+  If you are running Windows, you can
+
+  - Use the Linux subsystem that you setup at the beginning of this semester to
+    invoke the commands listed for ~Ubuntu~ users above.
+  - If you are running other distros (~Debian~ etc.), invoke the appropriate package
+	manager, with the same commands above.
+
+  If you are running ~MacOS~ or ~Linux~, you can use ~Homebrew/Linuxbrew~, then
+  install ~ffmpeg~ using:
+   #+begin_src sh :exports code
+	 # install ffmpeg, if not already there
+	 brew install ffmpeg
+   #+end_src
+* ~ffmpeg~ commands
+  The following ~ffmpeg~ command finds images in a given folder and creates a
+  nice movie out of them all. It has been added to the source script by default.
+   #+begin_src sh :exports code
+   #+end_src
+* Putting them together
+  The ~dump_snake.py~ script provided can dump data from the rod into a ~PovRay~
+  recognized format. The typical use case, and the generated image is shown
+  below:
+  #+begin_src python :exports code
+	from dump_snake import dump_snake_to_povray
+
+	# Fake rod objects
+	# x, y and z of nodes
+	x_rod = np.linspace(0., 1., 50)
+	y_rod = 0.1 * np.sin(5 * np.pi * x_vals)
+	radius = 0.05
+	z_vals = 0.0 * x_vals - radius
+
+	# Put the data as a (npts,3) or (3, npts) object
+	data_arr = np.vstack((x_vals, y_vals, z_vals))
+
+	# Folder where to dump data, optional
+	prefix = "./data/"
+
+	# Finally dump snake data into povray objects
+	# Look at the function docstring for more details
+	dump_snake_to_povray(0, data_arr, radius, prefix)
+  #+end_src
+  Note that there are caveats in using this function (which are detailed in its
+  docstring). The caveats however are not too restrictive, and typically your
+  snake should render fine.
+
+  Using the ~render_pov.sh~ script, you can then ask ~PovRay~ to render the
+  files generated by python as images. You can use it like so:
+
+  #+begin_src bash :exports code
+	# The argument passed to render_pov is
+	# where your data dumped from Python is located
+	bash render_pov.sh ./data/
+  #+end_src
+
+  Finally a sample image obtained from running the above code is shown below.
+  Note that the script also generates the ~snake.mp4~ animation file which
+  stitches all such images together.
+
+  #+CAPTION: ~Povray~ rendered snake
+  [[file:code/test_images/snake_0000000.png]]

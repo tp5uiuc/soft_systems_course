@@ -1,4 +1,4 @@
-% Created 2019-03-10 Sun 21:59
+% Created 2019-04-25 Thu 12:31
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -34,7 +34,7 @@
 \begin{document}
 
 \maketitle
-\textbf{Issue Date} : \today
+\textbf{Issue Date} : March 10, 2019
 
 \textbf{Teaching Assistant} : Tejaswin Parthasarathy, \texttt{tp5@illinois.edu}
 
@@ -53,7 +53,7 @@
 \newpage
 
 \section{Guidelines}
-\label{sec:org867312c}
+\label{sec:orge5d2764}
 General advice that pertains to solving the dynamics of an idealized
 slithering snake:
 \begin{enumerate}
@@ -74,9 +74,9 @@ Student Code on academic integrity---plagiarism will not be tolerated!
 \end{enumerate}
 
 \section{A soft snake}
-\label{sec:orgeda39eb}
+\label{sec:org4b530fa}
 \subsection{Definition}
-\label{sec:org90a815f}
+\label{sec:org48ac4b3}
 In \texttt{Python}, implement a code for computing the mechanics of soft filaments
 using Cosserat rod theory, mirroring the in-class discussion. Construct a
 model of a slithering snake using this implementation and furthermore
@@ -85,9 +85,9 @@ optimize the gait of the snake for achieving maximal forward speed.
 \textbf{BONUS} : Visualize any/all of your results using the \href{http://www.povray.org/}{PovRay} raytracing
 library or its \texttt{Python} interface---\href{https://github.com/Zulko/vapory}{Vapory}.
 \subsection{Details}
-\label{sec:org2918359}
+\label{sec:org83740c5}
 \subsubsection{Governing equations}
-\label{sec:org464fcee}
+\label{sec:org1ac146f}
 \textbf{Cosserat rod model}
  The following are the equations that you need to implement in your code.
  Note that these equations are derived \textbf{after} appropriate simplification as
@@ -115,7 +115,7 @@ hands-on session on rotations. Utilize the energy-preserving second-order
 the hands-on session on timestepping schemes.
 
 \subsubsection{Simplifications to the governing equations}
-\label{sec:org9706289}
+\label{sec:orgb411169}
 \begin{itemize}
 \item The first simplification performed above involves a crude
 approximation---we simply remove the Lagrangian transport and unsteady
@@ -130,7 +130,7 @@ valid in the specific example of slithering snake that we are interested in.
 \item As we will later see, rolling/lateral friction is neglected.
 \end{itemize}
 \subsubsection{Validation}
-\label{sec:orgc9576f5}
+\label{sec:org120c7fa}
 Once you are confident that all your operators (\texttt{Python}  functions) are
 performing the right task, it is prudent to validate your code against
 physical cases with known analytical (or numerical/experimental) solutions.
@@ -191,7 +191,7 @@ Time step \(dt\) & \(\SI{3e-4}{\second}\)\\
 \end{table}
 
 Notice that if you change one of these parameters such that \(3E\hat{I}_1/(4\hat{L}^2\hat{A}G)\ll 1\), you should also recover the
-results of the Euler-Bernoulli theory (Say by setting \(E = G = \SI{1e5}{\Pa}\) ).
+results of the Euler-Bernoulli theory (Say by setting \(E = \textcolor{red}{\frac{3}{2}G} = \SI{1e5}{\Pa}\) ).
 
 \noindent\rule{1\textwidth}{0.01pt}
 \textbf{Initial conditions}: Notice that in this case, the initial
@@ -207,7 +207,7 @@ condition constrains the elemental frame (and its angular velocity) at \(\hat{s}
 location, the node is time invariant---hence its location is fixed, and its
 velocity always \(\mathbf{0}\).
 \subsubsection{Towards a slithering snake}
-\label{sec:org2adc4ab}
+\label{sec:orgedb9da9}
 \textbf{Muscular activity} To model muscular activity, we express it as torques
  acting along the body. The magnitude \(A_m\) of this torque is a traveling
  wave propagating head to tail along the filament
@@ -346,7 +346,7 @@ friction coefficients based on the direction of locomotion.
 For this project, you can \textbf{neglect} lateral/rolling friction.
 
 \subsubsection{The slithering snake}
-\label{sec:org1e23fa4}
+\label{sec:org52aed0e}
 With all the components in place, we can assemble them together to model a
 snake. For this case, the muscular activity
 is modeled as an internal torque, calculated as a parametrized B-spline, as mentioned
@@ -373,7 +373,7 @@ can refer to the first link in \cref{sec:references} for more validation cases o
 ask the TA.
 
 \subsubsection{Gait optimization for maximal forward velocity}
-\label{sec:org24372a6}
+\label{sec:orgf2ace08}
 We are now (almost) ready to tackle the optimization problem of finding the
 maximal forward velocity for a model snake. The code setup, initial and
 boundary conditions follow from the previous section, including the
@@ -389,10 +389,10 @@ Parameters for the snake to be optimized for maximal forward velocity}
 \toprule
 Parameters & Value\\
 \midrule
-Rod density \(\rho\) & \(\SI{5e3}{\kg \m^{-3}}\)\\
+Rod density \(\rho\) & \(\textcolor{red}{\SI{1e3}{\kg \m^{-3}}}\)\\
 Young's modulus \(E\) & \(\SI{1e7}{\Pa}\)\\
 Shear modulus \(G\) & \(2E/3\;\si{\Pa}\)\\
-Shear/Stretch matrix \(\mathbf{S}\) & diag\((4GA/3, 4GA/3, 2GA/3) \si{\N\per\m^2}\)\\
+Shear/Stretch matrix \(\mathbf{S}\) & diag\((4GA/3, 4GA/3, \textcolor{red}{EA}) \si{\N\per\m^2}\)\\
 Bend/Twist matrix \(\mathbf{B}\) & diag\((EI_1, EI_2, GI_3) \si{\N\per\m^2}\)\\
 Rod length \(L\) & \(\SI{1}{\m}\)\\
 Rod radius \(r\) & \(\SI{0.025}{\m}\)\\
@@ -456,7 +456,7 @@ Optimal lateral undulation gait. (a, b, c, d) Instances at different times of a 
 \end{figure}
 
 \subsection{Expected submission}
-\label{sec:orga858d73}
+\label{sec:org12eef78}
 We expect you to submit your code and presentation. In your presentation,
 please try and include all your validation cases, information on your
 optimization campaign (CMAes fitness function, bounds on parameters, time
@@ -464,11 +464,11 @@ interval for optimization etc), performance of CMA on this problem and finally
 the results obtained. Other information such as timing data from your code
 (i.e. time for a single function evaluation) etc. can also be included.
 \section{A soft X}
-\label{sec:org774464f}
+\label{sec:orgf6d5f16}
 {\large \textbf{This section is compulsary for students taking the course for four credit
 hours and is optional for those taking the course for three credit hours}}.
 \subsection{Solve for X}
-\label{sec:org4512879}
+\label{sec:org0e81f38}
 Think of an physical problem/application in which the modeling capabilities
 that you learnt in this course can come in handy, and design, using Cosserat
 rod(s), a setup that can be used to study/solve the problem you have in mind.
@@ -477,14 +477,14 @@ something you are really curious about (a few examples will be given in the
 class, but we will brainstorm with you about potential project ideas and
 their feasibility).
 \subsection{Optimize for X}
-\label{sec:orgf92306d}
+\label{sec:org554c477}
 Once you have a preliminary design that partially/fully solves your problem,
 you need to see whether you can do \emph{better}. You are then expected to setup an
 inverse design problem, define what's \emph{better} in your case and use the
 optimization techniques that you have learnt thus far, to \emph{evolve} new
 designs.
 \subsection{Understand X}
-\label{sec:org2311759}
+\label{sec:orgf41acd1}
 After you have arrived at a \emph{good} design, try and understand what makes it
 \emph{good}. While this may not be straightforward in all cases, tracking the designs
 that CMAes evolves can give you some intution as to why your design may be optimal.
@@ -500,7 +500,7 @@ of a slithering snake, found \href{https://royalsocietypublishing.org/doi/full/1
 schemes accompanied by \href{http://www2.math.ethz.ch/education/bachelor/seminars/fs2008/nas/crivelli.pdf}{this link} that compares many other schemes to the same.
 \end{itemize}
 \section{Compass Instructions}
-\label{sec:org82a1cef}
+\label{sec:org4884744}
 \textbf{Project 2}
 In this project, you will implement a computational soft mechanics code (in Python) and construct a near-realistic model of a slithering snake. You will also hook it up to a stochastic optimization algorithm (CMAes) to find a gait that maximizes the forward speed, under some given conditions.
 

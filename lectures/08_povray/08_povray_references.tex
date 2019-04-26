@@ -1,4 +1,4 @@
-% Created 2019-04-18 Thu 20:04
+% Created 2019-04-26 Fri 09:43
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -39,13 +39,12 @@
 \textbf{Teaching Assistant} : Tejaswin Parthasarathy, \texttt{tp5@illinois.edu}
 
 \section{Setup}
-\label{sec:org9167742}
-Installing \texttt{PovRay} is straightforward in a nix system. Some ways are:
+\label{sec:orged45d52}
+Installing \texttt{PovRay} is straightforward in a *nix system. Some ways are:
 
 \begin{itemize}
 \item If you are running \texttt{Ubuntu}, you can install the \texttt{PovRay} executable and
 libraries using the \texttt{apt} module, like so:
-
 \begin{minted}[]{sh}
 # fetches up-to-date package information from
   #the ubuntu aptitude repository
@@ -54,25 +53,46 @@ sudo apt-get update
 # upgrades all packages
 sudo apt-get upgrade
 
-# install python3, if not already there
+# install povray, if not already there
 sudo apt-get install povray
 \end{minted}
-If you are running Windows, please use the Linux subsystem that you setup at
-the beginning of this semester to invoke the above commands.
+Beware that you may run into this issue:
+
+\texttt{povray: cannot open the user configuration file /home/.povray/3.7/povray.conf: No such file or directory}
+
+Running this command in your home directory (as borrowed from \href{https://askubuntu.com/questions/628496/using-pov-ray-installed-via-the-apt}{this SO thread}
+ ) seems to resolve this issue.
+
+\texttt{ln -s /etc/povray/ .povray}
+
+\item If you are running \texttt{Ubuntu}, you can also install the \texttt{PovRay} executable and
+libraries using the directions provided in \href{http://www.povray.org/download/linux.php}{this official installation link}.
+\item Alternatively you can install compile from source following the step-by-step
+instructions posted \href{https://askubuntu.com/a/414192}{in this Stack Overflow answer}.
+\end{itemize}
+
+If you are running Windows, you can
+
+\begin{itemize}
+\item Use the Linux subsystem that you setup at the beginning of this semester to
+invoke the commands listed for \texttt{Ubuntu} users above.
+\item Directly install the Povray binary from \href{http://www.povray.org/download/}{here}. I do not recommend this option
+as the scripts that I have uploaded requires some variant of \texttt{sh}, not found
+in a Windows environment.
 
 \item If you are running other distros (\texttt{Debian} etc.), invoke the appropriate package
 manager, with the same commands above.
-
 \item Alternatively, if you are on \texttt{MacOS} or \texttt{Linux} based systems and are using
 \texttt{Homebrew/Linuxbrew}, then install \texttt{PovRay} using:
 \begin{minted}[]{sh}
 # install povray, if not already there
 brew install povray
 \end{minted}
+Note that \texttt{MacOS} users can also compile code from source (similar to \texttt{Ubuntu} users)
 \end{itemize}
 
 \section{Tutorials}
-\label{sec:orgb02bc39}
+\label{sec:org0e98fd4}
 Here are some tutorials for getting familiar with \texttt{PovRay}. As mentioned in
 class, I will be giving you some scripts to do the rendering of the snake from
 your \texttt{Python} implementation:
@@ -86,4 +106,96 @@ your \texttt{Python} implementation:
 \item This site is the Godfather of all sites PovRay:
 \url{http://f-lohmueller.de/pov\_tut/pov\_\_eng.htm} and has many tricks, tips and tutorials
 \end{itemize}
+\section{\texttt{ffmpeg} setup}
+\label{sec:org2582b40}
+Installing \texttt{ffmpeg} is also straightforward in a *nix system. We will be
+requiring \texttt{ffmpeg} to stitch together images created by \texttt{PovRay} to create
+animations.
+
+\begin{itemize}
+\item If you are running \texttt{Ubuntu}, you should already have it installed. If not
+(there is no preinstalled \texttt{ffmpeg} in \texttt{Ubuntu 14.04}),
+run	the following commands using the \texttt{apt} module, like so:
+\begin{minted}[]{sh}
+# Add external repository containing ffmpeg
+sudo add-apt-repository ppa:mc3man/trusty-media
+
+# fetches up-to-date package information from
+# the ubuntu aptitude repository
+sudo apt-get update
+
+# upgrades all packages
+sudo apt-get upgrade
+
+# install ffmpeg, if not already there
+sudo apt-get install ffmpeg
+\end{minted}
+\end{itemize}
+
+If you are running Windows, you can
+
+\begin{itemize}
+\item Use the Linux subsystem that you setup at the beginning of this semester to
+invoke the commands listed for \texttt{Ubuntu} users above.
+\item If you are running other distros (\texttt{Debian} etc.), invoke the appropriate package
+manager, with the same commands above.
+\end{itemize}
+
+If you are running \texttt{MacOS} or \texttt{Linux}, you can use \texttt{Homebrew/Linuxbrew}, then
+install \texttt{ffmpeg} using:
+\begin{minted}[]{sh}
+# install ffmpeg, if not already there
+brew install ffmpeg
+\end{minted}
+\section{\texttt{ffmpeg} commands}
+\label{sec:org3428bce}
+The following \texttt{ffmpeg} command finds images in a given folder and creates a
+nice movie out of them all. It has been added to the source script by default.
+\section{Putting them together}
+\label{sec:org973d6fb}
+The \texttt{dump\_snake.py} script provided can dump data from the rod into a \texttt{PovRay}
+recognized format. The typical use case, and the generated image is shown
+below:
+\begin{minted}[]{python}
+from dump_snake import dump_snake_to_povray
+
+# Fake rod objects
+# x, y and z of nodes
+x_rod = np.linspace(0., 1., 50)
+y_rod = 0.1 * np.sin(5 * np.pi * x_vals)
+radius = 0.05
+z_vals = 0.0 * x_vals - radius
+
+# Put the data as a (npts,3) or (3, npts) object
+data_arr = np.vstack((x_vals, y_vals, z_vals))
+
+# Folder where to dump data, optional
+prefix = "./data/"
+
+# Finally dump snake data into povray objects
+# Look at the function docstring for more details
+dump_snake_to_povray(0, data_arr, radius, prefix)
+\end{minted}
+Note that there are caveats in using this function (which are detailed in its
+docstring). The caveats however are not too restrictive, and typically your
+snake should render fine.
+
+Using the \texttt{render\_pov.sh} script, you can then ask \texttt{PovRay} to render the
+files generated by python as images. You can use it like so:
+
+\begin{minted}[]{bash}
+# The argument passed to render_pov is
+# where your data dumped from Python is located
+bash render_pov.sh ./data/
+\end{minted}
+
+Finally a sample image obtained from running the above code is shown below.
+Note that the script also generates the \texttt{snake.mp4} animation file which
+stitches all such images together.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{code/test_images/snake_0000000.png}
+\caption{\texttt{Povray} rendered snake}
+\end{figure}
 \end{document}

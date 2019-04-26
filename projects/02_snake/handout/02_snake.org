@@ -4,7 +4,7 @@
 #+OPTIONS:   H:3 num:t toc:nil date:nil ::t |:t ^:{} -:t f:t *:t <:t
 #+LATEX_HEADER: \usepackage{cleveref}
 
-*Issue Date* : \today
+*Issue Date* : March 10, 2019
 
 *Teaching Assistant* : Tejaswin Parthasarathy, ~tp5@illinois.edu~
 
@@ -145,7 +145,7 @@
 
 	Notice that if you change one of these parameters such that \(
 	3E\hat{I}_1/(4\hat{L}^2\hat{A}G)\ll 1 \), you should also recover the
-	results of the Euler-Bernoulli theory (Say by setting \( E = G = \SI{1e5}{\Pa}
+	results of the Euler-Bernoulli theory (Say by setting \( E = \textcolor{red}{\frac{3}{2}G} = \SI{1e5}{\Pa}
 	\) ).
 
 	#+ATTR_LATEX: :width 1\textwidth :thickness 0.01pt
@@ -475,28 +475,28 @@
 
 	#+CAPTION: Parameters for the snake to be optimized for maximal forward velocity
 	#+NAME: tab_opt_snake_params
-	| Parameters                                                  | Value                                         |
-	|-------------------------------------------------------------+-----------------------------------------------|
-	| Rod density \(\rho\)                                        | \( \SI{5e3}{\kg \m^{-3}}\)                    |
-	| Young's modulus \( E \)                                     | \( \SI{1e7}{\Pa} \)                           |
-	| Shear modulus \( G\)                                        | \( 2E/3\;\si{\Pa} \)                          |
-	| Shear/Stretch matrix \( \mathbf{S} \)                       | diag\((4GA/3, 4GA/3, 2GA/3) \si{\N\per\m^2}\) |
-	| Bend/Twist matrix \( \mathbf{B} \)                          | diag\((EI_1, EI_2, GI_3) \si{\N\per\m^2}\)    |
-	| Rod length \( L \)                                          | \( \SI{1}{\m}     \)                          |
-	| Rod radius \( r \)                                          | \( \SI{0.025}{\m}     \)                      |
-	| Muscular activation period \( T_m \)                        | \( \SI{1}{\second}\)                          |
-	| Dissipation constant \( \gamma \)                           | \( \SI{5}{\kg\per\m\per\second}\)             |
-	| Acceleration due to gravity normal to ground \( g \)        | \SI{9.81}{\m \per \s^2}                       |
-	| Forward kinetic friction coefficient\( \mu^f_k \)           | \( 1.019368 \)                                |
-	| Backward kinetic friction coefficient \( \mu^b_k\)          | \(1.5 \cdot  \mu^f_k \)                       |
-	| Forward static friction coefficient\( \mu^f_s \)            | \(2 \cdot  \mu^f_k     \)                     |
-	| Backward static friction coefficient \( \mu^b_s\)           | \(1.5 \cdot  \mu^f_s      \)                  |
-	| Friction threshold velocity \( v_{\epsilon}\)               | \SI{1e-8}{\m\per\s}                           |
-	| Ground stiffness \(k_w \)                                   | \SI{1}{\kg \per \s^2}                         |
-	| Ground viscous dissipation                                  | \SI{1e-6}{\kg \per \s}                        |
-	| Number of discretization points \( n \)                     | 50                                            |
-	| Time step \( dt \)                                          | \( \SI{2.5e-5}{\second}\)                     |
-	|-------------------------------------------------------------+-----------------------------------------------|
+	| Parameters                                           | Value                                                       |
+	|------------------------------------------------------+-------------------------------------------------------------|
+	| Rod density \(\rho\)                                 | \( \textcolor{red}{\SI{1e3}{\kg \m^{-3}}} \)                |
+	| Young's modulus \( E \)                              | \( \SI{1e7}{\Pa} \)                                         |
+	| Shear modulus \( G\)                                 | \( 2E/3\;\si{\Pa} \)                                        |
+	| Shear/Stretch matrix \( \mathbf{S} \)                | diag\((4GA/3, 4GA/3, \textcolor{red}{EA}) \si{\N\per\m^2}\) |
+	| Bend/Twist matrix \( \mathbf{B} \)                   | diag\((EI_1, EI_2, GI_3) \si{\N\per\m^2}\)                  |
+	| Rod length \( L \)                                   | \( \SI{1}{\m}     \)                                        |
+	| Rod radius \( r \)                                   | \( \SI{0.025}{\m}     \)                                    |
+	| Muscular activation period \( T_m \)                 | \( \SI{1}{\second}\)                                        |
+	| Dissipation constant \( \gamma \)                    | \( \SI{5}{\kg\per\m\per\second}\)                           |
+	| Acceleration due to gravity normal to ground \( g \) | \SI{9.81}{\m \per \s^2}                                     |
+	| Forward kinetic friction coefficient\( \mu^f_k \)    | \( 1.019368 \)                                              |
+	| Backward kinetic friction coefficient \( \mu^b_k\)   | \(1.5 \cdot  \mu^f_k \)                                     |
+	| Forward static friction coefficient\( \mu^f_s \)     | \(2 \cdot  \mu^f_k     \)                                   |
+	| Backward static friction coefficient \( \mu^b_s\)    | \(1.5 \cdot  \mu^f_s      \)                                |
+	| Friction threshold velocity \( v_{\epsilon}\)        | \SI{1e-8}{\m\per\s}                                         |
+	| Ground stiffness \(k_w \)                            | \SI{1}{\kg \per \s^2}                                       |
+	| Ground viscous dissipation                           | \SI{1e-6}{\kg \per \s}                                      |
+	| Number of discretization points \( n \)              | 50                                                          |
+	| Time step \( dt \)                                   | \( \SI{2.5e-5}{\second}\)                                   |
+	|------------------------------------------------------+-------------------------------------------------------------|
 
 	# If rollng friction is included
 	# | Lateral (rolling) kinetic friction coefficient \( \mu^r_k\) | \(2 \cdot  \mu^f_k \)                         |
