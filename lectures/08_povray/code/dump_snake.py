@@ -34,7 +34,7 @@ def dump_snake_to_povray(t_step, t_pos, t_radius=0.01, t_prefix=""):
 
     """
 
-    # 0. Define hepler function for pythonic text conversion
+    # 0. Define helper function for pythonic text conversion
     def vectorize(arr, rad):
         """ transforms [a, b, c] into string "<a, b, c>"" """
         n = arr.shape[0]
