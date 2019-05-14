@@ -33,6 +33,12 @@ def snake_bspline(t_coeff, l_centerline=1.0, keep_pts=False):
     # Divide into n_control_pts numbrer of points (n_ctr_pts-1) regions
     control_pts = l_centerline * np.linspace(0.0, 1.0, t_coeff.shape[0])
 
+    # # Do chebyshev weighted points
+    # nodes, _ = np.polynomial.chebyshev.chebgauss(t_coeff.shape[0] - 2)
+    # # Need to reverse the nodes array because numpy returns it from [1,-1]
+    # nodes = np.hstack((-1.0, nodes[::-1], 1.0))
+    # control_pts = l_centerline * (0.5 + 0.5 * nodes) 
+
     # Degree of b-spline required. Set to cubic
     degree = 3
 
@@ -85,7 +91,8 @@ def __bspline_impl__(x_pts, t_c, b_head, b_tail, t_k):
 def test_bspline():
     """ Test object for the bspline function"""
     l_centre = 1.0
-    t_coeff = np.abs(np.random.randn(6, ))
+    # t_coeff = np.abs(np.random.randn(6, ))
+    t_coeff = np.array([2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 2.0])
     my_spline, ctr_pts, ctr_coeffs = snake_bspline(t_coeff, keep_pts=True)
     my_spline(2.0)
 
