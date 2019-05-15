@@ -51,6 +51,8 @@
 - Make figures in tikz for better consistency
 - In the povray script, ensure that what's already rendered is not rendered
   again.
+- In the snake handout, ensure that theres' no confusion between Bernoulli
+  theort and Timoshenko theory...
 * Rough plans for lectures
 ** 01: Introduction to shell, setup python
 ** 02: Intro to Python + Jupyter notebook : Till lists

@@ -405,6 +405,7 @@ resources/
 # Ignore grading folder
 projects/01_optimization/grading/
 projects/01_optimization/user_submissions/
+projects/02_snake/user_submissions/
 
 # Ignore povray data and image folders
 lectures/08_povray/code/data/
