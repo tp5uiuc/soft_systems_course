@@ -10,6 +10,7 @@
 #+LATEX_CLASS_OPTIONS: [presentation]
 # #+LATEX_CLASS_OPTIONS: [notes]
 #+LATEX_HEADER:\usetheme[progressbar=frametitle,block=fill]{metropolis}
+#+LATEX_HEADER:\usepackage{cleveref}
 #+OPTIONS:   H:2 num:t toc:nil ::t |:t ^:{} -:t f:t *:t <:t
 #+OPTIONS:   tex:t d:nil todo:t pri:nil tags:nil
 #+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col) %8BEAMER_OPT(Opt)
@@ -232,7 +233,7 @@
 #+ATTR_LATEX: :width 0.9\textwidth
 [[file:images/nacl.jpg]]
 
-** Your favorite applications use Python![fn:3]
+** Your favorite applications use Python! [fn:3]
 
    - Dropbox
    - Spotify

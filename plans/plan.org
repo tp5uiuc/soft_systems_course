@@ -40,19 +40,6 @@
 - Elastica + CMA coupling : some examples
 - Povray tutorial (document with povray setup)
 
-* Future improvement (next semester)
-- !!! Change lectures so that they code along with you (Checkpoints)
-- Some exercises on eigenvalues and eigenvectors
-  - Like an ipynb notebook that illustrates eigenvalues for general matrices
-  - Schedule after coding up the GA session?
-- Add one more example forcing function (two-body gravitational problem) for
-  example in the timestepper demonstration
-- At the start of every chapter give a compendium of references (books)
-- Make figures in tikz for better consistency
-- In the povray script, ensure that what's already rendered is not rendered
-  again.
-- In the snake handout, ensure that theres' no confusion between Bernoulli
-  theort and Timoshenko theory...
 * Rough plans for lectures
 ** 01: Introduction to shell, setup python
 ** 02: Intro to Python + Jupyter notebook : Till lists
@@ -65,3 +52,15 @@
 ** 09: Finish rotations (Rodrigues) + Start timesteppers (theory)
 ** 10: Timesteppers demo (activity, let them code up some timestepper)
 ** 11: Traveling wave demonstrations + snake intution (friction/contact)?
+* Future improvement (next semester)
+** TODO !!! Change lectures so that they code along with you (Checkpoints)
+** TODO Integrate wall contact and friction modules above
+** TODO Some exercises on eigenvalues and eigenvectors
+	- Like an ipynb notebook that illustrates eigenvalues for general matrices
+	- Schedule after coding up the GA session?
+** TODO Add one more example forcing function (two-body gravitational problem) for example in the timestepper demonstration
+** TODO At the start of every chapter give a compendium of references (books)
+** TODO Make figures in tikz for better consistency
+** TODO In the snake handout, ensure that theres' no confusion between Bernoulli theory and Timoshenko theory---they need to confirm
+that both work
+** TODO In the povray script, ensure that what's already rendered is not rendered again.

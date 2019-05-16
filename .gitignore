@@ -407,6 +407,8 @@ projects/01_optimization/grading/
 projects/01_optimization/user_submissions/
 projects/02_snake/user_submissions/
 
+# Ignore any data folders
+*data*
+
 # Ignore povray data and image folders
-lectures/08_povray/code/data/
 lectures/08_povray/code/test_images/
