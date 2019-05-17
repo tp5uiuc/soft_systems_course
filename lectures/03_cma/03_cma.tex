@@ -1,4 +1,4 @@
-% Created 2019-05-16 Thu 09:49
+% Created 2019-05-17 Fri 11:53
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation]{beamer}
 \usepackage[utf8]{inputenc}
@@ -21,17 +21,21 @@
 \usepackage{minted}
 \usetheme[progressbar=frametitle]{metropolis}
 \usepackage{tikz}
-\usetikzlibrary{matrix,calc}
+\usetikzlibrary{backgrounds,matrix,fit,calc}
 \usepackage{pgfplots}
-\pgfplotsset{compat=newest}
+\pgfplotsset{compat=1.16}
+\usepackage{nicematrix}
 \usepackage{spot}
+\usepackage[beamer,customcolors]{hf-tikz}
 \newcommand{\gv}[1]{\ensuremath{\mbox{\boldmath$ #1 $}}}
 \newcommand{\bv}[1]{\ensuremath{\mathbf{#1}}}
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 \newcommand{\order}[1]{\mathcal O \left( #1 \right)} % order of magnitude
+\newcommand*{\Scale}[2][4]{\scalebox{#1}{$#2$}}%
 \definecolor{scarlet}{rgb}{1.0, 0.13, 0.0}
 \definecolor{shamrockgreen}{rgb}{0.0, 0.62, 0.38}
 \definecolor{royalblue}{rgb}{0.25, 0.41, 0.88}
+\definecolor{metropolisorange}{RGB}{235,129,27}
 \usetheme{default}
 \author{\emph{Tejaswin Parthasarathy}, Mattia Gazzola}
 \date{\today}
@@ -47,9 +51,12 @@
 \begin{document}
 
 \maketitle
+\pgfplotsset{
+colormap={whitered}{color(0cm)=(white); rgb255(1cm)=(235,129,27)}
+}
 \section{\texttt{Matplotlib}}
-\label{sec:org5ade257}
-\begin{frame}[label={sec:orgd571dfa},fragile]{Additional packages}
+\label{sec:org93223be}
+\begin{frame}[label={sec:orgf5bf3a5},fragile]{Additional packages}
  \begin{itemize}
 \item \texttt{Seaborn}  \alert{DEMO}
 \item \texttt{bokeh}
@@ -57,7 +64,7 @@
 \item See \href{https://wiki.python.org/moin/NumericAndScientific/Plotting}{Python wiki} for more plotting tools
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org1179fdd}]{Quick review}
+\begin{frame}[label={sec:orgd0a337d}]{Quick review}
 \begin{block}{GA demo : Results of our GA implementation}
 \end{block}
 \begin{block}{How to improve convergence?}
@@ -71,16 +78,60 @@
 \end{block}
 \end{frame}
 \section{Implementation of CMAes}
-\label{sec:org0a82582}
-\begin{frame}[label={sec:org6b58949}]{The algorithm}
-\footnotesize
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=1.03\textwidth]{images/cma_algo.001.jpeg}
-\caption{CMAes}
-\end{figure}
+\label{sec:org5ff4ac7}
+\begin{frame}[label={sec:org12ab2f0}]{The algorithm}
+Set \(\mathbf{m} = \mathbf{0}, \mathbf{C} = \mathbf{I}, \sigma =
+ 0.5, \mathbf{p}_c = \mathbf{0}, \mathbf{p}_{\sigma} = \mathbf{0}\)
+\begin{block}{Sampling}
+\[ \begin{aligned}
+	  \tikzmarkin<1>[set fill color=shamrockgreen!20, set border color=black]{sampling}(0.2,-0.4)(-0.2,0.6)
+	  \mathbf{z}_{i} & \sim \mathcal{N}(\mathbf{0}, \mathbf{C}) \\
+	  \mathbf{x}_{i} &= m+\sigma \mathbf{z}_{i} \tikzmarkend{sampling}
+	  \end{aligned} \]
+\end{block}
+
+\begin{block}{Selection and Recombination}
+\(\mu\) indicates best individuals
+  \[ \begin{aligned}
+	  \tikzmarkin<1>[set fill color=royalblue!40, set border color=black]{selec}(0.2,-0.4)(-0.2,0.8)
+	  \langle\mathbf{z}\rangle_{w} &= \sum_{i=1}^{\mu} w_{i} \mathbf{z}_{i : \lambda} \\
+	  \mathbf{m} &\longleftarrow \mathbf{m}+\sigma\langle\mathbf{z}\rangle_{w} \tikzmarkend{selec}
+	  \end{aligned} \]
+\end{block}
 \end{frame}
-\begin{frame}[label={sec:org0982957}]{Starting CMAes}
+
+\begin{frame}[label={sec:orgbf57440}]{The algorithm contd.}
+\begin{block}{Step size update}
+\[ \begin{aligned}
+	 \tikzmarkin<1>[set fill color=scarlet!30, set border color=black]{step}(5.2,-0.4)(-0.2,0.8)
+	 \mathbf{p}_{\sigma} &\longleftarrow\left(1-c_{\sigma}\right)
+	 \mathbf{p}_{\sigma}+\sqrt{1-\left(1-c_{\sigma}\right)^{2}}
+	 \sqrt{\frac{1}{\sum_{i=1}^{\mu} w_{i}^{2}}}
+	 \mathbf{C}^{-\frac{1}{2}}\langle\mathbf{z}\rangle_{w} \\
+	 \sigma &\longleftarrow \sigma
+	 e^{\left(\frac{1}{d_{\sigma}}\left(\frac{\left\|p_{\sigma}\right\|}{E\|\mathcal{N}(\mathbf{0},
+	 \mathbf{I})\|}-1\right)\right)} \tikzmarkend{step}
+	 \end{aligned} \]
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:org799be68}]{The algorithm contd..}
+\begin{block}{Covariance Matrix Update}
+\[ \begin{aligned}
+	   \tikzmarkin<1>[set fill color=metropolisorange!40, set border color=black]{cov}(0.4,-0.8)(-0.4,0.8)
+	   \mathbf{p}_{c} &\longleftarrow \left(1-c_{c}\right)
+	   \mathbf{p}_{c}+\sqrt{1-\left(1-c_{c}\right)^{2}} \sqrt{\frac{1}{\sum_{i=1}^{\mu}
+	   w_{i}^{2}}}\langle\mathbf{z}\rangle_{w} \\
+	   \mathbf{Z} &= \sum_{i=1}^{\mu} w_{i} \mathbf{z}_{i : \lambda} \mathbf{z}_{i :
+	   \lambda}^{T} \\
+	   \mu_{c o v}&=\sqrt{\frac{1}{\sum_{i=1}^{\mu} w_{i}^{2}}} \\
+	   \mathbf{C} &\longleftarrow\left(1-c_{c o v}\right) \mathbf{C}+c_{c o v}
+	   \frac{1}{\mu_{c o v}} \mathbf{p}_{c} \mathbf{p}_{c}^{T}+c_{c o
+	   v}\left(1-\frac{1}{\mu_{c o v}}\right) \mathbf{Z} \tikzmarkend{cov}
+	   \end{aligned} \]
+\end{block}
+\end{frame}
+\begin{frame}[label={sec:orgbe9cc7d}]{Starting CMAes}
 \begin{block}{Problem independent}
 \begin{itemize}
 \item Set evolution paths \(\gv{p}_\sigma = \gv{0}, \gv{p}_c = \gv{0}\)
@@ -95,7 +146,7 @@
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org449bf96}]{Starting CMAes: more on problem dependent parameters}
+\begin{frame}[label={sec:org6225dc1}]{Starting CMAes: more on problem dependent parameters}
 \begin{itemize}
 \item Optimum presumably be within the initial cube \(\gv{m} \pm 3 \sigma
      \left(1 ,1 , \cdots, 1 \right)^T\)
@@ -121,7 +172,7 @@ done using \(\bv{C}\) as shown below (deferred discussion):
 rescale your problem.
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:orga970c1d},fragile]{First step : Sampling}
+\begin{frame}[label={sec:org94884e0},fragile]{First step : Sampling}
  \begin{block}{New population of points, for \(k = 1 \cdots \lambda\)}
 \begin{itemize}
 \item \(\gv{y}_k \sim \mathcal{N}\left( \gv{0}, \bv{I} \right)\)
@@ -144,7 +195,7 @@ elementwise multiplication and \texttt{+} for elementwise addition
 \end{block}
 \alert{We need a way to sample correlated (across dimensions) populations from} \texttt{numpy}
 \end{frame}
-\begin{frame}[label={sec:orgb185f1e},fragile]{Sampling : Python}
+\begin{frame}[label={sec:org60f9984},fragile]{Sampling : Python}
  \begin{block}{How to sample a multivariate normal distribution?}
 \begin{itemize}
 \item \texttt{np.random.multivariate\_normal} \alert{DEMO}
@@ -168,61 +219,613 @@ made up of rank-one decompositions
 \item Now explain why you set \(A=CC^T\)
 \end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:orga8e5c61}]{Covariance Matrix : Definition}
- % \renewcommand{\tikzmark}[2]{
- % \tikz[overlay,remember picture,baseline]
- % \node[anchor=base] (#1) {$#2$};
- % }
+\begin{frame}[label={sec:org598c80a}]{Covariance Matrix \footnote{\href{https://www.slideshare.net/OsamaSalaheldin2/cmaes-presentation}{CMAes overview, Slideshare}}}
+\begin{columns}
+\begin{column}{0.5\columnwidth}
+\begin{block}{\(\mathcal{N}(\gv{0}, \bv{I})\)}
+\begin{center}
+	\begin{tikzpicture}[
+		declare function={mu1=0;},
+		declare function={mu2=0;},
+		declare function={sigma1=1;},
+		declare function={sigma2=1;},
+		declare function={normal(\m,\s)=1/(2*\s*sqrt(pi))*exp(-(x-\m)^2/(2*\s^2));},
+		declare function={bivar(\ma,\sa,\mb,\sb)=
+			1/(2*pi*\sa*\sb) * exp(-((x-\ma)^2/\sa^2 + (y-\mb)^2/\sb^2))/2;}, scale=0.6]
+		\begin{axis}[
+			colormap name=whitered,
+			view={45}{65},
+			enlargelimits=false,
+			grid=major,
+			domain=-2.5:2.5,
+			y domain=-2.5:2.5,
+			samples=26,
+			xlabel=$x_1$,
+			ylabel=$x_2$,
+			zlabel={$\mathcal{N}$},
+			colorbar,
+			% colorbar style={
+			% 	at={(1,0)},
+			% 	anchor=south west,
+			% 	height=0.25*\pgfkeysvalueof{/pgfplots/parent axis height},
+			% 	title={$P(x_1,x_2)$}
+			% }
+		]
+		\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
+		\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
+		\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
 
- % \begin{equation}
- % % \begin{pmatrix}
- % % \tikzmark{diag1}{1} & \tikzmark{top2}{1} & 0 \\
- % % 0 & 1 & \tikzmark{bottom2}{1} \\
- % % \tikzmark{end}{1} & 0 & \tikzmark{diag2}{1}\\
- % % \end{pmatrix}
+		\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+		\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
 
- %  \begin{bmatrix}
- % 	 \tikzmark{diag1}{x} & \tikzmark{top1}{\cdot} & \tikzmark{top2}{\cdot} \\
- % 	 \tikzmark{bottom1}{\cdot}& x & \tikzmark{top3}{\cdot} \\
- % 	 \tikzmark{bottom2}{\cdot} & \tikzmark{bottom3}{\cdot} & \tikzmark{diag2}{x}\\
- %  \end{bmatrix}
- % \end{equation}
+		% \node at (axis cs:-1,1,0.18) [pin=165:$P(x_1)$] {};
+		% \node at (axis cs:1.5,4,0.32) [pin=-15:$P(x_2)$] {};
+		\end{axis}
+	\end{tikzpicture}
+\end{center}
+\end{block}
+\end{column}
 
- \begin{tikzpicture}[overlay,remember picture]
-		\matrix (M) [matrix of nodes]
-	{ a & b & c & d \\
-	e & f & g & h \\
-	i & j & k & l \\
-	m & n & o & p \\
-	};
+\begin{column}{0.5\columnwidth}
+\begin{block}{\(\mathcal{N}(\gv{\mu}, \bv{I})\)}
+\begin{center}
+	\begin{tikzpicture}[
+		declare function={mu1=1;},
+		declare function={mu2=-0.5;},
+		declare function={sigma1=1;},
+		declare function={sigma2=1;},
+		declare function={normal(\m,\s)=1/(2*\s*sqrt(pi))*exp(-(x-\m)^2/(2*\s^2));},
+		declare function={bivar(\ma,\sa,\mb,\sb)=
+			1/(2*pi*\sa*\sb) * exp(-((x-\ma)^2/\sa^2 + (y-\mb)^2/\sb^2))/2;}, scale=0.6]
+		\begin{axis}[
+			colormap name=whitered,
+			view={45}{65},
+			enlargelimits=false,
+			grid=major,
+			domain=-2.5:2.5,
+			y domain=-2.5:2.5,
+			samples=26,
+			xlabel=$x_1$,
+			ylabel=$x_2$,
+			zlabel={$\mathcal{N}$},
+			colorbar,
+		]
+		\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
+		\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
+		\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
 
-	\draw[blue,rounded corners]
-	let \p1=($(M-1-1)!-2mm!(M-4-4)$),
-		\p2=($(M-4-4)!-2mm!(M-1-1)$),
-		\p3=($(\p1)!2mm!90:(\p2)$),
-		\p4=($(\p1)!2mm!-90:(\p2)$),
-		\p5=($(\p2)!2mm!90:(\p1)$),
-		\p6=($(\p2)!2mm!-90:(\p1)$)
-	in
-	(\p3) -- (\p4)-- (\p5) -- (\p6) -- cycle;
-%\draw[opacity=.4,line width=3mm,line cap=round] (top1.center) -- (top2.center) -- (top3.center) -- cycle;
-%\draw[opacity=.4,line width=3mm,line cap=round] (bottom1.center) -- (bottom2.center) -- (bottom3.center) -- cycle;
-%\draw[opacity=.4,line width=3mm,line cap=round] (diag1.center) -- (diag2.center);
- \end{tikzpicture}
+		\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+		\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+
+		\end{axis}
+	\end{tikzpicture}
+\end{center}
+\end{block}
+\end{column}
+\end{columns}
 \end{frame}
-\begin{frame}[label={sec:org10cfefb}]{Covariance Matrix : Definition}
-\includegraphics[page=75,width=1.0\textwidth]{images/cma_slideshare.pdf}
+\begin{frame}[label={sec:orgf973a5f}]{Covariance Matrix}
+\begin{columns}
+\begin{column}{0.5\columnwidth}
+\begin{block}{\(\mathcal{N}(\gv{0}, \bv{I})\)}
+\begin{center}
+	\begin{tikzpicture}[
+		declare function={mu1=0;},
+		declare function={mu2=0;},
+		declare function={sigma1=1;},
+		declare function={sigma2=1;},
+		declare function={normal(\m,\s)=1/(2*\s*sqrt(pi))*exp(-(x-\m)^2/(2*\s^2));},
+		declare function={bivar(\ma,\sa,\mb,\sb)=
+			1/(2*pi*\sa*\sb) * exp(-((x-\ma)^2/\sa^2 + (y-\mb)^2/\sb^2))/2;}, scale=0.6]
+		\begin{axis}[
+			colormap name=whitered,
+			view={45}{65},
+			enlargelimits=false,
+			grid=major,
+			domain=-2.5:2.5,
+			y domain=-2.5:2.5,
+			samples=26,
+			xlabel=$x_1$,
+			ylabel=$x_2$,
+			zlabel={$\mathcal{N}$},
+			colorbar,
+		]
+		\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
+		\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
+		\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
+
+		\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+		\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+		\end{axis}
+	\end{tikzpicture}
+\end{center}
+\end{block}
+\end{column}
+
+\begin{column}{0.5\columnwidth}
+\begin{block}{\(\mathcal{N}(\gv{0}, \bv{C})\)}
+\begin{center}
+	\begin{tikzpicture}[
+		declare function={mu1=0;},
+		declare function={mu2=0;},
+		declare function={sigma1=0.5;},
+		declare function={sigma2=2;},
+		declare function={normal(\m,\s)=1/(2*\s*sqrt(pi))*exp(-(x-\m)^2/(2*\s^2));},
+		declare function={bivar(\ma,\sa,\mb,\sb)=
+			1/(2*pi*\sa*\sb) * exp(-(((x*cos(60) + y*sin(60))-\ma)^2/\sa^2 + ((-x*sin(60) + y*cos(60))-\mb)^2/\sb^2))/2;}, scale=0.6]
+		\begin{axis}[
+			colormap name=whitered,
+			view={45}{65},
+			enlargelimits=false,
+			grid=major,
+			domain=-2.5:2.5,
+			y domain=-2.5:2.5,
+			samples=26,
+			xlabel=$x_1$,
+			ylabel=$x_2$,
+			zlabel={$\mathcal{N}$},
+			colorbar,
+		]
+		\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
+		% \addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
+		% \addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
+
+		\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+		\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+
+		\end{axis}
+	\end{tikzpicture}
+\end{center}
+\end{block}
+\end{column}
+\end{columns}
 \end{frame}
-\begin{frame}[label={sec:org8364111}]{Covariance Matrix : Example}
-\includegraphics[page=76,width=1.0\textwidth]{images/cma_slideshare.pdf}
+\begin{frame}[label={sec:org2aa080d}]{Covariance Matrix : Example 1}
+\[ \bv{C} = \begin{bmatrix} 1 & 0 \\ 0 & 1\end{bmatrix}\]
+\begin{columns}
+\begin{column}{0.5\columnwidth}
+\begin{center}
+	\begin{tikzpicture}[
+		declare function={mu1=0;},
+		declare function={mu2=0;},
+		declare function={sigma1=1;},
+		declare function={sigma2=1;},
+		declare function={normal(\m,\s)=1/(2*\s*sqrt(pi))*exp(-(x-\m)^2/(2*\s^2));},
+		declare function={bivar(\ma,\sa,\mb,\sb)=
+			1/(2*pi*\sa*\sb) * exp(-((x-\ma)^2/\sa^2 + (y-\mb)^2/\sb^2))/2;}, scale=0.6, baseline]
+		\begin{axis}[
+			colormap name=whitered,
+			view={45}{65},
+			enlargelimits=false,
+			grid=major,
+			domain=-2.5:2.5,
+			y domain=-2.5:2.5,
+			samples=26,
+			xlabel=$x_1$,
+			ylabel=$x_2$,
+			zlabel={$\mathcal{N}$},
+			colorbar,
+		]
+		\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
+		\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
+		\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
+
+		\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+		\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+		\end{axis}
+	\end{tikzpicture}
+\end{center}
+\end{column}
+\begin{column}{0.5\columnwidth}
+\begin{center}
+	\begin{tikzpicture}[baseline,scale=0.6]
+		\begin{axis}[
+			enlargelimits=false,
+			grid=major,
+			ymin=-2.5, ymax=2.5,
+			xmin=-2.5, xmax=2.5,
+			xlabel=$x_1$,
+			ylabel=$x_2$,
+		]
+		\addplot [only marks, mark=*,
+		mark size=2.5pt, metropolisorange, mark options={fill=metropolisorange}] table {data/normal.txt};
+
+		\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+		\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+
+		\end{axis}
+	\end{tikzpicture}
+\end{center}
+\end{column}
+\end{columns}
 \end{frame}
-\begin{frame}[label={sec:org21ac520}]{Covariance Matrix : Definition}
-\includegraphics[page=77,width=1.0\textwidth]{images/cma_slideshare.pdf}
+\begin{frame}[label={sec:org0fa0995}]{Covariance Matrix : Example 2}
+\[ \bv{C} = \begin{bmatrix} 1 & 0 \\ 0 & \spot{0.2}\end{bmatrix}\]
+\begin{columns}
+\begin{column}{0.5\columnwidth}
+\begin{center}
+	\begin{tikzpicture}[
+		declare function={mu1=0;},
+		declare function={mu2=0;},
+		declare function={sigma1=1;},
+		declare function={sigma2=0.2;},
+		declare function={normal(\m,\s)=1/(2*\s*sqrt(pi))*exp(-(x-\m)^2/(2*\s^2));},
+		declare function={bivar(\ma,\sa,\mb,\sb)=
+			1/(2*pi*\sa*\sb) * exp(-((x-\ma)^2/\sa^2 + (y-\mb)^2/\sb^2))/2;}, scale=0.6, baseline]
+		\begin{axis}[
+			colormap name=whitered,
+			view={45}{65},
+			enlargelimits=false,
+			grid=major,
+			domain=-2.5:2.5,
+			y domain=-2.5:2.5,
+			samples=26,
+			xlabel=$x_1$,
+			ylabel=$x_2$,
+			zlabel={$\mathcal{N}$},
+			colorbar,
+		]
+		\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
+		\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
+		\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
+
+		\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+		\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+
+		\end{axis}
+	\end{tikzpicture}
+\end{center}
+\end{column}
+
+\begin{column}{0.5\columnwidth}
+\begin{center}
+	\begin{tikzpicture}[baseline,scale=0.6]
+		\begin{axis}[
+			enlargelimits=false,
+			grid=major,
+			ymin=-2.5, ymax=2.5,
+			xmin=-2.5, xmax=2.5,
+			xlabel=$x_1$,
+			ylabel=$x_2$,
+		]
+		\addplot [only marks, mark=*,
+		mark size=2.5pt, metropolisorange, mark options={fill=metropolisorange}] table {data/skewedX.txt};
+
+		\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+		\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+
+		\end{axis}
+	\end{tikzpicture}
+\end{center}
+\end{column}
+\end{columns}
 \end{frame}
-\begin{frame}[label={sec:org8d5a0b8}]{Covariance Matrix : Example}
-\includegraphics[page=78,width=1.0\textwidth]{images/cma_slideshare.pdf}
+\begin{frame}[label={sec:orgb172425}]{Covariance Matrix : Example 3}
+\[ \bv{C} = \begin{bmatrix} \spot{0.2} & 0 \\ 0 & 1\end{bmatrix}\]
+\begin{columns}
+\begin{column}{0.5\columnwidth}
+\begin{center}
+	\begin{tikzpicture}[
+		declare function={mu1=0;},
+		declare function={mu2=0;},
+		declare function={sigma1=0.2;},
+		declare function={sigma2=1.0;},
+		declare function={normal(\m,\s)=1/(2*\s*sqrt(pi))*exp(-(x-\m)^2/(2*\s^2));},
+		declare function={bivar(\ma,\sa,\mb,\sb)=
+			1/(2*pi*\sa*\sb) * exp(-((x-\ma)^2/\sa^2 + (y-\mb)^2/\sb^2))/2;}, scale=0.6, baseline]
+		\begin{axis}[
+			colormap name=whitered,
+			view={45}{65},
+			enlargelimits=false,
+			grid=major,
+			domain=-2.5:2.5,
+			y domain=-2.5:2.5,
+			samples=26,
+			xlabel=$x_1$,
+			ylabel=$x_2$,
+			zlabel={$\mathcal{N}$},
+			colorbar,
+		]
+		\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
+		\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
+		\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
+
+		\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+		\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+
+		\end{axis}
+	\end{tikzpicture}
+\end{center}
+\end{column}
+
+\begin{column}{0.5\columnwidth}
+\begin{center}
+	\begin{tikzpicture}[baseline,scale=0.6]
+		\begin{axis}[
+			enlargelimits=false,
+			grid=major,
+			ymin=-2.5, ymax=2.5,
+			xmin=-2.5, xmax=2.5,
+			xlabel=$x_1$,
+			ylabel=$x_2$,
+		]
+		\addplot [only marks, mark=*,
+		mark size=2.5pt, metropolisorange, mark options={fill=metropolisorange}] table {data/skewedY.txt};
+
+		\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+		\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+
+		\end{axis}
+	\end{tikzpicture}
+\end{center}
+\end{column}
+\end{columns}
 \end{frame}
-\begin{frame}[label={sec:org18d2830},fragile]{Sampling : Python--Answers}
+\begin{frame}[label={sec:org13d6b84}]{Covariance Matrix : Example 4}
+\[ \bv{C} = \begin{bmatrix} 0.2 & \spot{0.36} \\ \spot{0.36} & 1\end{bmatrix}\]
+\begin{columns}
+\begin{column}{0.5\columnwidth}
+\begin{center}
+	\begin{tikzpicture}[
+		declare function={mu1=0;},
+		declare function={mu2=0;},
+		declare function={sigma1=0.2;},
+		declare function={sigma2=1.0;},
+		declare function={normal(\m,\s)=1/(2*\s*sqrt(pi))*exp(-(x-\m)^2/(2*\s^2));},
+		declare function={bivar(\ma,\sa,\mb,\sb)=
+			1/(2*pi*\sa*\sb) * exp(-(((-0.35826*x - 0.93362*y)-\ma)^2/\sa^2 + ((-0.93362*x + 0.358266*y)-\mb)^2/\sb^2))/2;}, scale=0.6, baseline]
+		\begin{axis}[
+			colormap name=whitered,
+			view={45}{65},
+			enlargelimits=false,
+			grid=major,
+			domain=-2.5:2.5,
+			y domain=-2.5:2.5,
+			samples=26,
+			xlabel=$x_1$,
+			ylabel=$x_2$,
+			zlabel={$\mathcal{N}$},
+			colorbar,
+		]
+		\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
+		\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
+		\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
+
+		\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+		\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+
+		\end{axis}
+	\end{tikzpicture}
+\end{center}
+\end{column}
+
+\begin{column}{0.5\columnwidth}
+\begin{center}
+	\begin{tikzpicture}[baseline,scale=0.6]
+		\begin{axis}[
+			enlargelimits=false,
+			grid=major,
+			ymin=-2.5, ymax=2.5,
+			xmin=-2.5, xmax=2.5,
+			xlabel=$x_1$,
+			ylabel=$x_2$,
+		]
+		\addplot [only marks, mark=*,
+		mark size=2.5pt, metropolisorange, mark options={fill=metropolisorange}] table {data/skewedXY.txt};
+
+		\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+		\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+
+		\end{axis}
+	\end{tikzpicture}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+\begin{frame}[label={sec:org80fdc2b}]{Covariance Matrix : Definition}
+Covariance Matrix decides the ``direction'' of the population\ldots{}
+
+\[ \left(\,\begin{NiceArray}{>{\strut}CCCC}%
+   [create-extra-nodes,left-margin,right-margin,
+   code-after = {\tikz \path [name suffix = -large,
+   fill = metropolisorange!40,
+   blend mode = multiply]
+   (1-2.north west)|- (2-3.north west)|- (3-4.north west)|-
+   (3-4.south east)|- (1-2.north west) ;
+   \tikz \path [name suffix = -large,
+   fill = metropolisorange!40,
+   blend mode = multiply]
+   (2-1.north west)|- (4-1.south west)|- (4-3.south east)|-
+   (4-3.north west)|- (3-2.north west)|- (2-1.north west) ;
+   \tikz \path [name suffix = -large,
+   fill = royalblue!60,
+   blend mode = multiply]
+   (1-1.north west)|- (2-2.north west)|- (3-3.north west)|-
+   (4-4.north west)|- (4-4.south east)|- (4-4.north west)|-
+   (3-3.north west)|- (2-2.north west)|- (1-1.north west);} ]
+   C_{11} & C_{12} & C_{13} & C_{14} \\C_{21} & C_{22} & C_{23} & C_{24} \\C_{31} & C_{32} & C_{33} & C_{34} \\C_{41} & C_{42} & C_{43} & C_{44}\end{NiceArray}\,
+   \right)\]
+
+\tikz{\draw[fill=royalblue!60,line width=1pt]  rectangle(4ex, 2ex);}  \(\rightarrow\) Variance
+
+\tikz{\draw[fill=metropolisorange!40,line width=1pt]  rectangle(4ex, 2ex);}  \(\rightarrow\) Covariance
+
+Nonzero covariances \(\Rightarrow\) Population is not iid and is skewed wrt
+coordinate axes.
+\end{frame}
+
+\begin{frame}[label={sec:orgb0d945d}]{Variance}
+\begin{definition}[Variance]
+\(\sigma^2\) Is a measure of how ``far'' a variable changes away from its mean.
+\end{definition}
+
+\[ \sigma  = \frac{1}{N} \sum_{i=1}^{N}(x_i - \mu)^2 \]
+where \(\mu\) is the mean and \(N\) is the number of samples.
+\end{frame}
+
+\begin{frame}[label={sec:org3a5d7f8}]{Variance}
+\begin{example}[Low variance]
+\begin{center}
+	\begin{tikzpicture}[baseline,scale=0.9]
+		\begin{axis}[
+			% only scale the axis, not the axis including the ticks and labels
+			scale only axis=true,
+			% set `width' and `height' to the desired values
+			width=0.7\textwidth,
+			height=0.2\textwidth,
+			enlargelimits=true,
+			grid=major,
+			xlabel=$i$,
+			ylabel=$x_i$,
+			ymin=-2.5,ymax=2.5,
+			xticklabels={,,},
+		]
+		\addplot [only marks, mark=*,
+		mark size=2.5pt, metropolisorange, mark options={fill=metropolisorange}] table {data/lowvar.txt};
+		\draw[thick, black] (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0) -- (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0) node[left,pos=1] (endofplot){};
+		\node [above] at (endofplot) {$\mu$};
+		\end{axis}
+	\end{tikzpicture}
+\end{center}
+\end{example}
+
+\begin{example}[High variance]
+\begin{center}
+	\begin{tikzpicture}[baseline,scale=0.9]
+		\begin{axis}[
+			% only scale the axis, not the axis including the ticks and labels
+			scale only axis=true,
+			% set `width' and `height' to the desired values
+			width=0.7\textwidth,
+			height=0.2\textwidth,
+			enlargelimits=true,
+			grid=major,
+			xlabel=$i$,
+			ylabel=$x_i$,
+			ymin=-2.5,ymax=2.5,
+			xticklabels={,,},
+		]
+		\addplot [only marks, mark=*,
+		mark size=2.5pt, metropolisorange, mark options={fill=metropolisorange}] table {data/highvar.txt};
+		\draw[thick, black] (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0) -- (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0) node[left,pos=1] (endofplot){};
+		\node [above] at (endofplot) {$\mu$};
+		\end{axis}
+	\end{tikzpicture}
+\end{center}
+\end{example}
+\end{frame}
+\begin{frame}[label={sec:orgcca79d4}]{Covariance}
+\begin{definition}[Covariance]
+covar\((x,y)\) Is a measure of how two variables change with one another.
+\end{definition}
+
+\[ \sigma_{xy} = \frac{1}{N} \sum_{i=1}^{N}(x_i - \mu_x)(y_i - \mu_y) \]
+where \(\mu_x, \mu_y\) are the respective means and \(N\) is the number of samples.
+\end{frame}
+
+\begin{frame}[label={sec:org57d7920}]{Covariance}
+\begin{example}[Covariance (x,y,z)]
+\begin{center}
+	\begin{tikzpicture}[baseline]
+		\begin{axis}[
+			% only scale the axis, not the axis including the ticks and labels
+			scale only axis=true,
+			% set `width' and `height' to the desired values
+			width=0.7\textwidth,
+			height=0.12\textwidth,
+			enlargelimits=true,
+			grid=major,
+			ylabel=$x_i$,
+			ymin=-1.0,ymax=1.0,
+			xticklabels={,,},
+		]
+		\addplot [only marks, mark=*,
+		mark size=2.5pt, metropolisorange, mark options={fill=metropolisorange}] table {data/orig.txt};
+		\draw[thick, black] (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0) -- (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0) node[left,pos=1] (endofplot){};
+		\node [above] at (endofplot) {$\mu_x$};
+		\end{axis}
+	\end{tikzpicture}
+\end{center}
+
+\begin{center}
+	\begin{tikzpicture}[baseline]
+		\begin{axis}[
+			% only scale the axis, not the axis including the ticks and labels
+			scale only axis=true,
+			% set `width' and `height' to the desired values
+			width=0.7\textwidth,
+			height=0.12\textwidth,
+			enlargelimits=true,
+			grid=major,
+			ylabel=$y_i$,
+			ymin=-1.0,ymax=1.0,
+			xticklabels={,,},
+		]
+		\addplot [only marks, mark=*,
+		mark size=2.5pt, metropolisorange, mark options={fill=metropolisorange}] table {data/poscovar.txt};
+		\draw[thick, black] (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0) -- (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0) node[left,pos=1] (endofplot){};
+		\node [above] at (endofplot) {$\mu_y$};
+		\end{axis}
+	\end{tikzpicture}
+\end{center}
+
+\begin{center}
+	\begin{tikzpicture}[baseline]
+		\begin{axis}[
+			% only scale the axis, not the axis including the ticks and labels
+			scale only axis=true,
+			% set `width' and `height' to the desired values
+			width=0.7\textwidth,
+			height=0.12\textwidth,
+			enlargelimits=true,
+			grid=major,
+			xlabel=$i$,
+			ylabel=$z_i$,
+			ymin=-1.0,ymax=1.0,
+			xticklabels={,,},
+		]
+		\addplot [only marks, mark=*,
+		mark size=2.5pt, metropolisorange, mark options={fill=metropolisorange}] table {data/negcovar.txt};
+		\draw[thick, black] (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0) -- (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0) node[left,pos=1] (endofplot){};
+		\node [above] at (endofplot) {$\mu_z$};
+		\end{axis}
+	\end{tikzpicture}
+\end{center}
+\end{example}
+\end{frame}
+\begin{frame}[label={sec:orgd3e3bb3}]{Covariance Matrix : Definition}
+Covariance Matrix decides the ``direction'' of the population\ldots{}
+
+\[ \left(\,\begin{NiceArray}{>{\strut}CCCC}%
+   [create-extra-nodes,left-margin,right-margin,
+   code-after = {\tikz \path [name suffix = -large,
+   fill = metropolisorange!40,
+   blend mode = multiply]
+   (1-2.north west)|- (2-3.north west)|- (3-4.north west)|-
+   (3-4.south east)|- (1-2.north west) ;
+   \tikz \path [name suffix = -large,
+   fill = metropolisorange!40,
+   blend mode = multiply]
+   (2-1.north west)|- (4-1.south west)|- (4-3.south east)|-
+   (4-3.north west)|- (3-2.north west)|- (2-1.north west) ;
+   \tikz \path [name suffix = -large,
+   fill = royalblue!60,
+   blend mode = multiply]
+   (1-1.north west)|- (2-2.north west)|- (3-3.north west)|-
+   (4-4.north west)|- (4-4.south east)|- (4-4.north west)|-
+   (3-3.north west)|- (2-2.north west)|- (1-1.north west);} ]
+   C_{11} & C_{12} & C_{13} & C_{14} \\C_{21} & C_{22} & C_{23} & C_{24} \\C_{31} & C_{32} & C_{33} & C_{34} \\C_{41} & C_{42} & C_{43} & C_{44}\end{NiceArray}\,
+   \right)\]
+
+\tikz{\draw[fill=royalblue!60,line width=1pt]  rectangle(4ex, 2ex);}
+\(\rightarrow\) Variance
+\tikz{\draw[fill=metropolisorange!40,line width=1pt]  rectangle(4ex, 2ex);}
+\(\rightarrow\) Covariance
+
+\(C_{12}\) \(\Rightarrow\) \(\sigma_{12}\),  \(C_{23}\) \(\Rightarrow\) \(\sigma_{23}\), \(\cdots{}\)
+\end{frame}
+
+\begin{frame}[label={sec:orgcd5645f},fragile]{Sampling : Python--Answers}
  \begin{itemize}
 \item What is \(\bv{C}\) / \texttt{cov} (in a 2D case) and its meaning?
 \begin{enumerate}
@@ -246,7 +849,7 @@ made up of rank-one decompositions
 \end{itemize}}
 \end{frame}
 
-\begin{frame}[label={sec:org5f3227b}]{Sampling : Idea of \(\bv{C}\) \(\rightarrow\) math}
+\begin{frame}[label={sec:org5273592}]{Sampling : Idea of \(\bv{C}\) \(\rightarrow\) math}
 \begin{block}{What is CMA-ES doing?}
 \begin{itemize}
 \item How does CMA estimate \(\bv{C}\)?
@@ -266,7 +869,7 @@ previous \(C\) (show separately, will be discussed in CMA)
 (second order)
 \end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:orgea4fd6d}]{Sampling : Idea of \(\bv{C}\) \(\rightarrow\) math--Answers}
+\begin{frame}[label={sec:org7cc9fef}]{Sampling : Idea of \(\bv{C}\) \(\rightarrow\) math--Answers}
 \begin{itemize}
 \item How does CMA estimate \(\bv{C}\)?
 \begin{enumerate}
@@ -292,7 +895,7 @@ across \(N_{best}\) individuals to estimate covariance between genes
 \end{enumerate}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org61e2f78}]{PCA}
+\begin{frame}[label={sec:org9a96c12}]{PCA}
 \begin{block}{CMAes performs PCA on the optimization data}
 \end{block}
 \begin{block}{PCA?}
@@ -308,7 +911,7 @@ across \(N_{best}\) individuals to estimate covariance between genes
 \end{enumerate}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org12f9177}]{Sampling : Parameters}
+\begin{frame}[label={sec:org40dd136}]{Sampling : Parameters}
 \begin{block}{Choice of \(\lambda\)?}
 \begin{itemize}
 \item Look at the CMA tutorial : \href{file:///Users/tp5/Desktop/Masters\_Resources/readings/optimization/Hansen/The\%20CMA\%20evolution\%20strategy\%20A\%20tutorial.pdf}{The CMA tutorial}/\href{https://arxiv.org/pdf/1604.00772.pdf}{CMA tutorial on Arxiv}
@@ -317,7 +920,7 @@ across \(N_{best}\) individuals to estimate covariance between genes
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org98fa7bc},fragile]{Second step : Selection}
+\begin{frame}[label={sec:orgee0ae93},fragile]{Second step : Selection}
  \begin{block}{How to select \(\mu\) best individuals}
 \begin{itemize}
 \item \(\langle \gv{z}_k \rangle_{w} = \sum_{i=1}^{\mu} w_i \gv{z}_{i:\lambda}\)
@@ -334,14 +937,14 @@ This determines the \(\mu\) best individuals.
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org92bebf3}]{Selection : Parameters}
+\begin{frame}[label={sec:org353bfbc}]{Selection : Parameters}
 \begin{block}{Choice of \(w_i\)?}
 \begin{itemize}
 \item Look at the CMA tutorial : \href{file:///Users/tp5/Desktop/Masters\_Resources/readings/optimization/Hansen/The\%20CMA\%20evolution\%20strategy\%20A\%20tutorial.pdf}{The CMA tutorial}/\href{https://arxiv.org/pdf/1604.00772.pdf}{CMA tutorial on Arxiv}
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org571352c},fragile]{Third step : Recombination}
+\begin{frame}[label={sec:orga1cad2c},fragile]{Third step : Recombination}
  \begin{block}{Recombination to get new \(m\)}
 \begin{itemize}
 \item \(\gv{m} \leftarrow \gv{m} + \sigma \langle \gv{z} \rangle_{w}\)
@@ -371,7 +974,7 @@ scaling.
 \item So choose only a scalar.
 \end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:orge148790}]{Third step : Recombination--Answers}
+\begin{frame}[label={sec:org8cf48e7}]{Third step : Recombination--Answers}
 \begin{itemize}
 \item \(\sigma\) could also be a matrix. Is this a good idea?
 \begin{itemize}
@@ -388,7 +991,7 @@ the convergence of the algorithm
 
 \alert{CONCLUSION}---Scalar \(\sigma\) is apt.
 \end{frame}
-\begin{frame}[label={sec:org3b0cfc7},fragile]{Fourth step : Step size control}
+\begin{frame}[label={sec:org48fc224},fragile]{Fourth step : Step size control}
  \begin{block}{Control for \(\sigma\) and cumulation \(\gv{p}_{\sigma}\)}
 \begin{itemize}
 \item \(\gv{p}_\sigma \leftarrow (1 - c_\sigma) \gv{p}_\sigma +
@@ -422,7 +1025,7 @@ definiteness used to invert.
 \item PD : All positive eigenvalues needed
 \end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:orgf6e5fb9},fragile]{Step size control: Computing/Python}
+\begin{frame}[label={sec:org528b701},fragile]{Step size control: Computing/Python}
  \begin{block}{Computing continued}
 \begin{itemize}
 \item Extensive use of matvecs (\texttt{@})
@@ -448,7 +1051,7 @@ definiteness used to invert.
 \item Expected length of distribution
 \end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:org2682d84}]{Step size control \(\rightarrow\) math}
+\begin{frame}[label={sec:org14ea100}]{Step size control \(\rightarrow\) math}
 \begin{block}{What is path update doing?}
 \begin{itemize}
 \item Increase probability of reproducing successful solution paths\ldots{}
@@ -473,7 +1076,7 @@ definiteness used to invert.
 the expectation\ldots{}
 \end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:org4715050}]{Step size : Parameters}
+\begin{frame}[label={sec:orgbdd9b82}]{Step size : Parameters}
 \begin{block}{Choice of \(c_\sigma , d_\sigma\)?}
 \begin{itemize}
 \item Look at the CMA tutorial : \href{file:///Users/tp5/Desktop/Masters\_Resources/readings/optimization/Hansen/The\%20CMA\%20evolution\%20strategy\%20A\%20tutorial.pdf}{The CMA tutorial}/\href{https://arxiv.org/pdf/1604.00772.pdf}{CMA tutorial on Arxiv}
@@ -483,7 +1086,7 @@ the expectation\ldots{}
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:orgef43205},fragile]{Fifth step : Covariance matrix adaptation}
+\begin{frame}[label={sec:orge950c10},fragile]{Fifth step : Covariance matrix adaptation}
  \begin{block}{Control for \(\bv{C}\) and cumulation \(\gv{p}_{c}\)}
 \begin{itemize}
 \item \(\gv{p}_c \leftarrow (1 - c_c) \gv{p}_c+
@@ -503,7 +1106,7 @@ where \(\bv{Z} =  \sum_{i=1}^{\mu} w_i \gv{z}_{i:\lambda} \gv{z}^T_{i:\lambda}\)
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:org9104187}]{CMA \(\rightarrow\) math}
+\begin{frame}[label={sec:org927e411}]{CMA \(\rightarrow\) math}
 \begin{block}{What is cumulation for \(\gv{p}_c\) doing?}
 \begin{itemize}
 \item Weighting with exponential decay for prior values
@@ -535,7 +1138,7 @@ path length adaption and so on)
 \end{itemize}}
 \end{frame}
 
-\begin{frame}[label={sec:org4969c8e}]{CMA: Parameters}
+\begin{frame}[label={sec:orgcc4dea4}]{CMA: Parameters}
 \begin{block}{Choice of \(c_c, c_{\text{cov}}\)?}
 \begin{itemize}
 \item Look at the CMA tutorial : \href{file:///Users/tp5/Desktop/Masters\_Resources/readings/optimization/Hansen/The\%20CMA\%20evolution\%20strategy\%20A\%20tutorial.pdf}{The CMA tutorial}/\href{https://arxiv.org/pdf/1604.00772.pdf}{CMA tutorial on Arxiv}
@@ -546,7 +1149,7 @@ path length adaption and so on)
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:org10424ed},fragile]{Terminating CMA}
+\begin{frame}[label={sec:org2b50db4},fragile]{Terminating CMA}
  \begin{block}{Algorithm should be stopped when CPU-time is wasted. Then we can:}
 \begin{enumerate}
 \item restart (eventually with increased population size)
@@ -577,7 +1180,7 @@ path length adaption and so on)
 \end{itemize}}
 \end{frame}
 
-\begin{frame}[label={sec:org1173323},fragile]{Terminating CMA contd.}
+\begin{frame}[label={sec:orga94290c},fragile]{Terminating CMA contd.}
  \begin{block}{Problem independent}
 \begin{itemize}
 \item \texttt{EqualFunValues}: stop if the range of the best \(\gv{f}(\gv{x})\) of
@@ -601,7 +1204,7 @@ divergence.
 \end{itemize}}
 \end{frame}
 
-\begin{frame}[label={sec:org6c67585}]{Boundaries/Constraints in CMA : Best solution strictly inside}
+\begin{frame}[label={sec:org5b9077c}]{Boundaries/Constraints in CMA : Best solution strictly inside}
 \begin{itemize}
 \item Set fitness (for minimization problem) as
 \end{itemize}
@@ -622,7 +1225,7 @@ divergence.
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:org9d923ca}]{Boundaries/Constraints in CMA : Repair}
+\begin{frame}[label={sec:org8e6461f}]{Boundaries/Constraints in CMA : Repair}
 \begin{itemize}
 \item Simply ``repair'' infeasible individuals (say when boundary is a box) before
 update so that they satisfy the constraint
@@ -641,8 +1244,8 @@ update so that they satisfy the constraint
 \end{frame}
 
 \section{Comparing CMA against GA}
-\label{sec:org90ade3f}
-\begin{frame}[label={sec:org96cdde2}]{CMAes vs GA--setup}
+\label{sec:org047f4b0}
+\begin{frame}[label={sec:orga349b1f}]{CMAes vs GA--setup}
 \begin{block}{Optimization on smooth functions}
 \begin{itemize}
 \item Two dimensional, \(C^{\infty}\) functions \(f(\gv{x})\) : \(\left(\mathbb{R}^2,  \mathbb{R}, f, \leq \right)\)
@@ -650,20 +1253,56 @@ update so that they satisfy the constraint
 \end{itemize}
 \end{block}
 \begin{center}
-\includegraphics[width=.9\linewidth]{images/schaffer.png}
+	\begin{tikzpicture}[
+		declare function={schaffer=0.5 + ((sin(deg(sqrt(x^2+y^2))))^2-0.5)/(1+0.001*(x^2+y^2))^2;}, scale=0.9]
+		\begin{axis}[
+			colormap name=whitered,
+			view={45}{65},
+			enlargelimits=false,
+			grid=major,
+			domain=-8:8,
+			y domain=-8:8,
+			samples=41,
+			xlabel=$x_1$,
+			ylabel=$x_2$,
+			zlabel={$f_{\text{schaffer}}$},
+			colorbar,
+		]
+		\addplot3 [surf] {schaffer};
+		\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+		\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+		\end{axis}
+	\end{tikzpicture}
 \end{center}
 \end{frame}
-
-\begin{frame}[label={sec:orga26448e}]{CMAes vs GA--setup}
+\begin{frame}[label={sec:org5cf0a82}]{CMAes vs GA--setup}
 \begin{itemize}
 \item shifted Rastrigin function (optima in the middle well)
-\end{itemize}
 \begin{center}
-\includegraphics[width=.9\linewidth]{images/rastrigin.png}
+	\begin{tikzpicture}[
+		declare function={rastrigin=20 + (x^2 - 10*cos(deg(0.85*pi*x))) + (y^2 - 10*cos(deg(0.85*pi*y)));}, scale=1.0]
+		\begin{axis}[
+			colormap name=whitered,
+			view={45}{65},
+			enlargelimits=false,
+			grid=major,
+			domain=-8:8,
+			y domain=-8:8,
+			samples=41,
+			xlabel=$x_1$,
+			ylabel=$x_2$,
+			zlabel={$f_{\text{rastrigin}}$},
+			colorbar,
+		]
+		\addplot3 [surf] {rastrigin};
+		\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+		\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+		\end{axis}
+	\end{tikzpicture}
 \end{center}
+\end{itemize}
 \end{frame}
-
-\begin{frame}[label={sec:org201d9f5}]{Comparison between functions\footnote{\href{http://blog.otoro.net/2017/10/29/visual-evolution-strategies/}{Otoro}}}
+\begin{frame}[label={sec:org6490810}]{Comparison between functions\footnote{\href{http://blog.otoro.net/2017/10/29/visual-evolution-strategies/}{Otoro}}}
 \begin{columns}
 \begin{column}{0.5\columnwidth}
 \begin{figure}[htbp]
@@ -683,7 +1322,7 @@ update so that they satisfy the constraint
 
 Lighter region indicates smaller values
 \end{frame}
-\begin{frame}[label={sec:org7418a20}]{Simple ES}
+\begin{frame}[label={sec:org53229c0}]{Simple ES}
 \begin{block}{Scheme}
 \begin{itemize}
 \item \alert{Sampling} : \(\gv{z}_i \sim \mathcal{N}\left( \gv{m}, \bv{C} \right)\)
@@ -706,7 +1345,7 @@ far.
 Simple Evolution strategy from \href{http://blog.otoro.net/2017/10/29/visual-evolution-strategies/}{Otoro} shown for 20 generations
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org3d7098d}]{Simple ES-Observations}
+\begin{frame}[label={sec:orgd5f4b22}]{Simple ES-Observations}
 \begin{block}{Convergence}
 \begin{itemize}
 \item What do you expect for general problems?
@@ -727,7 +1366,7 @@ Simple Evolution strategy from \href{http://blog.otoro.net/2017/10/29/visual-evo
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:org92e19b4}]{Simple ES-Observations}
+\begin{frame}[label={sec:org45d7805}]{Simple ES-Observations}
 \begin{block}{Convergence}
 \begin{itemize}
 \item What do you expect for general problems?
@@ -750,7 +1389,7 @@ rastrigin, which temporarily gets stuck)
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:org38b4aba}]{Simple GA}
+\begin{frame}[label={sec:orgb4694e8}]{Simple GA}
 \begin{block}{Scheme}
 \begin{itemize}
 \item \alert{Environmental selection} : Keep only best \(10 \%\)
@@ -772,7 +1411,7 @@ far.
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:org52f8fa7}]{Simple GA-Observations}
+\begin{frame}[label={sec:org82c7c9d}]{Simple GA-Observations}
 \begin{block}{Convergence}
 \begin{itemize}
 \item What do you expect for general problems?
@@ -793,7 +1432,7 @@ far.
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:org10b9535}]{Simple GA-Observations}
+\begin{frame}[label={sec:org4df207e}]{Simple GA-Observations}
 \begin{block}{Convergence}
 \begin{itemize}
 \item What do you expect for general problems?
@@ -816,7 +1455,7 @@ far.
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:org5ae4f14}]{CMAes-Observations}
+\begin{frame}[label={sec:orgb7aae97}]{CMAes-Observations}
 \begin{block}{Can you spot the updates?}
 \begin{itemize}
 \item \(\gv{m}\) update (fairly obvious)
@@ -845,7 +1484,7 @@ complementary to it\ldots{}
 \end{itemize}}
 \end{frame}
 
-\begin{frame}[label={sec:org09c26b0}]{CMAes-Observations}
+\begin{frame}[label={sec:org184f38a}]{CMAes-Observations}
 \begin{block}{Convergence}
 \begin{itemize}
 \item What do you expect for general problems?
@@ -865,7 +1504,7 @@ complementary to it\ldots{}
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org54a85e9}]{CMAes-Some interesting videos}
+\begin{frame}[label={sec:org3a4c214}]{CMAes-Some interesting videos}
 \begin{itemize}
 \item Mario \url{https://www.youtube.com/watch?v=0iipyd7Gi70}
 \item Rastrigin : \url{https://www.youtube.com/watch?v=aP31Q7o2UGU}

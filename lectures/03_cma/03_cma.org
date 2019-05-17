@@ -180,551 +180,485 @@
 	  made up of rank-one decompositions
 	- ~numpy~ checks for PD and throws an error
 	- Now explain why you set \( A=CC^T \)
-# ** Covariance Matrix [fn:4]
-# *** \( \mathcal{N}(\gv{0}, \bv{I})\)                                :B_block:
-# 	:PROPERTIES:
-# 	:BEAMER_env: block
-# 	:BEAMER_COL: 0.5
-# 	:END:
-# 	#+begin_export latex
-# 	\pgfplotsset{
-# 	colormap={whitered}{color(0cm)=(white); rgb255(1cm)=(235,129,27)}
-# 	}
+** Covariance Matrix [fn:4]
+*** \( \mathcal{N}(\gv{0}, \bv{I})\)                                :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:BEAMER_COL: 0.5
+	:END:
+	#+begin_export latex
+	\begin{center}
+		\begin{tikzpicture}[
+			declare function={mu1=0;},
+			declare function={mu2=0;},
+			declare function={sigma1=1;},
+			declare function={sigma2=1;},
+			declare function={normal(\m,\s)=1/(2*\s*sqrt(pi))*exp(-(x-\m)^2/(2*\s^2));},
+			declare function={bivar(\ma,\sa,\mb,\sb)=
+				1/(2*pi*\sa*\sb) * exp(-((x-\ma)^2/\sa^2 + (y-\mb)^2/\sb^2))/2;}, scale=0.6]
+			\begin{axis}[
+				colormap name=whitered,
+				view={45}{65},
+				enlargelimits=false,
+				grid=major,
+				domain=-2.5:2.5,
+				y domain=-2.5:2.5,
+				samples=26,
+				xlabel=$x_1$,
+				ylabel=$x_2$,
+				zlabel={$\mathcal{N}$},
+				colorbar,
+				% colorbar style={
+				% 	at={(1,0)},
+				% 	anchor=south west,
+				% 	height=0.25*\pgfkeysvalueof{/pgfplots/parent axis height},
+				% 	title={$P(x_1,x_2)$}
+				% }
+			]
+			\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
+			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
+			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
 
-# 	\begin{center}
-# 		\begin{tikzpicture}[
-# 			declare function={mu1=0;},
-# 			declare function={mu2=0;},
-# 			declare function={sigma1=1;},
-# 			declare function={sigma2=1;},
-# 			declare function={normal(\m,\s)=1/(2*\s*sqrt(pi))*exp(-(x-\m)^2/(2*\s^2));},
-# 			declare function={bivar(\ma,\sa,\mb,\sb)=
-# 				1/(2*pi*\sa*\sb) * exp(-((x-\ma)^2/\sa^2 + (y-\mb)^2/\sb^2))/2;}, scale=0.6]
-# 			\begin{axis}[
-# 				colormap name=whitered,
-# 				view={45}{65},
-# 				enlargelimits=false,
-# 				grid=major,
-# 				domain=-2.5:2.5,
-# 				y domain=-2.5:2.5,
-# 				samples=26,
-# 				xlabel=$x_1$,
-# 				ylabel=$x_2$,
-# 				zlabel={$\mathcal{N}$},
-# 				colorbar,
-# 				% colorbar style={
-# 				% 	at={(1,0)},
-# 				% 	anchor=south west,
-# 				% 	height=0.25*\pgfkeysvalueof{/pgfplots/parent axis height},
-# 				% 	title={$P(x_1,x_2)$}
-# 				% }
-# 			]
-# 			\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
-# 			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
-# 			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
+			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
 
-# 			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
-# 			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+			% \node at (axis cs:-1,1,0.18) [pin=165:$P(x_1)$] {};
+			% \node at (axis cs:1.5,4,0.32) [pin=-15:$P(x_2)$] {};
+			\end{axis}
+		\end{tikzpicture}
+	\end{center}
+	#+end_export
 
-# 			% \node at (axis cs:-1,1,0.18) [pin=165:$P(x_1)$] {};
-# 			% \node at (axis cs:1.5,4,0.32) [pin=-15:$P(x_2)$] {};
-# 			\end{axis}
-# 		\end{tikzpicture}
-# 	\end{center}
-# 	#+end_export
+*** \( \mathcal{N}(\gv{\mu}, \bv{I})\)                              :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:BEAMER_COL: 0.5
+	:END:
 
-# *** \( \mathcal{N}(\gv{\mu}, \bv{I})\)                              :B_block:
-# 	:PROPERTIES:
-# 	:BEAMER_env: block
-# 	:BEAMER_COL: 0.5
-# 	:END:
+	#+begin_export latex
+	\begin{center}
+		\begin{tikzpicture}[
+			declare function={mu1=1;},
+			declare function={mu2=-0.5;},
+			declare function={sigma1=1;},
+			declare function={sigma2=1;},
+			declare function={normal(\m,\s)=1/(2*\s*sqrt(pi))*exp(-(x-\m)^2/(2*\s^2));},
+			declare function={bivar(\ma,\sa,\mb,\sb)=
+				1/(2*pi*\sa*\sb) * exp(-((x-\ma)^2/\sa^2 + (y-\mb)^2/\sb^2))/2;}, scale=0.6]
+			\begin{axis}[
+				colormap name=whitered,
+				view={45}{65},
+				enlargelimits=false,
+				grid=major,
+				domain=-2.5:2.5,
+				y domain=-2.5:2.5,
+				samples=26,
+				xlabel=$x_1$,
+				ylabel=$x_2$,
+				zlabel={$\mathcal{N}$},
+				colorbar,
+			]
+			\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
+			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
+			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
 
-# 	#+begin_export latex
-# 	\pgfplotsset{
-# 	colormap={whitered}{color(0cm)=(white); rgb255(1cm)=(235,129,27)}
-# 	}
+			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
 
-# 	\begin{center}
-# 		\begin{tikzpicture}[
-# 			declare function={mu1=1;},
-# 			declare function={mu2=-0.5;},
-# 			declare function={sigma1=1;},
-# 			declare function={sigma2=1;},
-# 			declare function={normal(\m,\s)=1/(2*\s*sqrt(pi))*exp(-(x-\m)^2/(2*\s^2));},
-# 			declare function={bivar(\ma,\sa,\mb,\sb)=
-# 				1/(2*pi*\sa*\sb) * exp(-((x-\ma)^2/\sa^2 + (y-\mb)^2/\sb^2))/2;}, scale=0.6]
-# 			\begin{axis}[
-# 				colormap name=whitered,
-# 				view={45}{65},
-# 				enlargelimits=false,
-# 				grid=major,
-# 				domain=-2.5:2.5,
-# 				y domain=-2.5:2.5,
-# 				samples=26,
-# 				xlabel=$x_1$,
-# 				ylabel=$x_2$,
-# 				zlabel={$\mathcal{N}$},
-# 				colorbar,
-# 				% colorbar style={
-# 				% 	at={(1,0)},
-# 				% 	anchor=south west,
-# 				% 	height=0.25*\pgfkeysvalueof{/pgfplots/parent axis height},
-# 				% 	title={$P(x_1,x_2)$}
-# 				% }
-# 			]
-# 			\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
-# 			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
-# 			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
+			\end{axis}
+		\end{tikzpicture}
+	\end{center}
+	#+end_export
+** Covariance Matrix
+*** \( \mathcal{N}(\gv{0}, \bv{I})\)                                :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:BEAMER_COL: 0.5
+	:END:
+	#+begin_export latex
+	\begin{center}
+		\begin{tikzpicture}[
+			declare function={mu1=0;},
+			declare function={mu2=0;},
+			declare function={sigma1=1;},
+			declare function={sigma2=1;},
+			declare function={normal(\m,\s)=1/(2*\s*sqrt(pi))*exp(-(x-\m)^2/(2*\s^2));},
+			declare function={bivar(\ma,\sa,\mb,\sb)=
+				1/(2*pi*\sa*\sb) * exp(-((x-\ma)^2/\sa^2 + (y-\mb)^2/\sb^2))/2;}, scale=0.6]
+			\begin{axis}[
+				colormap name=whitered,
+				view={45}{65},
+				enlargelimits=false,
+				grid=major,
+				domain=-2.5:2.5,
+				y domain=-2.5:2.5,
+				samples=26,
+				xlabel=$x_1$,
+				ylabel=$x_2$,
+				zlabel={$\mathcal{N}$},
+				colorbar,
+			]
+			\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
+			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
+			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
 
-# 			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
-# 			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+			\end{axis}
+		\end{tikzpicture}
+	\end{center}
+	#+end_export
 
-# 			% \node at (axis cs:-1,1,0.18) [pin=165:$P(x_1)$] {};
-# 			% \node at (axis cs:1.5,4,0.32) [pin=-15:$P(x_2)$] {};
-# 			\end{axis}
-# 		\end{tikzpicture}
-# 	\end{center}
-# 	#+end_export
-# ** Covariance Matrix
-# *** \( \mathcal{N}(\gv{0}, \bv{I})\)                                :B_block:
-# 	:PROPERTIES:
-# 	:BEAMER_env: block
-# 	:BEAMER_COL: 0.5
-# 	:END:
-# 	#+begin_export latex
-# 	\pgfplotsset{
-# 	colormap={whitered}{color(0cm)=(white); rgb255(1cm)=(235,129,27)}
-# 	}
+*** \( \mathcal{N}(\gv{0}, \bv{C})\)                                :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:BEAMER_COL: 0.5
+	:END:
 
-# 	\begin{center}
-# 		\begin{tikzpicture}[
-# 			declare function={mu1=0;},
-# 			declare function={mu2=0;},
-# 			declare function={sigma1=1;},
-# 			declare function={sigma2=1;},
-# 			declare function={normal(\m,\s)=1/(2*\s*sqrt(pi))*exp(-(x-\m)^2/(2*\s^2));},
-# 			declare function={bivar(\ma,\sa,\mb,\sb)=
-# 				1/(2*pi*\sa*\sb) * exp(-((x-\ma)^2/\sa^2 + (y-\mb)^2/\sb^2))/2;}, scale=0.6]
-# 			\begin{axis}[
-# 				colormap name=whitered,
-# 				view={45}{65},
-# 				enlargelimits=false,
-# 				grid=major,
-# 				domain=-2.5:2.5,
-# 				y domain=-2.5:2.5,
-# 				samples=26,
-# 				xlabel=$x_1$,
-# 				ylabel=$x_2$,
-# 				zlabel={$\mathcal{N}$},
-# 				colorbar,
-# 				% colorbar style={
-# 				% 	at={(1,0)},
-# 				% 	anchor=south west,
-# 				% 	height=0.25*\pgfkeysvalueof{/pgfplots/parent axis height},
-# 				% 	title={$P(x_1,x_2)$}
-# 				% }
-# 			]
-# 			\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
-# 			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
-# 			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
+	#+begin_export latex
+	\begin{center}
+		\begin{tikzpicture}[
+			declare function={mu1=0;},
+			declare function={mu2=0;},
+			declare function={sigma1=0.5;},
+			declare function={sigma2=2;},
+			declare function={normal(\m,\s)=1/(2*\s*sqrt(pi))*exp(-(x-\m)^2/(2*\s^2));},
+			declare function={bivar(\ma,\sa,\mb,\sb)=
+				1/(2*pi*\sa*\sb) * exp(-(((x*cos(60) + y*sin(60))-\ma)^2/\sa^2 + ((-x*sin(60) + y*cos(60))-\mb)^2/\sb^2))/2;}, scale=0.6]
+			\begin{axis}[
+				colormap name=whitered,
+				view={45}{65},
+				enlargelimits=false,
+				grid=major,
+				domain=-2.5:2.5,
+				y domain=-2.5:2.5,
+				samples=26,
+				xlabel=$x_1$,
+				ylabel=$x_2$,
+				zlabel={$\mathcal{N}$},
+				colorbar,
+			]
+			\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
+			% \addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
+			% \addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
 
-# 			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
-# 			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
 
-# 			% \node at (axis cs:-1,1,0.18) [pin=165:$P(x_1)$] {};
-# 			% \node at (axis cs:1.5,4,0.32) [pin=-15:$P(x_2)$] {};
-# 			\end{axis}
-# 		\end{tikzpicture}
-# 	\end{center}
-# 	#+end_export
+			\end{axis}
+		\end{tikzpicture}
+	\end{center}
+	#+end_export
+** Covariance Matrix : Example 1
+  \[ \bv{C} = \begin{bmatrix} 1 & 0 \\ 0 & 1\end{bmatrix}\]
+*** \( \mathcal{N}(\gv{0}, \bv{I})\)                               :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.5
+	:END:
+	#+begin_export latex
+	\begin{center}
+		\begin{tikzpicture}[
+			declare function={mu1=0;},
+			declare function={mu2=0;},
+			declare function={sigma1=1;},
+			declare function={sigma2=1;},
+			declare function={normal(\m,\s)=1/(2*\s*sqrt(pi))*exp(-(x-\m)^2/(2*\s^2));},
+			declare function={bivar(\ma,\sa,\mb,\sb)=
+				1/(2*pi*\sa*\sb) * exp(-((x-\ma)^2/\sa^2 + (y-\mb)^2/\sb^2))/2;}, scale=0.6, baseline]
+			\begin{axis}[
+				colormap name=whitered,
+				view={45}{65},
+				enlargelimits=false,
+				grid=major,
+				domain=-2.5:2.5,
+				y domain=-2.5:2.5,
+				samples=26,
+				xlabel=$x_1$,
+				ylabel=$x_2$,
+				zlabel={$\mathcal{N}$},
+				colorbar,
+			]
+			\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
+			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
+			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
 
-# *** \( \mathcal{N}(\gv{0}, \bv{C})\)                                :B_block:
-# 	:PROPERTIES:
-# 	:BEAMER_env: block
-# 	:BEAMER_COL: 0.5
-# 	:END:
+			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+			\end{axis}
+		\end{tikzpicture}
+	\end{center}
+	#+end_export
+	#+begin_src python :exports none
+	  import numpy as np
+	  import os
 
-# 	#+begin_export latex
-# 	\pgfplotsset{
-# 	colormap={whitered}{color(0cm)=(white); rgb255(1cm)=(235,129,27)}
-# 	}
+	  DATA_PATH = './data/'
+	  if not os.path.isdir(DATA_PATH):
+		  os.makedirs(DATA_PATH)
 
-# 	\begin{center}
-# 		\begin{tikzpicture}[
-# 			declare function={mu1=0;},
-# 			declare function={mu2=0;},
-# 			declare function={sigma1=0.5;},
-# 			declare function={sigma2=2;},
-# 			declare function={normal(\m,\s)=1/(2*\s*sqrt(pi))*exp(-(x-\m)^2/(2*\s^2));},
-# 			declare function={bivar(\ma,\sa,\mb,\sb)=
-# 				1/(2*pi*\sa*\sb) * exp(-(((x*cos(60) + y*sin(60))-\ma)^2/\sa^2 + ((-x*sin(60) + y*cos(60))-\mb)^2/\sb^2))/2;}, scale=0.6]
-# 			\begin{axis}[
-# 				colormap name=whitered,
-# 				view={45}{65},
-# 				enlargelimits=false,
-# 				grid=major,
-# 				domain=-2.5:2.5,
-# 				y domain=-2.5:2.5,
-# 				samples=26,
-# 				xlabel=$x_1$,
-# 				ylabel=$x_2$,
-# 				zlabel={$\mathcal{N}$},
-# 				colorbar,
-# 				% colorbar style={
-# 				% 	at={(1,0)},
-# 				% 	anchor=south west,
-# 				% 	height=0.25*\pgfkeysvalueof{/pgfplots/parent axis height},
-# 				% 	title={$P(x_1,x_2)$}
-# 				% }
-# 			]
-# 			\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
-# 			% \addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
-# 			% \addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
+	  # Generate data for all cases
 
-# 			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
-# 			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+	  # First case, normal distribution centered at origin
+	  mean = np.zeros((2,))
+	  cov = np.eye(2)
+	  sampled_dist = np.random.multivariate_normal(mean, cov, 100)
+	  np.savetxt(os.path.join(DATA_PATH, 'normal.txt'), sampled_dist, delimiter='\t')
 
-# 			% \node at (axis cs:-1,1,0.18) [pin=165:$P(x_1)$] {};
-# 			% \node at (axis cs:1.5,4,0.32) [pin=-15:$P(x_2)$] {};
-# 			\end{axis}
-# 		\end{tikzpicture}
-# 	\end{center}
-# 	#+end_export
-# ** Covariance Matrix : Example 1
-#   \[ \bv{C} = \begin{bmatrix} 1 & 0 \\ 0 & 1\end{bmatrix}\]
-# *** \( \mathcal{N}(\gv{0}, \bv{I})\)                               :B_column:
-# 	:PROPERTIES:
-# 	:BEAMER_env: column
-# 	:BEAMER_COL: 0.5
-# 	:END:
-# 	#+begin_export latex
-# 	\pgfplotsset{
-# 	colormap={whitered}{color(0cm)=(white); rgb255(1cm)=(235,129,27)}
-# 	}
+	  # Second case, skewed distribution in X
+	  mean = np.zeros((2,))
+	  cov = np.eye(2)
+	  cov[1,1] = 0.2
+	  sampled_dist = np.random.multivariate_normal(mean, cov, 100)
+	  np.savetxt(os.path.join(DATA_PATH, 'skewedX.txt'), sampled_dist, delimiter='\t')
 
-# 	\begin{center}
-# 		\begin{tikzpicture}[
-# 			declare function={mu1=0;},
-# 			declare function={mu2=0;},
-# 			declare function={sigma1=1;},
-# 			declare function={sigma2=1;},
-# 			declare function={normal(\m,\s)=1/(2*\s*sqrt(pi))*exp(-(x-\m)^2/(2*\s^2));},
-# 			declare function={bivar(\ma,\sa,\mb,\sb)=
-# 				1/(2*pi*\sa*\sb) * exp(-((x-\ma)^2/\sa^2 + (y-\mb)^2/\sb^2))/2;}, scale=0.6, baseline]
-# 			\begin{axis}[
-# 				colormap name=whitered,
-# 				view={45}{65},
-# 				enlargelimits=false,
-# 				grid=major,
-# 				domain=-2.5:2.5,
-# 				y domain=-2.5:2.5,
-# 				samples=26,
-# 				xlabel=$x_1$,
-# 				ylabel=$x_2$,
-# 				zlabel={$\mathcal{N}$},
-# 				colorbar,
-# 				% colorbar style={
-# 				% 	at={(1,0)},
-# 				% 	anchor=south west,
-# 				% 	height=0.25*\pgfkeysvalueof{/pgfplots/parent axis height},
-# 				% 	title={$P(x_1,x_2)$}
-# 				% }
-# 			]
-# 			\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
-# 			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
-# 			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
+	  # Third case, skewed distribution in Y
+	  mean = np.zeros((2,))
+	  cov = np.eye(2)
+	  cov[0,0] = 0.2
+	  sampled_dist = np.random.multivariate_normal(mean, cov, 100)
+	  np.savetxt(os.path.join(DATA_PATH, 'skewedY.txt'), sampled_dist, delimiter='\t')
 
-# 			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
-# 			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+	  # Fourth case, skewed distribution in X and Y
+	  cov[0,1] = 0.36
+	  cov[1,0] = 0.36
+	  sampled_dist = np.random.multivariate_normal(mean, cov, 100)
+	  np.savetxt(os.path.join(DATA_PATH, 'skewedXY.txt'), sampled_dist, delimiter='\t')
+	#+end_src
 
-# 			% \node at (axis cs:-1,1,0.18) [pin=165:$P(x_1)$] {};
-# 			% \node at (axis cs:1.5,4,0.32) [pin=-15:$P(x_2)$] {};
-# 			\end{axis}
-# 		\end{tikzpicture}
-# 	\end{center}
-# 	#+end_export
-# 	#+begin_src python :exports none
-# 	  import numpy as np
-# 	  import os
+	#+RESULTS:
+	: None
 
-# 	  DATA_PATH = './data/'
-# 	  if not os.path.isdir(DATA_PATH):
-# 		  os.makedirs(DATA_PATH)
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.5
+	:END:
+	#+begin_export latex
+	\begin{center}
+		\begin{tikzpicture}[baseline,scale=0.6]
+			\begin{axis}[
+				enlargelimits=false,
+				grid=major,
+				ymin=-2.5, ymax=2.5,
+				xmin=-2.5, xmax=2.5,
+				xlabel=$x_1$,
+				ylabel=$x_2$,
+			]
+			\addplot [only marks, mark=*,
+			mark size=2.5pt, metropolisorange, mark options={fill=metropolisorange}] table {data/normal.txt};
 
-# 	  # Generate data for all cases
+			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
 
-# 	  # First case, normal distribution centered at origin
-# 	  mean = np.zeros((2,))
-# 	  cov = np.eye(2)
-# 	  sampled_dist = np.random.multivariate_normal(mean, cov, 100)
-# 	  np.savetxt(os.path.join(DATA_PATH, 'normal.txt'), sampled_dist, delimiter='\t')
+			\end{axis}
+		\end{tikzpicture}
+	\end{center}
+	#+end_export
+** Covariance Matrix : Example 2
+  \[ \bv{C} = \begin{bmatrix} 1 & 0 \\ 0 & \spot{0.2}\end{bmatrix}\]
+*** \( \mathcal{N}(\gv{0}, \bv{I})\)                               :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.5
+	:END:
+	#+begin_export latex
+	\begin{center}
+		\begin{tikzpicture}[
+			declare function={mu1=0;},
+			declare function={mu2=0;},
+			declare function={sigma1=1;},
+			declare function={sigma2=0.2;},
+			declare function={normal(\m,\s)=1/(2*\s*sqrt(pi))*exp(-(x-\m)^2/(2*\s^2));},
+			declare function={bivar(\ma,\sa,\mb,\sb)=
+				1/(2*pi*\sa*\sb) * exp(-((x-\ma)^2/\sa^2 + (y-\mb)^2/\sb^2))/2;}, scale=0.6, baseline]
+			\begin{axis}[
+				colormap name=whitered,
+				view={45}{65},
+				enlargelimits=false,
+				grid=major,
+				domain=-2.5:2.5,
+				y domain=-2.5:2.5,
+				samples=26,
+				xlabel=$x_1$,
+				ylabel=$x_2$,
+				zlabel={$\mathcal{N}$},
+				colorbar,
+			]
+			\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
+			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
+			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
 
-# 	  # Second case, skewed distribution in X
-# 	  mean = np.zeros((2,))
-# 	  cov = np.eye(2)
-# 	  cov[1,1] = 0.2
-# 	  sampled_dist = np.random.multivariate_normal(mean, cov, 100)
-# 	  np.savetxt(os.path.join(DATA_PATH, 'skewedX.txt'), sampled_dist, delimiter='\t')
+			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
 
-# 	  # Third case, skewed distribution in Y
-# 	  mean = np.zeros((2,))
-# 	  cov = np.eye(2)
-# 	  cov[0,0] = 0.2
-# 	  sampled_dist = np.random.multivariate_normal(mean, cov, 100)
-# 	  np.savetxt(os.path.join(DATA_PATH, 'skewedY.txt'), sampled_dist, delimiter='\t')
+			\end{axis}
+		\end{tikzpicture}
+	\end{center}
+	#+end_export
 
-# 	  # Fourth case, skewed distribution in X and Y
-# 	  cov[0,1] = 0.36
-# 	  cov[1,0] = 0.36
-# 	  sampled_dist = np.random.multivariate_normal(mean, cov, 100)
-# 	  np.savetxt(os.path.join(DATA_PATH, 'skewedXY.txt'), sampled_dist, delimiter='\t')
-# 	#+end_src
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.5
+	:END:
+	#+begin_export latex
+	\begin{center}
+		\begin{tikzpicture}[baseline,scale=0.6]
+			\begin{axis}[
+				enlargelimits=false,
+				grid=major,
+				ymin=-2.5, ymax=2.5,
+				xmin=-2.5, xmax=2.5,
+				xlabel=$x_1$,
+				ylabel=$x_2$,
+			]
+			\addplot [only marks, mark=*,
+			mark size=2.5pt, metropolisorange, mark options={fill=metropolisorange}] table {data/skewedX.txt};
 
-# 	#+RESULTS:
-# 	: None
+			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
 
-# ***                                                                :B_column:
-# 	:PROPERTIES:
-# 	:BEAMER_env: column
-# 	:BEAMER_COL: 0.5
-# 	:END:
-# 	#+begin_export latex
-# 	\begin{center}
-# 		\begin{tikzpicture}[baseline,scale=0.6]
-# 			\begin{axis}[
-# 				enlargelimits=false,
-# 				grid=major,
-# 				ymin=-2.5, ymax=2.5,
-# 				xmin=-2.5, xmax=2.5,
-# 				xlabel=$x_1$,
-# 				ylabel=$x_2$,
-# 			]
-# 			\addplot [only marks, mark=*,
-# 			mark size=2.5pt, metropolisorange, mark options={fill=metropolisorange}] table {data/normal.txt};
+			\end{axis}
+		\end{tikzpicture}
+	\end{center}
+	#+end_export
+** Covariance Matrix : Example 3
+  \[ \bv{C} = \begin{bmatrix} \spot{0.2} & 0 \\ 0 & 1\end{bmatrix}\]
+*** \( \mathcal{N}(\gv{0}, \bv{I})\)                               :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.5
+	:END:
+	#+begin_export latex
+	\begin{center}
+		\begin{tikzpicture}[
+			declare function={mu1=0;},
+			declare function={mu2=0;},
+			declare function={sigma1=0.2;},
+			declare function={sigma2=1.0;},
+			declare function={normal(\m,\s)=1/(2*\s*sqrt(pi))*exp(-(x-\m)^2/(2*\s^2));},
+			declare function={bivar(\ma,\sa,\mb,\sb)=
+				1/(2*pi*\sa*\sb) * exp(-((x-\ma)^2/\sa^2 + (y-\mb)^2/\sb^2))/2;}, scale=0.6, baseline]
+			\begin{axis}[
+				colormap name=whitered,
+				view={45}{65},
+				enlargelimits=false,
+				grid=major,
+				domain=-2.5:2.5,
+				y domain=-2.5:2.5,
+				samples=26,
+				xlabel=$x_1$,
+				ylabel=$x_2$,
+				zlabel={$\mathcal{N}$},
+				colorbar,
+			]
+			\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
+			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
+			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
 
-# 			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
-# 			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
 
-# 			\end{axis}
-# 		\end{tikzpicture}
-# 	\end{center}
-# 	#+end_export
-# ** Covariance Matrix : Example 2
-#   \[ \bv{C} = \begin{bmatrix} 1 & 0 \\ 0 & \spot{0.2}\end{bmatrix}\]
-# *** \( \mathcal{N}(\gv{0}, \bv{I})\)                               :B_column:
-# 	:PROPERTIES:
-# 	:BEAMER_env: column
-# 	:BEAMER_COL: 0.5
-# 	:END:
-# 	#+begin_export latex
-# 	\pgfplotsset{
-# 	colormap={whitered}{color(0cm)=(white); rgb255(1cm)=(235,129,27)}
-# 	}
+			\end{axis}
+		\end{tikzpicture}
+	\end{center}
+	#+end_export
 
-# 	\begin{center}
-# 		\begin{tikzpicture}[
-# 			declare function={mu1=0;},
-# 			declare function={mu2=0;},
-# 			declare function={sigma1=1;},
-# 			declare function={sigma2=0.2;},
-# 			declare function={normal(\m,\s)=1/(2*\s*sqrt(pi))*exp(-(x-\m)^2/(2*\s^2));},
-# 			declare function={bivar(\ma,\sa,\mb,\sb)=
-# 				1/(2*pi*\sa*\sb) * exp(-((x-\ma)^2/\sa^2 + (y-\mb)^2/\sb^2))/2;}, scale=0.6, baseline]
-# 			\begin{axis}[
-# 				colormap name=whitered,
-# 				view={45}{65},
-# 				enlargelimits=false,
-# 				grid=major,
-# 				domain=-2.5:2.5,
-# 				y domain=-2.5:2.5,
-# 				samples=26,
-# 				xlabel=$x_1$,
-# 				ylabel=$x_2$,
-# 				zlabel={$\mathcal{N}$},
-# 				colorbar,
-# 			]
-# 			\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
-# 			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
-# 			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.5
+	:END:
+	#+begin_export latex
+	\begin{center}
+		\begin{tikzpicture}[baseline,scale=0.6]
+			\begin{axis}[
+				enlargelimits=false,
+				grid=major,
+				ymin=-2.5, ymax=2.5,
+				xmin=-2.5, xmax=2.5,
+				xlabel=$x_1$,
+				ylabel=$x_2$,
+			]
+			\addplot [only marks, mark=*,
+			mark size=2.5pt, metropolisorange, mark options={fill=metropolisorange}] table {data/skewedY.txt};
 
-# 			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
-# 			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
 
-# 			\end{axis}
-# 		\end{tikzpicture}
-# 	\end{center}
-# 	#+end_export
+			\end{axis}
+		\end{tikzpicture}
+	\end{center}
+	#+end_export
+** Covariance Matrix : Example 4
+  \[ \bv{C} = \begin{bmatrix} 0.2 & \spot{0.36} \\ \spot{0.36} & 1\end{bmatrix}\]
+*** \( \mathcal{N}(\gv{0}, \bv{I})\)                               :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.5
+	:END:
+	#+begin_export latex
+	\begin{center}
+		\begin{tikzpicture}[
+			declare function={mu1=0;},
+			declare function={mu2=0;},
+			declare function={sigma1=0.2;},
+			declare function={sigma2=1.0;},
+			declare function={normal(\m,\s)=1/(2*\s*sqrt(pi))*exp(-(x-\m)^2/(2*\s^2));},
+			declare function={bivar(\ma,\sa,\mb,\sb)=
+				1/(2*pi*\sa*\sb) * exp(-(((-0.35826*x - 0.93362*y)-\ma)^2/\sa^2 + ((-0.93362*x + 0.358266*y)-\mb)^2/\sb^2))/2;}, scale=0.6, baseline]
+			\begin{axis}[
+				colormap name=whitered,
+				view={45}{65},
+				enlargelimits=false,
+				grid=major,
+				domain=-2.5:2.5,
+				y domain=-2.5:2.5,
+				samples=26,
+				xlabel=$x_1$,
+				ylabel=$x_2$,
+				zlabel={$\mathcal{N}$},
+				colorbar,
+			]
+			\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
+			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
+			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
 
-# ***                                                                :B_column:
-# 	:PROPERTIES:
-# 	:BEAMER_env: column
-# 	:BEAMER_COL: 0.5
-# 	:END:
-# 	#+begin_export latex
-# 	\begin{center}
-# 		\begin{tikzpicture}[baseline,scale=0.6]
-# 			\begin{axis}[
-# 				enlargelimits=false,
-# 				grid=major,
-# 				ymin=-2.5, ymax=2.5,
-# 				xmin=-2.5, xmax=2.5,
-# 				xlabel=$x_1$,
-# 				ylabel=$x_2$,
-# 			]
-# 			\addplot [only marks, mark=*,
-# 			mark size=2.5pt, metropolisorange, mark options={fill=metropolisorange}] table {data/skewedX.txt};
+			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
 
-# 			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
-# 			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+			\end{axis}
+		\end{tikzpicture}
+	\end{center}
+	#+end_export
 
-# 			\end{axis}
-# 		\end{tikzpicture}
-# 	\end{center}
-# 	#+end_export
-# ** Covariance Matrix : Example 3
-#   \[ \bv{C} = \begin{bmatrix} \spot{0.2} & 0 \\ 0 & 1\end{bmatrix}\]
-# *** \( \mathcal{N}(\gv{0}, \bv{I})\)                               :B_column:
-# 	:PROPERTIES:
-# 	:BEAMER_env: column
-# 	:BEAMER_COL: 0.5
-# 	:END:
-# 	#+begin_export latex
-# 	\pgfplotsset{
-# 	colormap={whitered}{color(0cm)=(white); rgb255(1cm)=(235,129,27)}
-# 	}
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.5
+	:END:
+	#+begin_export latex
+	\begin{center}
+		\begin{tikzpicture}[baseline,scale=0.6]
+			\begin{axis}[
+				enlargelimits=false,
+				grid=major,
+				ymin=-2.5, ymax=2.5,
+				xmin=-2.5, xmax=2.5,
+				xlabel=$x_1$,
+				ylabel=$x_2$,
+			]
+			\addplot [only marks, mark=*,
+			mark size=2.5pt, metropolisorange, mark options={fill=metropolisorange}] table {data/skewedXY.txt};
 
-# 	\begin{center}
-# 		\begin{tikzpicture}[
-# 			declare function={mu1=0;},
-# 			declare function={mu2=0;},
-# 			declare function={sigma1=0.2;},
-# 			declare function={sigma2=1.0;},
-# 			declare function={normal(\m,\s)=1/(2*\s*sqrt(pi))*exp(-(x-\m)^2/(2*\s^2));},
-# 			declare function={bivar(\ma,\sa,\mb,\sb)=
-# 				1/(2*pi*\sa*\sb) * exp(-((x-\ma)^2/\sa^2 + (y-\mb)^2/\sb^2))/2;}, scale=0.6, baseline]
-# 			\begin{axis}[
-# 				colormap name=whitered,
-# 				view={45}{65},
-# 				enlargelimits=false,
-# 				grid=major,
-# 				domain=-2.5:2.5,
-# 				y domain=-2.5:2.5,
-# 				samples=26,
-# 				xlabel=$x_1$,
-# 				ylabel=$x_2$,
-# 				zlabel={$\mathcal{N}$},
-# 				colorbar,
-# 			]
-# 			\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
-# 			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
-# 			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
+			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
 
-# 			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
-# 			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
-
-# 			\end{axis}
-# 		\end{tikzpicture}
-# 	\end{center}
-# 	#+end_export
-
-# ***                                                                :B_column:
-# 	:PROPERTIES:
-# 	:BEAMER_env: column
-# 	:BEAMER_COL: 0.5
-# 	:END:
-# 	#+begin_export latex
-# 	\begin{center}
-# 		\begin{tikzpicture}[baseline,scale=0.6]
-# 			\begin{axis}[
-# 				enlargelimits=false,
-# 				grid=major,
-# 				ymin=-2.5, ymax=2.5,
-# 				xmin=-2.5, xmax=2.5,
-# 				xlabel=$x_1$,
-# 				ylabel=$x_2$,
-# 			]
-# 			\addplot [only marks, mark=*,
-# 			mark size=2.5pt, metropolisorange, mark options={fill=metropolisorange}] table {data/skewedY.txt};
-
-# 			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
-# 			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
-
-# 			\end{axis}
-# 		\end{tikzpicture}
-# 	\end{center}
-# 	#+end_export
-# ** Covariance Matrix : Example 4
-#   \[ \bv{C} = \begin{bmatrix} 0.2 & \spot{0.36} \\ \spot{0.36} & 1\end{bmatrix}\]
-# *** \( \mathcal{N}(\gv{0}, \bv{I})\)                               :B_column:
-# 	:PROPERTIES:
-# 	:BEAMER_env: column
-# 	:BEAMER_COL: 0.5
-# 	:END:
-# 	#+begin_export latex
-# 	\pgfplotsset{
-# 	colormap={whitered}{color(0cm)=(white); rgb255(1cm)=(235,129,27)}
-# 	}
-
-# 	\begin{center}
-# 		\begin{tikzpicture}[
-# 			declare function={mu1=0;},
-# 			declare function={mu2=0;},
-# 			declare function={sigma1=0.2;},
-# 			declare function={sigma2=1.0;},
-# 			declare function={normal(\m,\s)=1/(2*\s*sqrt(pi))*exp(-(x-\m)^2/(2*\s^2));},
-# 			declare function={bivar(\ma,\sa,\mb,\sb)=
-# 				1/(2*pi*\sa*\sb) * exp(-(((-0.35826*x - 0.93362*y)-\ma)^2/\sa^2 + ((-0.93362*x + 0.358266*y)-\mb)^2/\sb^2))/2;}, scale=0.6, baseline]
-# 			\begin{axis}[
-# 				colormap name=whitered,
-# 				view={45}{65},
-# 				enlargelimits=false,
-# 				grid=major,
-# 				domain=-2.5:2.5,
-# 				y domain=-2.5:2.5,
-# 				samples=26,
-# 				xlabel=$x_1$,
-# 				ylabel=$x_2$,
-# 				zlabel={$\mathcal{N}$},
-# 				colorbar,
-# 			]
-# 			\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
-# 			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
-# 			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
-
-# 			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
-# 			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
-
-# 			\end{axis}
-# 		\end{tikzpicture}
-# 	\end{center}
-# 	#+end_export
-
-# ***                                                                :B_column:
-# 	:PROPERTIES:
-# 	:BEAMER_env: column
-# 	:BEAMER_COL: 0.5
-# 	:END:
-# 	#+begin_export latex
-# 	\begin{center}
-# 		\begin{tikzpicture}[baseline,scale=0.6]
-# 			\begin{axis}[
-# 				enlargelimits=false,
-# 				grid=major,
-# 				ymin=-2.5, ymax=2.5,
-# 				xmin=-2.5, xmax=2.5,
-# 				xlabel=$x_1$,
-# 				ylabel=$x_2$,
-# 			]
-# 			\addplot [only marks, mark=*,
-# 			mark size=2.5pt, metropolisorange, mark options={fill=metropolisorange}] table {data/skewedXY.txt};
-
-# 			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
-# 			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
-
-# 			\end{axis}
-# 		\end{tikzpicture}
-# 	\end{center}
-# 	#+end_export
+			\end{axis}
+		\end{tikzpicture}
+	\end{center}
+	#+end_export
 ** Covariance Matrix : Definition
    Covariance Matrix decides the "direction" of the population...
 
