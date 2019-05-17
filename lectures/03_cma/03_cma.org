@@ -29,6 +29,13 @@
 #+OPTIONS:   H:2 num:t toc:nil ::t |:t ^:{} -:t f:t *:t <:t
 #+OPTIONS:   tex:t d:nil todo:t pri:nil tags:nil
 #+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col) %8BEAMER_OPT(Opt)
+
+# LATEXX EXPORTS AT START
+#+begin_export latex
+	\pgfplotsset{
+	colormap={whitered}{color(0cm)=(white); rgb255(1cm)=(235,129,27)}
+	}
+#+end_export
 * ~Matplotlib~
 ** Additional packages
   - ~Seaborn~  *DEMO*
@@ -1304,16 +1311,60 @@
 	:PROPERTIES:
 	:BEAMER_env: ignoreheading
 	:END:
-	 [[file:images/schaffer.png]]
-
+	 #+begin_export latex
+	\begin{center}
+		\begin{tikzpicture}[
+			declare function={schaffer=0.5 + ((sin(deg(sqrt(x^2+y^2))))^2-0.5)/(1+0.001*(x^2+y^2))^2;}, scale=0.9]
+			\begin{axis}[
+				colormap name=whitered,
+				view={45}{65},
+				enlargelimits=false,
+				grid=major,
+				domain=-8:8,
+				y domain=-8:8,
+				samples=41,
+				xlabel=$x_1$,
+				ylabel=$x_2$,
+				zlabel={$f_{\text{schaffer}}$},
+				colorbar,
+			]
+			\addplot3 [surf] {schaffer};
+			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+			\end{axis}
+		\end{tikzpicture}
+	\end{center}
+	#+end_export
 ** CMAes vs GA--setup
 ***                                                         :B_ignoreheading:
 	:PROPERTIES:
 	:BEAMER_env: ignoreheading
 	:END:
 	- shifted Rastrigin function (optima in the middle well)
-	[[file:images/rastrigin.png]]
-
+	 #+begin_export latex
+	\begin{center}
+		\begin{tikzpicture}[
+			declare function={rastrigin=20 + (x^2 - 10*cos(deg(0.85*pi*x))) + (y^2 - 10*cos(deg(0.85*pi*y)));}, scale=1.0]
+			\begin{axis}[
+				colormap name=whitered,
+				view={45}{65},
+				enlargelimits=false,
+				grid=major,
+				domain=-8:8,
+				y domain=-8:8,
+				samples=41,
+				xlabel=$x_1$,
+				ylabel=$x_2$,
+				zlabel={$f_{\text{rastrigin}}$},
+				colorbar,
+			]
+			\addplot3 [surf] {rastrigin};
+			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+			\end{axis}
+		\end{tikzpicture}
+	\end{center}
+	#+end_export
 ** Comparison between functions[fn:2]
 ***                                                                :B_column:
 	:PROPERTIES:
