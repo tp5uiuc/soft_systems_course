@@ -1,4 +1,4 @@
-% Created 2019-05-16 Thu 11:56
+% Created 2019-05-17 Fri 10:50
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation]{beamer}
 \usepackage[utf8]{inputenc}
@@ -21,15 +21,17 @@
 \usepackage{minted}
 \usetheme[progressbar=frametitle]{metropolis}
 \usepackage{tikz}
-\usetikzlibrary{backgrounds,matrix,fit}
+\usetikzlibrary{backgrounds,matrix,fit,calc}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.16}
 \usepackage{nicematrix}
 \usepackage{spot}
+\usepackage[beamer,customcolors]{hf-tikz}
 \newcommand{\gv}[1]{\ensuremath{\mbox{\boldmath$ #1 $}}}
 \newcommand{\bv}[1]{\ensuremath{\mathbf{#1}}}
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 \newcommand{\order}[1]{\mathcal O \left( #1 \right)} % order of magnitude
+\newcommand*{\Scale}[2][4]{\scalebox{#1}{$#2$}}%
 \definecolor{scarlet}{rgb}{1.0, 0.13, 0.0}
 \definecolor{shamrockgreen}{rgb}{0.0, 0.62, 0.38}
 \definecolor{royalblue}{rgb}{0.25, 0.41, 0.88}
@@ -50,8 +52,8 @@
 
 \maketitle
 \section{\texttt{Matplotlib}}
-\label{sec:org35fdbec}
-\begin{frame}[label={sec:orgce797fe},fragile]{Additional packages}
+\label{sec:org19db061}
+\begin{frame}[label={sec:org5dbc9b0},fragile]{Additional packages}
  \begin{itemize}
 \item \texttt{Seaborn}  \alert{DEMO}
 \item \texttt{bokeh}
@@ -59,7 +61,7 @@
 \item See \href{https://wiki.python.org/moin/NumericAndScientific/Plotting}{Python wiki} for more plotting tools
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org1aebdad}]{Quick review}
+\begin{frame}[label={sec:org363c837}]{Quick review}
 \begin{block}{GA demo : Results of our GA implementation}
 \end{block}
 \begin{block}{How to improve convergence?}
@@ -73,16 +75,60 @@
 \end{block}
 \end{frame}
 \section{Implementation of CMAes}
-\label{sec:org840b588}
-\begin{frame}[label={sec:orga1f7119}]{The algorithm}
-\footnotesize
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=1.03\textwidth]{images/cma_algo.001.jpeg}
-\caption{CMAes}
-\end{figure}
+\label{sec:orge083df8}
+\begin{frame}[label={sec:orgb47e5c3}]{The algorithm}
+Set \(\mathbf{m} = \mathbf{0}, \mathbf{C} = \mathbf{I}, \sigma =
+ 0.5, \mathbf{p}_c = \mathbf{0}, \mathbf{p}_{\sigma} = \mathbf{0}\)
+\begin{block}{Sampling}
+\[ \begin{aligned}
+	  \tikzmarkin<1>[set fill color=shamrockgreen!20, set border color=black]{sampling}(0.2,-0.4)(-0.2,0.6)
+	  \mathbf{z}_{i} & \sim \mathcal{N}(\mathbf{0}, \mathbf{C}) \\
+	  \mathbf{x}_{i} &= m+\sigma \mathbf{z}_{i} \tikzmarkend{sampling}
+	  \end{aligned} \]
+\end{block}
+
+\begin{block}{Selection and Recombination}
+\(\mu\) indicates best individuals
+  \[ \begin{aligned}
+	  \tikzmarkin<1>[set fill color=royalblue!40, set border color=black]{selec}(0.2,-0.4)(-0.2,0.8)
+	  \langle\mathbf{z}\rangle_{w} &= \sum_{i=1}^{\mu} w_{i} \mathbf{z}_{i : \lambda} \\
+	  \mathbf{m} &\longleftarrow \mathbf{m}+\sigma\langle\mathbf{z}\rangle_{w} \tikzmarkend{selec}
+	  \end{aligned} \]
+\end{block}
 \end{frame}
-\begin{frame}[label={sec:org2a5a231}]{Starting CMAes}
+
+\begin{frame}[label={sec:orgb3f48f8}]{The algorithm contd.}
+\begin{block}{Step size update}
+\[ \begin{aligned}
+	 \tikzmarkin<1>[set fill color=scarlet!30, set border color=black]{step}(5.2,-0.4)(-0.2,0.8)
+	 \mathbf{p}_{\sigma} &\longleftarrow\left(1-c_{\sigma}\right)
+	 \mathbf{p}_{\sigma}+\sqrt{1-\left(1-c_{\sigma}\right)^{2}}
+	 \sqrt{\frac{1}{\sum_{i=1}^{\mu} w_{i}^{2}}}
+	 \mathbf{C}^{-\frac{1}{2}}\langle\mathbf{z}\rangle_{w} \\
+	 \sigma &\longleftarrow \sigma
+	 e^{\left(\frac{1}{d_{\sigma}}\left(\frac{\left\|p_{\sigma}\right\|}{E\|\mathcal{N}(\mathbf{0},
+	 \mathbf{I})\|}-1\right)\right)} \tikzmarkend{step}
+	 \end{aligned} \]
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:org7fbe629}]{The algorithm contd..}
+\begin{block}{Covariance Matrix Update}
+\[ \begin{aligned}
+	   \tikzmarkin<1>[set fill color=metropolisorange!40, set border color=black]{cov}(0.4,-0.8)(-0.4,0.8)
+	   \mathbf{p}_{c} &\longleftarrow \left(1-c_{c}\right)
+	   \mathbf{p}_{c}+\sqrt{1-\left(1-c_{c}\right)^{2}} \sqrt{\frac{1}{\sum_{i=1}^{\mu}
+	   w_{i}^{2}}}\langle\mathbf{z}\rangle_{w} \\
+	   \mathbf{Z} &= \sum_{i=1}^{\mu} w_{i} \mathbf{z}_{i : \lambda} \mathbf{z}_{i :
+	   \lambda}^{T} \\
+	   \mu_{c o v}&=\sqrt{\frac{1}{\sum_{i=1}^{\mu} w_{i}^{2}}} \\
+	   \mathbf{C} &\longleftarrow\left(1-c_{c o v}\right) \mathbf{C}+c_{c o v}
+	   \frac{1}{\mu_{c o v}} \mathbf{p}_{c} \mathbf{p}_{c}^{T}+c_{c o
+	   v}\left(1-\frac{1}{\mu_{c o v}}\right) \mathbf{Z} \tikzmarkend{cov}
+	   \end{aligned} \]
+\end{block}
+\end{frame}
+\begin{frame}[label={sec:orge366858}]{Starting CMAes}
 \begin{block}{Problem independent}
 \begin{itemize}
 \item Set evolution paths \(\gv{p}_\sigma = \gv{0}, \gv{p}_c = \gv{0}\)
@@ -97,7 +143,7 @@
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:orgd6af848}]{Starting CMAes: more on problem dependent parameters}
+\begin{frame}[label={sec:orgfe676d9}]{Starting CMAes: more on problem dependent parameters}
 \begin{itemize}
 \item Optimum presumably be within the initial cube \(\gv{m} \pm 3 \sigma
      \left(1 ,1 , \cdots, 1 \right)^T\)
@@ -123,7 +169,7 @@ done using \(\bv{C}\) as shown below (deferred discussion):
 rescale your problem.
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org590b1c8},fragile]{First step : Sampling}
+\begin{frame}[label={sec:org2a1cd91},fragile]{First step : Sampling}
  \begin{block}{New population of points, for \(k = 1 \cdots \lambda\)}
 \begin{itemize}
 \item \(\gv{y}_k \sim \mathcal{N}\left( \gv{0}, \bv{I} \right)\)
@@ -146,7 +192,7 @@ elementwise multiplication and \texttt{+} for elementwise addition
 \end{block}
 \alert{We need a way to sample correlated (across dimensions) populations from} \texttt{numpy}
 \end{frame}
-\begin{frame}[label={sec:org329fba4},fragile]{Sampling : Python}
+\begin{frame}[label={sec:orgc41bdfd},fragile]{Sampling : Python}
  \begin{block}{How to sample a multivariate normal distribution?}
 \begin{itemize}
 \item \texttt{np.random.multivariate\_normal} \alert{DEMO}
@@ -170,7 +216,7 @@ made up of rank-one decompositions
 \item Now explain why you set \(A=CC^T\)
 \end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:org486d94b}]{Covariance Matrix : Definition}
+\begin{frame}[label={sec:org5a5e897}]{Covariance Matrix : Definition}
 Covariance Matrix decides the ``direction'' of the population\ldots{}
 
 \[ \left(\,\begin{NiceArray}{>{\strut}CCCC}%
@@ -202,7 +248,7 @@ Nonzero covariances \(\Rightarrow\) Population is not iid and is skewed wrt
 coordinate axes.
 \end{frame}
 
-\begin{frame}[label={sec:orgc246928}]{Variance}
+\begin{frame}[label={sec:org14a61dc}]{Variance}
 \begin{definition}[Variance]
 \(\sigma^2\) Is a measure of how ``far'' a variable changes away from its mean.
 \end{definition}
@@ -211,7 +257,7 @@ coordinate axes.
 where \(\mu\) is the mean and \(N\) is the number of samples.
 \end{frame}
 
-\begin{frame}[label={sec:org9b1e5c6}]{Variance}
+\begin{frame}[label={sec:org4ac1318}]{Variance}
 \begin{example}[Low variance]
 \begin{center}
 	\begin{tikzpicture}[baseline,scale=0.9]
@@ -262,7 +308,7 @@ where \(\mu\) is the mean and \(N\) is the number of samples.
 \end{center}
 \end{example}
 \end{frame}
-\begin{frame}[label={sec:orgd6a2561}]{Covariance}
+\begin{frame}[label={sec:orgba55c91}]{Covariance}
 \begin{definition}[Covariance]
 covar\((x,y)\) Is a measure of how two variables change with one another.
 \end{definition}
@@ -271,7 +317,7 @@ covar\((x,y)\) Is a measure of how two variables change with one another.
 where \(\mu_x, \mu_y\) are the respective means and \(N\) is the number of samples.
 \end{frame}
 
-\begin{frame}[label={sec:org4c55102}]{Covariance}
+\begin{frame}[label={sec:orgb5415c2}]{Covariance}
 \begin{example}[Covariance (x,y,z)]
 \begin{center}
 	\begin{tikzpicture}[baseline]
@@ -341,7 +387,39 @@ where \(\mu_x, \mu_y\) are the respective means and \(N\) is the number of sampl
 \end{center}
 \end{example}
 \end{frame}
-\begin{frame}[label={sec:org6d3f5de},fragile]{Sampling : Python--Answers}
+\begin{frame}[label={sec:org2a2d065}]{Covariance Matrix : Definition}
+Covariance Matrix decides the ``direction'' of the population\ldots{}
+
+\[ \left(\,\begin{NiceArray}{>{\strut}CCCC}%
+   [create-extra-nodes,left-margin,right-margin,
+   code-after = {\tikz \path [name suffix = -large,
+   fill = metropolisorange!40,
+   blend mode = multiply]
+   (1-2.north west)|- (2-3.north west)|- (3-4.north west)|-
+   (3-4.south east)|- (1-2.north west) ;
+   \tikz \path [name suffix = -large,
+   fill = metropolisorange!40,
+   blend mode = multiply]
+   (2-1.north west)|- (4-1.south west)|- (4-3.south east)|-
+   (4-3.north west)|- (3-2.north west)|- (2-1.north west) ;
+   \tikz \path [name suffix = -large,
+   fill = royalblue!60,
+   blend mode = multiply]
+   (1-1.north west)|- (2-2.north west)|- (3-3.north west)|-
+   (4-4.north west)|- (4-4.south east)|- (4-4.north west)|-
+   (3-3.north west)|- (2-2.north west)|- (1-1.north west);} ]
+   C_{11} & C_{12} & C_{13} & C_{14} \\C_{21} & C_{22} & C_{23} & C_{24} \\C_{31} & C_{32} & C_{33} & C_{34} \\C_{41} & C_{42} & C_{43} & C_{44}\end{NiceArray}\,
+   \right)\]
+
+\tikz{\draw[fill=royalblue!60,line width=1pt]  rectangle(4ex, 2ex);}
+\(\rightarrow\) Variance
+\tikz{\draw[fill=metropolisorange!40,line width=1pt]  rectangle(4ex, 2ex);}
+\(\rightarrow\) Covariance
+
+\(C_{12}\) \(\Rightarrow\) \(\sigma_{12}\),  \(C_{23}\) \(\Rightarrow\) \(\sigma_{23}\), \(\cdots{}\)
+\end{frame}
+
+\begin{frame}[label={sec:org269c04c},fragile]{Sampling : Python--Answers}
  \begin{itemize}
 \item What is \(\bv{C}\) / \texttt{cov} (in a 2D case) and its meaning?
 \begin{enumerate}
@@ -365,7 +443,7 @@ where \(\mu_x, \mu_y\) are the respective means and \(N\) is the number of sampl
 \end{itemize}}
 \end{frame}
 
-\begin{frame}[label={sec:org6443558}]{Sampling : Idea of \(\bv{C}\) \(\rightarrow\) math}
+\begin{frame}[label={sec:org2d1b2bc}]{Sampling : Idea of \(\bv{C}\) \(\rightarrow\) math}
 \begin{block}{What is CMA-ES doing?}
 \begin{itemize}
 \item How does CMA estimate \(\bv{C}\)?
@@ -385,7 +463,7 @@ previous \(C\) (show separately, will be discussed in CMA)
 (second order)
 \end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:orgdb1fbaf}]{Sampling : Idea of \(\bv{C}\) \(\rightarrow\) math--Answers}
+\begin{frame}[label={sec:orgff54d28}]{Sampling : Idea of \(\bv{C}\) \(\rightarrow\) math--Answers}
 \begin{itemize}
 \item How does CMA estimate \(\bv{C}\)?
 \begin{enumerate}
@@ -411,7 +489,7 @@ across \(N_{best}\) individuals to estimate covariance between genes
 \end{enumerate}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:orgb7e4067}]{PCA}
+\begin{frame}[label={sec:orgf06c39e}]{PCA}
 \begin{block}{CMAes performs PCA on the optimization data}
 \end{block}
 \begin{block}{PCA?}
@@ -427,7 +505,7 @@ across \(N_{best}\) individuals to estimate covariance between genes
 \end{enumerate}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org1097250}]{Sampling : Parameters}
+\begin{frame}[label={sec:org16dd4da}]{Sampling : Parameters}
 \begin{block}{Choice of \(\lambda\)?}
 \begin{itemize}
 \item Look at the CMA tutorial : \href{file:///Users/tp5/Desktop/Masters\_Resources/readings/optimization/Hansen/The\%20CMA\%20evolution\%20strategy\%20A\%20tutorial.pdf}{The CMA tutorial}/\href{https://arxiv.org/pdf/1604.00772.pdf}{CMA tutorial on Arxiv}
@@ -436,7 +514,7 @@ across \(N_{best}\) individuals to estimate covariance between genes
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:orgd924d37},fragile]{Second step : Selection}
+\begin{frame}[label={sec:orgbb6931f},fragile]{Second step : Selection}
  \begin{block}{How to select \(\mu\) best individuals}
 \begin{itemize}
 \item \(\langle \gv{z}_k \rangle_{w} = \sum_{i=1}^{\mu} w_i \gv{z}_{i:\lambda}\)
@@ -453,14 +531,14 @@ This determines the \(\mu\) best individuals.
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:orgbe25bb0}]{Selection : Parameters}
+\begin{frame}[label={sec:orge1ae225}]{Selection : Parameters}
 \begin{block}{Choice of \(w_i\)?}
 \begin{itemize}
 \item Look at the CMA tutorial : \href{file:///Users/tp5/Desktop/Masters\_Resources/readings/optimization/Hansen/The\%20CMA\%20evolution\%20strategy\%20A\%20tutorial.pdf}{The CMA tutorial}/\href{https://arxiv.org/pdf/1604.00772.pdf}{CMA tutorial on Arxiv}
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:orga735c8b},fragile]{Third step : Recombination}
+\begin{frame}[label={sec:orgc32da85},fragile]{Third step : Recombination}
  \begin{block}{Recombination to get new \(m\)}
 \begin{itemize}
 \item \(\gv{m} \leftarrow \gv{m} + \sigma \langle \gv{z} \rangle_{w}\)
@@ -490,7 +568,7 @@ scaling.
 \item So choose only a scalar.
 \end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:orgef0cd11}]{Third step : Recombination--Answers}
+\begin{frame}[label={sec:orgeaceecc}]{Third step : Recombination--Answers}
 \begin{itemize}
 \item \(\sigma\) could also be a matrix. Is this a good idea?
 \begin{itemize}
@@ -507,7 +585,7 @@ the convergence of the algorithm
 
 \alert{CONCLUSION}---Scalar \(\sigma\) is apt.
 \end{frame}
-\begin{frame}[label={sec:orge348e5f},fragile]{Fourth step : Step size control}
+\begin{frame}[label={sec:org34b433d},fragile]{Fourth step : Step size control}
  \begin{block}{Control for \(\sigma\) and cumulation \(\gv{p}_{\sigma}\)}
 \begin{itemize}
 \item \(\gv{p}_\sigma \leftarrow (1 - c_\sigma) \gv{p}_\sigma +
@@ -541,7 +619,7 @@ definiteness used to invert.
 \item PD : All positive eigenvalues needed
 \end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:orgfd34489},fragile]{Step size control: Computing/Python}
+\begin{frame}[label={sec:org385573d},fragile]{Step size control: Computing/Python}
  \begin{block}{Computing continued}
 \begin{itemize}
 \item Extensive use of matvecs (\texttt{@})
@@ -567,7 +645,7 @@ definiteness used to invert.
 \item Expected length of distribution
 \end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:orgc64ea47}]{Step size control \(\rightarrow\) math}
+\begin{frame}[label={sec:org59538a2}]{Step size control \(\rightarrow\) math}
 \begin{block}{What is path update doing?}
 \begin{itemize}
 \item Increase probability of reproducing successful solution paths\ldots{}
@@ -592,7 +670,7 @@ definiteness used to invert.
 the expectation\ldots{}
 \end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:orgfa9453c}]{Step size : Parameters}
+\begin{frame}[label={sec:org9fd1e0a}]{Step size : Parameters}
 \begin{block}{Choice of \(c_\sigma , d_\sigma\)?}
 \begin{itemize}
 \item Look at the CMA tutorial : \href{file:///Users/tp5/Desktop/Masters\_Resources/readings/optimization/Hansen/The\%20CMA\%20evolution\%20strategy\%20A\%20tutorial.pdf}{The CMA tutorial}/\href{https://arxiv.org/pdf/1604.00772.pdf}{CMA tutorial on Arxiv}
@@ -602,7 +680,7 @@ the expectation\ldots{}
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org9cc94fc},fragile]{Fifth step : Covariance matrix adaptation}
+\begin{frame}[label={sec:org3ed99f8},fragile]{Fifth step : Covariance matrix adaptation}
  \begin{block}{Control for \(\bv{C}\) and cumulation \(\gv{p}_{c}\)}
 \begin{itemize}
 \item \(\gv{p}_c \leftarrow (1 - c_c) \gv{p}_c+
@@ -622,7 +700,7 @@ where \(\bv{Z} =  \sum_{i=1}^{\mu} w_i \gv{z}_{i:\lambda} \gv{z}^T_{i:\lambda}\)
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:org0f085a3}]{CMA \(\rightarrow\) math}
+\begin{frame}[label={sec:org0a39bf7}]{CMA \(\rightarrow\) math}
 \begin{block}{What is cumulation for \(\gv{p}_c\) doing?}
 \begin{itemize}
 \item Weighting with exponential decay for prior values
@@ -654,7 +732,7 @@ path length adaption and so on)
 \end{itemize}}
 \end{frame}
 
-\begin{frame}[label={sec:org7ea29a2}]{CMA: Parameters}
+\begin{frame}[label={sec:orge8c793f}]{CMA: Parameters}
 \begin{block}{Choice of \(c_c, c_{\text{cov}}\)?}
 \begin{itemize}
 \item Look at the CMA tutorial : \href{file:///Users/tp5/Desktop/Masters\_Resources/readings/optimization/Hansen/The\%20CMA\%20evolution\%20strategy\%20A\%20tutorial.pdf}{The CMA tutorial}/\href{https://arxiv.org/pdf/1604.00772.pdf}{CMA tutorial on Arxiv}
@@ -665,7 +743,7 @@ path length adaption and so on)
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:org0ef41d6},fragile]{Terminating CMA}
+\begin{frame}[label={sec:org9dfd0bf},fragile]{Terminating CMA}
  \begin{block}{Algorithm should be stopped when CPU-time is wasted. Then we can:}
 \begin{enumerate}
 \item restart (eventually with increased population size)
@@ -696,7 +774,7 @@ path length adaption and so on)
 \end{itemize}}
 \end{frame}
 
-\begin{frame}[label={sec:org95eab8d},fragile]{Terminating CMA contd.}
+\begin{frame}[label={sec:org559c877},fragile]{Terminating CMA contd.}
  \begin{block}{Problem independent}
 \begin{itemize}
 \item \texttt{EqualFunValues}: stop if the range of the best \(\gv{f}(\gv{x})\) of
@@ -720,7 +798,7 @@ divergence.
 \end{itemize}}
 \end{frame}
 
-\begin{frame}[label={sec:org64e838f}]{Boundaries/Constraints in CMA : Best solution strictly inside}
+\begin{frame}[label={sec:org0e5f98e}]{Boundaries/Constraints in CMA : Best solution strictly inside}
 \begin{itemize}
 \item Set fitness (for minimization problem) as
 \end{itemize}
@@ -741,7 +819,7 @@ divergence.
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orgda26665}]{Boundaries/Constraints in CMA : Repair}
+\begin{frame}[label={sec:orgd4a8162}]{Boundaries/Constraints in CMA : Repair}
 \begin{itemize}
 \item Simply ``repair'' infeasible individuals (say when boundary is a box) before
 update so that they satisfy the constraint
@@ -760,8 +838,8 @@ update so that they satisfy the constraint
 \end{frame}
 
 \section{Comparing CMA against GA}
-\label{sec:org6ce3885}
-\begin{frame}[label={sec:orgabbb31e}]{CMAes vs GA--setup}
+\label{sec:orgfd2926f}
+\begin{frame}[label={sec:orgcc5d87a}]{CMAes vs GA--setup}
 \begin{block}{Optimization on smooth functions}
 \begin{itemize}
 \item Two dimensional, \(C^{\infty}\) functions \(f(\gv{x})\) : \(\left(\mathbb{R}^2,  \mathbb{R}, f, \leq \right)\)
@@ -773,7 +851,7 @@ update so that they satisfy the constraint
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org36e7632}]{CMAes vs GA--setup}
+\begin{frame}[label={sec:org9fec8c7}]{CMAes vs GA--setup}
 \begin{itemize}
 \item shifted Rastrigin function (optima in the middle well)
 \end{itemize}
@@ -782,7 +860,7 @@ update so that they satisfy the constraint
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org36f8c71}]{Comparison between functions\footnote{\href{http://blog.otoro.net/2017/10/29/visual-evolution-strategies/}{Otoro}}}
+\begin{frame}[label={sec:org89c22b1}]{Comparison between functions\footnote{\href{http://blog.otoro.net/2017/10/29/visual-evolution-strategies/}{Otoro}}}
 \begin{columns}
 \begin{column}{0.5\columnwidth}
 \begin{figure}[htbp]
@@ -802,7 +880,7 @@ update so that they satisfy the constraint
 
 Lighter region indicates smaller values
 \end{frame}
-\begin{frame}[label={sec:org53f5f7e}]{Simple ES}
+\begin{frame}[label={sec:org769902d}]{Simple ES}
 \begin{block}{Scheme}
 \begin{itemize}
 \item \alert{Sampling} : \(\gv{z}_i \sim \mathcal{N}\left( \gv{m}, \bv{C} \right)\)
@@ -825,7 +903,7 @@ far.
 Simple Evolution strategy from \href{http://blog.otoro.net/2017/10/29/visual-evolution-strategies/}{Otoro} shown for 20 generations
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org97cc4d5}]{Simple ES-Observations}
+\begin{frame}[label={sec:org9c06767}]{Simple ES-Observations}
 \begin{block}{Convergence}
 \begin{itemize}
 \item What do you expect for general problems?
@@ -846,7 +924,7 @@ Simple Evolution strategy from \href{http://blog.otoro.net/2017/10/29/visual-evo
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:org19ee9a8}]{Simple ES-Observations}
+\begin{frame}[label={sec:org6d88d98}]{Simple ES-Observations}
 \begin{block}{Convergence}
 \begin{itemize}
 \item What do you expect for general problems?
@@ -869,7 +947,7 @@ rastrigin, which temporarily gets stuck)
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:org66fbf40}]{Simple GA}
+\begin{frame}[label={sec:org6163b36}]{Simple GA}
 \begin{block}{Scheme}
 \begin{itemize}
 \item \alert{Environmental selection} : Keep only best \(10 \%\)
@@ -891,7 +969,7 @@ far.
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:orgb94ac1e}]{Simple GA-Observations}
+\begin{frame}[label={sec:org68566b5}]{Simple GA-Observations}
 \begin{block}{Convergence}
 \begin{itemize}
 \item What do you expect for general problems?
@@ -912,7 +990,7 @@ far.
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:org6d1ca57}]{Simple GA-Observations}
+\begin{frame}[label={sec:org16d9d4b}]{Simple GA-Observations}
 \begin{block}{Convergence}
 \begin{itemize}
 \item What do you expect for general problems?
@@ -935,7 +1013,7 @@ far.
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:orgadbc7bb}]{CMAes-Observations}
+\begin{frame}[label={sec:org4485627}]{CMAes-Observations}
 \begin{block}{Can you spot the updates?}
 \begin{itemize}
 \item \(\gv{m}\) update (fairly obvious)
@@ -964,7 +1042,7 @@ complementary to it\ldots{}
 \end{itemize}}
 \end{frame}
 
-\begin{frame}[label={sec:orgc1d1d69}]{CMAes-Observations}
+\begin{frame}[label={sec:org81a7115}]{CMAes-Observations}
 \begin{block}{Convergence}
 \begin{itemize}
 \item What do you expect for general problems?
@@ -984,7 +1062,7 @@ complementary to it\ldots{}
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:orgcef22fa}]{CMAes-Some interesting videos}
+\begin{frame}[label={sec:orgf165dac}]{CMAes-Some interesting videos}
 \begin{itemize}
 \item Mario \url{https://www.youtube.com/watch?v=0iipyd7Gi70}
 \item Rastrigin : \url{https://www.youtube.com/watch?v=aP31Q7o2UGU}

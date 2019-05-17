@@ -11,15 +11,17 @@
 # #+LATEX_CLASS_OPTIONS: [notes]
 #+LATEX_HEADER:\usetheme[progressbar=frametitle]{metropolis}
 #+LATEX_HEADER:\usepackage{tikz}
-#+LATEX_HEADER:\usetikzlibrary{backgrounds,matrix,fit}
+#+LATEX_HEADER:\usetikzlibrary{backgrounds,matrix,fit,calc}
 #+LATEX_HEADER:\usepackage{pgfplots}
 #+LATEX_HEADER:\pgfplotsset{compat=1.16}
 #+LATEX_HEADER:\usepackage{nicematrix}
 #+LATEX_HEADER:\usepackage{spot}
+#+LATEX_HEADER:\usepackage[beamer,customcolors]{hf-tikz}
 #+LATEX_HEADER:\newcommand{\gv}[1]{\ensuremath{\mbox{\boldmath$ #1 $}}}
 #+LATEX_HEADER:\newcommand{\bv}[1]{\ensuremath{\mathbf{#1}}}
 #+LATEX_HEADER:\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 #+LATEX_HEADER:\newcommand{\order}[1]{\mathcal O \left( #1 \right)} % order of magnitude
+#+LATEX_HEADER:\newcommand*{\Scale}[2][4]{\scalebox{#1}{$#2$}}%
 #+LATEX_HEADER:\definecolor{scarlet}{rgb}{1.0, 0.13, 0.0}
 #+LATEX_HEADER:\definecolor{shamrockgreen}{rgb}{0.0, 0.62, 0.38}
 #+LATEX_HEADER:\definecolor{royalblue}{rgb}{0.25, 0.41, 0.88}
@@ -42,10 +44,68 @@
 *** \Rightarrow CMAes (and other algorithms)
 * Implementation of CMAes
 ** The algorithm
-#+LATEX: \footnotesize
-#+CAPTION: CMAes
-#+ATTR_LATEX: :width 1.03\textwidth
-[[file:images/cma_algo.001.jpeg]]
+# #+LATEX: \footnotesize
+# #+CAPTION: CMAes
+# #+ATTR_LATEX: :width 1.03\textwidth
+# [[file:images/cma_algo.001.jpeg]]
+ Set \( \mathbf{m} = \mathbf{0}, \mathbf{C} = \mathbf{I}, \sigma =
+ 0.5, \mathbf{p}_c = \mathbf{0}, \mathbf{p}_{\sigma} = \mathbf{0}\)
+*** Sampling                                                        :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+
+	  \[ \begin{aligned}
+	  \tikzmarkin<1>[set fill color=shamrockgreen!20, set border color=black]{sampling}(0.2,-0.4)(-0.2,0.6)
+	  \mathbf{z}_{i} & \sim \mathcal{N}(\mathbf{0}, \mathbf{C}) \\
+	  \mathbf{x}_{i} &= m+\sigma \mathbf{z}_{i} \tikzmarkend{sampling}
+	  \end{aligned} \]
+
+*** Selection and Recombination                                     :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+
+	\( \mu \) indicates best individuals
+	  \[ \begin{aligned}
+	  \tikzmarkin<1>[set fill color=royalblue!40, set border color=black]{selec}(0.2,-0.4)(-0.2,0.8)
+	  \langle\mathbf{z}\rangle_{w} &= \sum_{i=1}^{\mu} w_{i} \mathbf{z}_{i : \lambda} \\
+	  \mathbf{m} &\longleftarrow \mathbf{m}+\sigma\langle\mathbf{z}\rangle_{w} \tikzmarkend{selec}
+	  \end{aligned} \]
+
+** The algorithm contd.
+*** Step size update                                                :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	 \[ \begin{aligned}
+	 \tikzmarkin<1>[set fill color=scarlet!30, set border color=black]{step}(5.2,-0.4)(-0.2,0.8)
+	 \mathbf{p}_{\sigma} &\longleftarrow\left(1-c_{\sigma}\right)
+	 \mathbf{p}_{\sigma}+\sqrt{1-\left(1-c_{\sigma}\right)^{2}}
+	 \sqrt{\frac{1}{\sum_{i=1}^{\mu} w_{i}^{2}}}
+	 \mathbf{C}^{-\frac{1}{2}}\langle\mathbf{z}\rangle_{w} \\
+	 \sigma &\longleftarrow \sigma
+	 e^{\left(\frac{1}{d_{\sigma}}\left(\frac{\left\|p_{\sigma}\right\|}{E\|\mathcal{N}(\mathbf{0},
+	 \mathbf{I})\|}-1\right)\right)} \tikzmarkend{step} \\
+	 \end{aligned} \]
+
+** The algorithm contd..
+*** Covariance Matrix Update                                        :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	   \[ \begin{aligned}
+	   \tikzmarkin<1>[set fill color=metropolisorange!40, set border color=black]{cov}(0.4,-0.8)(-0.4,0.8)
+	   \mathbf{p}_{c} &\longleftarrow \left(1-c_{c}\right)
+	   \mathbf{p}_{c}+\sqrt{1-\left(1-c_{c}\right)^{2}} \sqrt{\frac{1}{\sum_{i=1}^{\mu}
+	   w_{i}^{2}}}\langle\mathbf{z}\rangle_{w} \\
+	   \mathbf{Z} &= \sum_{i=1}^{\mu} w_{i} \mathbf{z}_{i : \lambda} \mathbf{z}_{i :
+	   \lambda}^{T} \\
+	   \mu_{c o v}&=\sqrt{\frac{1}{\sum_{i=1}^{\mu} w_{i}^{2}}} \\
+	   \mathbf{C} &\longleftarrow\left(1-c_{c o v}\right) \mathbf{C}+c_{c o v}
+	   \frac{1}{\mu_{c o v}} \mathbf{p}_{c} \mathbf{p}_{c}^{T}+c_{c o
+	   v}\left(1-\frac{1}{\mu_{c o v}}\right) \mathbf{Z} \tikzmarkend{cov}
+	   \end{aligned} \]
 ** Starting CMAes
 *** Problem independent
    - Set evolution paths \( \gv{p}_\sigma = \gv{0}, \gv{p}_c = \gv{0}\)
@@ -911,6 +971,39 @@
   # #+begin_export latex
   # \includegraphics[page=77,width=1.0\textwidth]{images/cma_slideshare.pdf}
   # #+end_export
+** Covariance Matrix : Definition
+   Covariance Matrix decides the "direction" of the population...
+
+   # Code below taken from Pg 18 of
+   # http://ctan.math.washington.edu/tex-archive/macros/latex/contrib/nicematrix/nicematrix.pdf
+   \[ \left(\,\begin{NiceArray}{>{\strut}CCCC}%
+   [create-extra-nodes,left-margin,right-margin,
+   code-after = {\tikz \path [name suffix = -large,
+   fill = metropolisorange!40,
+   blend mode = multiply]
+   (1-2.north west)|- (2-3.north west)|- (3-4.north west)|-
+   (3-4.south east)|- (1-2.north west) ;
+   \tikz \path [name suffix = -large,
+   fill = metropolisorange!40,
+   blend mode = multiply]
+   (2-1.north west)|- (4-1.south west)|- (4-3.south east)|-
+   (4-3.north west)|- (3-2.north west)|- (2-1.north west) ;
+   \tikz \path [name suffix = -large,
+   fill = royalblue!60,
+   blend mode = multiply]
+   (1-1.north west)|- (2-2.north west)|- (3-3.north west)|-
+   (4-4.north west)|- (4-4.south east)|- (4-4.north west)|-
+   (3-3.north west)|- (2-2.north west)|- (1-1.north west);} ]
+   C_{11} & C_{12} & C_{13} & C_{14} \\C_{21} & C_{22} & C_{23} & C_{24} \\C_{31} & C_{32} & C_{33} & C_{34} \\C_{41} & C_{42} & C_{43} & C_{44}\end{NiceArray}\,
+   \right)\]
+
+   \tikz{\draw[fill=royalblue!60,line width=1pt]  rectangle(4ex, 2ex);}
+   \rightarrow Variance
+   \tikz{\draw[fill=metropolisorange!40,line width=1pt]  rectangle(4ex, 2ex);}
+   \rightarrow Covariance
+
+   \( C_{12} \) \Rightarrow \( \sigma_{12} \),  \( C_{23} \) \Rightarrow \( \sigma_{23} \), \cdots
+
 ** Sampling : Python--Answers
 	* What is \( \bv{C}\) / ~cov~ (in a 2D case) and its meaning?
 	  1. Covariance, how a gene varies with another (across dimensions)
