@@ -77,8 +77,8 @@
 		  ylabel=$\Im(z)$,
 		  disabledatascaling]
 		  % https://tex.stackexchange.com/questions/27279/how-to-make-an-arrow-bigger-and-change-its-color-in-tikz/27287#27287
-		  \addplot [arrows={-latex[scale=4]}, thick, color=metropolisorange] coordinates { (0,0) (2,3) };
-		  \addplot [arrows={-latex[scale=4]}, thick, color=metropolisblue] coordinates { (0,0) (3,-2) };
+		  \addplot [arrows={-latex[scale=4]}, thick, color=metropolisorange] coordinates { (0,0) (2,3) } node [right] {$2 + 3i$};
+		  \addplot [arrows={-latex[scale=4]}, thick, color=metropolisblue] coordinates { (0,0) (3,-2) } node [below] {$3 - 2i$};
 		\end{axis}
 	  \end{tikzpicture}
 	\end{center}

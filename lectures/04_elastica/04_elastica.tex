@@ -1,4 +1,4 @@
-% Created 2019-05-18 Sat 23:29
+% Created 2019-05-19 Sun 00:42
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation]{beamer}
 \usepackage[utf8]{inputenc}
@@ -53,8 +53,8 @@
 
 \maketitle
 \section{Coordinate/Frame transformations}
-\label{sec:org948c099}
-\begin{frame}[label={sec:orgcef1296}]{Motivation}
+\label{sec:orgd94388e}
+\begin{frame}[label={sec:org59c56d1}]{Motivation}
 \[ \gv{x}_{\mathcal{L}} = \bv{Q}\gv{x} \]
 \[ \scalebox{5}{\textbf{?}} \]
 \[ \frac{\partial \bv{d}_j}{\partial t} = \left( \bv{Q}^T
@@ -62,7 +62,7 @@
 \[ \scalebox{5}{\textbf{?}} \]
 \end{frame}
 
-\begin{frame}[label={sec:orgfe68763}]{Motivation}
+\begin{frame}[label={sec:orge85effd}]{Motivation}
 \begin{columns}
 \begin{column}{0.7\columnwidth}
 \begin{itemize}
@@ -93,8 +93,8 @@ rather than cartesian coordinates
 		ylabel=$\Im(z)$,
 		disabledatascaling]
 		% https://tex.stackexchange.com/questions/27279/how-to-make-an-arrow-bigger-and-change-its-color-in-tikz/27287#27287
-		\addplot [arrows={-latex[scale=4]}, thick, color=metropolisorange] coordinates { (0,0) (2,3) };
-		\addplot [arrows={-latex[scale=4]}, thick, color=metropolisblue] coordinates { (0,0) (3,-2) };
+		\addplot [arrows={-latex[scale=4]}, thick, color=metropolisorange] coordinates { (0,0) (2,3) } node [right] {$2 + 3i$};
+		\addplot [arrows={-latex[scale=4]}, thick, color=metropolisblue] coordinates { (0,0) (3,-2) } node [below] {$3 - 2i$};
 	\end{axis}
 	\end{tikzpicture}
 \end{center}
