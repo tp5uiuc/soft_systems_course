@@ -13,6 +13,9 @@
 #+LATEX_HEADER:\usepackage{tikz}
 #+LATEX_HEADER:\usepackage{tikz-3dplot}
 #+LATEX_HEADER:\usepackage{spot}
+#+LATEX_HEADER:\usepackage{pgfplots}
+#+LATEX_HEADER:\usetikzlibrary{arrows.meta}
+#+LATEX_HEADER:\pgfplotsset{compat=1.16}
 #+LATEX_HEADER:\newcommand{\gv}[1]{\ensuremath{\mbox{\boldmath$ #1 $}}}
 #+LATEX_HEADER:\newcommand{\bv}[1]{\ensuremath{\mathbf{#1}}}
 #+LATEX_HEADER:\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
@@ -22,6 +25,8 @@
 #+LATEX_HEADER:\definecolor{scarlet}{rgb}{1.0, 0.13, 0.0}
 #+LATEX_HEADER:\definecolor{shamrockgreen}{rgb}{0.0, 0.62, 0.38}
 #+LATEX_HEADER:\definecolor{royalblue}{rgb}{0.25, 0.41, 0.88}
+#+LATEX_HEADER:\definecolor{metropolisorange}{RGB}{235,129,27}
+#+LATEX_HEADER:\definecolor{metropolisblue}{RGB}{35,55,59}
 #+OPTIONS:   H:2 num:t toc:nil ::t |:t ^:{} -:t f:t *:t <:t
 #+OPTIONS:   tex:t d:nil todo:t pri:nil tags:nil
 #+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col) %8BEAMER_OPT(Opt)
@@ -52,803 +57,825 @@
 *** Transformations used                                           :B_column:
 	:PROPERTIES:
 	:BEAMER_env: column
-	:BEAMER_COL: 0.4
+	:BEAMER_COL: 0.5
 	:END:
 	#+CAPTION: The complex plane, taken from Wikimedia
-	#+ATTR_LATEX: :width 0.9\textwidth
-	[[file:images/complex.pdf]]
-** Introduction
-  - Some familiar coordinate transformations (each with its own natural "frame"
-    of vectors)
-    are
-*** Coordinates                                                    :B_column:
-	:PROPERTIES:
-	:BEAMER_env: column
-	:BEAMER_COL: 0.4
-	:END:
-**** Cartesian coordinates
-	 - Coordinate: \( (x, y, z) \)
-	 - Frame : \( \hat{\gv{e}_x}, \hat{\gv{e}_y}, \hat{\gv{e}_z}\)
-*** Pictures                                                       :B_column:
-	:PROPERTIES:
-	:BEAMER_env: column
-	:BEAMER_COL: 0.6
-	:END:
-	#+CAPTION: Cartesian coordinate system, Wikimedia
-	#+ATTR_LATEX: :width 0.8\textwidth
-	[[file:images/cartesian.pdf]]
-** Introduction
-*** Cyl                                                            :B_column:
-	:PROPERTIES:
-	:BEAMER_env: column
-	:BEAMER_COL: 0.4
-	:END:
-**** Cylindrical coordinates
-	 - Coordinate: \( (\rho, \phi, z) \)
-	 - Frame : \( \hat{\gv{e}_\rho}, \hat{\gv{e}_\phi}, \hat{\gv{e}_z}\)
-	 #+CAPTION: Cylindrical coordinate system, Wikimedia
-	#+ATTR_LATEX: :height 0.8\textwidth
-	[[file:images/cylindrical.pdf]]
-
-*** Spherical                                                      :B_column:
-	:PROPERTIES:
-	:BEAMER_env: column
-	:BEAMER_COL: 0.4
-	:END:
-**** Spherical coordinates
-	 - Coordinate: \( (r, \theta, \phi) \)
-	 - Frame : \( \hat{\gv{e}_r}, \hat{\gv{e}_\theta}, \hat{\gv{e}_\phi}\)
-
-	#+CAPTION: Spherical coordinate system, Wikimedia
-	#+ATTR_LATEX: :height 0.8\textwidth
-	[[file:images/spherical.pdf]]
-** Introduction
-*** Choice of coordinate system
-	- We represent entities (points, vectors etc.) in the /cartesian coordinate
-      system/, considering only Euclidean geometry
-*** Why?
-	- To use certain *affine* transformations
-*** Affine transformations                                     :B_definition:
-	:PROPERTIES:
-	:BEAMER_env: definition
-	:END:
-	- any function between /affine spaces/ which preserves points, straight lines and planes
-	- Examples: translation, scaling, similarity transformation,
-      reflection, rotation, etc. and their compositions
-** Affine transformations
-*** Affine \leftrightarrow Linear                                 :B_theorem:
-	:PROPERTIES:
-	:BEAMER_env: theorem
-	:END:
-
-	If \( \mathcal{X} \) and \(\mathcal{Y}\) are affine spaces, then every affine transformation
-	\(f\colon \mathcal{X}\to \mathcal{Y} \) is of the form \(\gv{x}\mapsto
-	\bv{M}\gv{x}+\gv{b}\) where \(\bv{M}\) is a linear transformation on the
-	space \( \mathcal{X}\),  \( \gv{x} \) is a vector in \( \mathcal{X} \), and \(
-	\gv{b} \) is a vector in \( \mathcal{Y} \).
-
-** Affine transformations : Examples
-*** Translations ( \( \bv{M} = \bv{0} \) and \( \gv{b} \neq \gv{0}\) )
-	#+CAPTION: Translation of entities, Wikimedia, CC4.0
-	#+ATTR_LATEX: :width 0.4\textwidth
-	[[file:images/translate.pdf]]
-*** Translation *DEMO*
-** Linear transformations
-*** Difference b/w linear and affine trans.                         :B_block:
-	:PROPERTIES:
-	:BEAMER_env: block
-	:END:
-	- Most of our interest lies in modeling soft filaments, for which we will be
-      using only /linear transformations/
-	- In linear transformations, \( \gv{b} \equiv \gv{0} \) in vector space
-      \(\mathcal{Y}\)
-	- We lose the ability to translate entities using linear transformations (
-      zero must map to zero by definition)
-** But what are linear transformations?
-   - We loosely define a linear transformation \( \gv{x} \to \bv{M}\gv{x} \) by a /matrix/
-     ( \( \bv{M}\) ) that acts on the vector \( \gv{x} \in \mathcal{X}\), about
-     \( \gv{0} \in \mathcal{X} \)
-   - Check out the Wikipedia page on [[https://en.wikipedia.org/wiki/Matrix_(mathematics)][matrices]] and [[https://en.wikipedia.org/wiki/Rotation_matrix][matrix classes]] to see why they
-     (matrices and linear transformations) are considered important.
-** Linear transformations : Examples[fn:1]
-***                                                                :B_column:
-	:PROPERTIES:
-	:BEAMER_env: column
-	:BEAMER_COL: 0.5
-	:END:
-**** Identity
-	\[ \bv{M} = \begin{bmatrix}1&0&0\\0&1&0\\0&0&1\end{bmatrix} \]
-	#+ATTR_LATEX: :height 0.8\textwidth
-	[[file:images/ch_id.pdf]]
-***                                                                :B_column:
-	:PROPERTIES:
-	:BEAMER_env: column
-	:BEAMER_COL: 0.5
-	:END:
-**** Reflection
-	\[ \bv{M} =\begin{bmatrix}-1&0&0\\0&1&0\\0&0&1\end{bmatrix} \]
-	#+ATTR_LATEX: :height 0.8\textwidth
-	[[file:images/ch_ref.pdf]]
-
-** Linear transformations : Examples
-***                                                                :B_column:
-	:PROPERTIES:
-	:BEAMER_env: column
-	:BEAMER_COL: 0.5
-	:END:
-**** Scale
-	\[ \bv{M} =\begin{bmatrix}c_{x}=2&0&0\\0&c_{y}=1&0\\0&0&1\end{bmatrix} \]
-	#+ATTR_LATEX: :height 0.8\textwidth
-	[[file:images/ch_sc.pdf]]
-***                                                                :B_column:
-	:PROPERTIES:
-	:BEAMER_env: column
-	:BEAMER_COL: 0.5
-	:END:
-**** Shear
-	\[ \bv{M} =\begin{bmatrix}1&c_{x}=0.5&0\\c_{y}=0&1&0\\0&0&1\end{bmatrix}\]
-	#+ATTR_LATEX: :height 0.8\textwidth
-	[[file:images/ch_sh.pdf]]
-
-** Linear transformations : Examples
-*** Rotation
 	#+begin_export latex
 	\begin{center}
-	\spot<2>{\( \bv{M} =\begin{bmatrix}\cos(\theta )&\sin(\theta )&0\\-\sin(\theta
-   )&\cos(\theta )&0\\0&0&1\end{bmatrix} \text{with } \theta = \frac{\pi}{6}\)}
+	  \begin{tikzpicture}
+		\begin{axis}[
+		  width=1\textwidth,
+		  height=0.8\textheight,
+		  xmin=-1.5,
+		  xmax=4.5,
+		  ymin=-4.5,
+		  ymax=4.5,
+		  axis equal,
+		  axis lines=middle,
+		  grid=major,
+		  xlabel=$\Re(z)$,
+		  ylabel=$\Im(z)$,
+		  disabledatascaling]
+		  % https://tex.stackexchange.com/questions/27279/how-to-make-an-arrow-bigger-and-change-its-color-in-tikz/27287#27287
+		  \addplot [arrows={-latex[scale=4]}, thick, color=metropolisorange] coordinates { (0,0) (2,3) };
+		  \addplot [arrows={-latex[scale=4]}, thick, color=metropolisblue] coordinates { (0,0) (3,-2) };
+		\end{axis}
+	  \end{tikzpicture}
 	\end{center}
 	#+end_export
-   # \[ \bv{M} =\begin{bmatrix}\cos(\theta )&\sin(\theta )&0\\-\sin(\theta
-   # )&\cos(\theta )&0\\0&0&1\end{bmatrix} \text{with } \theta = \frac{\pi}{6}\]
-   #+ATTR_LATEX: :height 0.5\textwidth
-	[[file:images/ch_rot.pdf]]
-** Rotations (includes reflections)
-   - Generates new unit vectors, fundamentally changing the directions
-     (eigenvectors) of further transformations
-   - Does not scale the entity under consideration ( \( \abs{\lambda} \equiv  1
-     \), more on this later...)
-** Frame rotations in two--dimensions
-   Consider
-   #+CAPTION: Rotation in two dimensions
-   #+ATTR_LATEX: :width 0.45\textwidth
-   file:images/cartesian_rotation.png
 
-   \[ \begin{bmatrix} x^\prime \\ y^\prime \end{bmatrix}
-   = \underbrace{\begin{bmatrix}\cos(\alpha )&\sin(\alpha )\\ -\sin(\alpha
-   )&\cos(\alpha )\end{bmatrix}}_{\bv{R}} \begin{bmatrix} x\\ y\end{bmatrix}\]
-***                                                                  :B_note:
-	:PROPERTIES:
-	:BEAMER_env: note
-	:END:
-	Derive this thing in class.
-** Inverse rotations in two--dimensions
-   Now consider the same picture, but we want to obtain \([x,y]^T\) from \( [
-   x^\prime, y^\prime ]^T \) (the other way around).
+# ** Introduction
+#   - Some familiar coordinate transformations (each with its own natural "frame"
+#     of vectors)
+#     are
+# *** Coordinates                                                    :B_column:
+# 	:PROPERTIES:
+# 	:BEAMER_env: column
+# 	:BEAMER_COL: 0.4
+# 	:END:
+# **** Cartesian coordinates
+# 	 - Coordinate: \( (x, y, z) \)
+# 	 - Frame : \( \hat{\gv{e}_x}, \hat{\gv{e}_y}, \hat{\gv{e}_z}\)
+# *** Pictures                                                       :B_column:
+# 	:PROPERTIES:
+# 	:BEAMER_env: column
+# 	:BEAMER_COL: 0.6
+# 	:END:
+# 	#+CAPTION: Cartesian coordinate system, Wikimedia
+# 	#+ATTR_LATEX: :width 0.8\textwidth
+# 	[[file:images/cartesian.pdf]]
+# ** Introduction
+# *** Cyl                                                            :B_column:
+# 	:PROPERTIES:
+# 	:BEAMER_env: column
+# 	:BEAMER_COL: 0.4
+# 	:END:
+# **** Cylindrical coordinates
+# 	 - Coordinate: \( (\rho, \phi, z) \)
+# 	 - Frame : \( \hat{\gv{e}_\rho}, \hat{\gv{e}_\phi}, \hat{\gv{e}_z}\)
+# 	 #+CAPTION: Cylindrical coordinate system, Wikimedia
+# 	#+ATTR_LATEX: :height 0.8\textwidth
+# 	[[file:images/cylindrical.pdf]]
 
-   - Physically, this is just a rotation of \( - \alpha \) counter-clockwise (or
-     \( \alpha \) clockwise). That means
-   \[ \begin{bmatrix} x\\ y\end{bmatrix}
-   = \begin{bmatrix}\cos(\alpha )& -\sin(\alpha )\\ \sin(\alpha
-   )& \cos(\alpha )\end{bmatrix}  \begin{bmatrix} x^\prime \\ y^\prime
-   \end{bmatrix} \]
-   - Mathematically, if \( \gv{x}^\prime= \bv{R} \gv{x} \), then we know \(
-     \gv{x}= \bv{R}^{-1} \gv{x}^\prime \), provided \( \bv{R}^{-1}\) exists
-     (which does).
-   - Then notice that
-   \[ \bv{R}^{-1} = \begin{bmatrix}\cos(\alpha )& -\sin(\alpha )\\ \sin(\alpha
-   )& \cos(\alpha )\end{bmatrix}  = \bv{R}^T ! \]
-   - We will see later why holds for *all* rotation matrices...
-** Frame rotations in three--dimensions
-   #+CAPTION: Rotation in three dimensions, Wikimedia CC1.0
-   #+ATTR_LATEX: :width 0.45\textwidth
-   [[file:images/cartesian_rot_3D.pdf]]
-   is a natural extension of 2D results...
-** Beware!
-*** Be wary about alias (passive) or alibi (active) transformations
-***                                                                :B_column:
-	:PROPERTIES:
-	:BEAMER_env: column
-	:BEAMER_col: 0.55
-	:END:
-**** Alias transformations                                     :B_definition:
-	 :PROPERTIES:
-	 :BEAMER_env: definition
-	 :END:
-	 Involves rotation of the coordinate system or frame
-	 (change in basis)
-**** Alibi transformations                                           :B_definition:
-	 :PROPERTIES:
-	 :BEAMER_env: definition
-	 :END:
-	 Involves rotation of the entities within the same
-	 frame (change in entity)
-***                                                                :B_column:
-	:PROPERTIES:
-	:BEAMER_env: column
-	:BEAMER_col: 0.5
-	:END:
-   #+CAPTION: Alias-Alibi transformations, Wikimedia CC3.0
-   #+ATTR_LATEX: :width 1.00\textwidth
-	[[file:images/alias_alibi.png]]
-***                                                         :B_ignoreheading:
-	:PROPERTIES:
-	:BEAMER_env: ignoreheading
-	:END:
-	Both are equally valid ways of representing rotations---in this class
-	however, we focus on alias transformations.
-***                                                                  :B_note:
-	:PROPERTIES:
-	:BEAMER_env: note
-	:END:
-	- Affirm that the entity does not matter. Show this for a vector or a point.
-      Beauty of affine transformations.
-	- To change the formulas for passive rotations (or find reverse active
-      rotation), transpose the matrices (then each matrix transforms the initial
-      coordinates of a vector remaining fixed to the coordinates of the same
-      vector measured in the rotated reference system; same rotation axis, same
-      angles, but now the coordinate system rotates, rather than the vector).
-** Difference in perspectives[fn:2]
-***                                                             :B_quotation:
-	:PROPERTIES:
-	:BEAMER_env: quotation
-	:END:
-	" Analyzing rotation demands awareness of your desired perspective. You can rotate an object, while you stay still, or you can keep the object
-	fixed while you rotate yourself. It is important to be aware of which of these
-	perspectives applies for your problem of interest. The distinction between
-	these fundamentally different transformations goes beyond one being the
-	same as the other with an opposite rotation angle. "
-** TODO Frame rotation as a change in basis
-*** More concretely
-	If \( \mathcal{B} \) and \( \mathcal{B}^\prime \) are two (different) bases
-	\( \in \mathbb{R}^n \)
-	+ Alibi : Change in entity \( [\gv{p}]_{\mathcal{B}} \to
-      [\gv{p}^\prime]_{\mathcal{B}} \) given by
-  \[ [\gv{p}^\prime]_{\mathcal{B}} = [\bv{M}]_{\mathcal{B} \to \mathcal{B}}
-  [\gv{p}]_{\mathcal{B}} \]
-	+ Alias : Change in basis \( [\gv{p}]_{\mathcal{B}} \to
-      [\gv{p}]_{\mathcal{B}^\prime} \)
-  \[ [\gv{p}]_{\mathcal{B}^\prime} = [\bv{M}]_{\mathcal{B} \to \mathcal{B}^\prime}
-  [\gv{p}]_{\mathcal{B}} \]
-	+ In our soft filament framework, \( \mathcal{B}^\prime \equiv \mathcal{L}
-      \) and  \( \mathcal{B} \equiv \) lab frame. \( \bv{Q} \) is then the
-      basis transformation matrix (corresponding to pure rotation of the
-      orthonormal bases)
-** Frame rotation---example
-***                                                                :B_column:
-	:PROPERTIES:
-	:BEAMER_env: column
-	:BEAMER_col: 0.5
-	:END:
-	 #+begin_export latex
-	 \tdplotsetmaincoords{60}{100}
-	 \begin{center}
-		\begin{tikzpicture}[scale=2, tdplot_main_coords]
-		\draw[thick,->, color=scarlet] (0,0,0) -- (1,0,0) node[anchor=north east]{$x$};
-		\draw[thick,->, color=shamrockgreen] (0,0,0) -- (0,1,0) node[anchor=north west]{$y$};
-		\draw[thick,->, color=royalblue] (0,0,0) -- (0,0,1) node[anchor=south]{$z$};
-		\end{tikzpicture}
-	 \end{center}
-	 #+end_export
-***                                                                :B_column:
-	:PROPERTIES:
-	:BEAMER_env: column
-	:BEAMER_col: 0.5
-	:END:
-	 #+begin_export latex
-	 \tdplotsetmaincoords{60}{100}
-	 \begin{center}
-		\begin{tikzpicture}[scale=2, tdplot_main_coords]
-		\draw[dashed,->,line width= 1.1pt] (0,0,0) -- (1,0,0) node[anchor=north east]{$x$};
-		\draw[dashed,->,line width= 1.1pt] (0,0,0) -- (0,1,0) node[anchor=north west]{$y$};
-		\draw[dashed,->,line width= 1.1pt] (0,0,0) -- (0,0,1) node[anchor=south west]{$z$};
+# *** Spherical                                                      :B_column:
+# 	:PROPERTIES:
+# 	:BEAMER_env: column
+# 	:BEAMER_COL: 0.4
+# 	:END:
+# **** Spherical coordinates
+# 	 - Coordinate: \( (r, \theta, \phi) \)
+# 	 - Frame : \( \hat{\gv{e}_r}, \hat{\gv{e}_\theta}, \hat{\gv{e}_\phi}\)
 
-		\coordinate (Shift) at (0,0,0);
-		\tdplotsetrotatedcoords{0}{0}{90}
-		\tdplotsetrotatedcoordsorigin{(Shift)}
+# 	#+CAPTION: Spherical coordinate system, Wikimedia
+# 	#+ATTR_LATEX: :height 0.8\textwidth
+# 	[[file:images/spherical.pdf]]
+# ** Introduction
+# *** Choice of coordinate system
+# 	- We represent entities (points, vectors etc.) in the /cartesian coordinate
+#       system/, considering only Euclidean geometry
+# *** Why?
+# 	- To use certain *affine* transformations
+# *** Affine transformations                                     :B_definition:
+# 	:PROPERTIES:
+# 	:BEAMER_env: definition
+# 	:END:
+# 	- any function between /affine spaces/ which preserves points, straight lines and planes
+# 	- Examples: translation, scaling, similarity transformation,
+#       reflection, rotation, etc. and their compositions
+# ** Affine transformations
+# *** Affine \leftrightarrow Linear                                 :B_theorem:
+# 	:PROPERTIES:
+# 	:BEAMER_env: theorem
+# 	:END:
 
-		\draw[thick,color=scarlet,tdplot_rotated_coords,->] (0,0,0)
-		-- (1,0,0) node[anchor=south east]{$x’$};
-		\draw[thick,color=shamrockgreen,tdplot_rotated_coords,->] (0,0,0)
-		-- (0,1,0) node[anchor=west]{$y’$};
-		\draw[thick,color=royalblue,tdplot_rotated_coords,->] (0,0,0)
-		-- (0,0,1) node[anchor=south east]{$z’$};
-		\end{tikzpicture}
-	 \end{center}
-	 #+end_export
-***                                                         :B_ignoreheading:
-	:PROPERTIES:
-	:BEAMER_env: ignoreheading
-	:END:
-	- Represent \( (x-y-z) \) axis with a basis \( \mathcal{E}\) of unit vectors \( \hat{\gv{e}_1}, \hat{\gv{e}_2}, \hat{\gv{e}_3}\)
-	- Represent \( (x'-y'-z') \) axis with a basis \( \mathcal{D} \) of unit vectors \( \hat{\gv{d}_1}, \hat{\gv{d}_2}, \hat{\gv{d}_3}\)
-	- \( \mathcal{E} \to \mathcal{D} \)?
-	- Note : rotation of \( \ang{90} \) about an invariant \( z' = z \) axis
-** Frame rotation---example contd.
-  \[ {\begin{bmatrix} x^\prime \\ y^\prime \\ z^\prime\end{bmatrix}} =
-  \spot{[\bv{M}]_{\mathcal{E} \to \mathcal{D}}}
-  {\begin{bmatrix} x \\ y \\ z \end{bmatrix}}
-  \]
-   - We begin by noticing that \( \begin{bmatrix} x^\prime , y^\prime , z^\prime
-     \end{bmatrix} = \begin{bmatrix} y , -x , z \end{bmatrix}\) (from figure). Then
-  \[ {\begin{bmatrix} x^\prime \\ y^\prime \\ z^\prime\end{bmatrix}} =
-  {\begin{bmatrix} 0 & 1 & 0 \\ -1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}}
-  {\begin{bmatrix} x \\ y \\ z \end{bmatrix}}
-  \]
-  \[\Rightarrow {\begin{bmatrix} x^\prime \\ y^\prime \\ z^\prime\end{bmatrix}} =
-  {\begin{bmatrix} \cos(\ang{90}) & \sin(\ang{90}) & 0 \\ -\sin(\ang{90}) &
-  \cos(\ang{90}) & 0 \\ 0 & 0 & 1 \end{bmatrix}}
-  {\begin{bmatrix} x \\ y \\ z \end{bmatrix}}
-  \]
-** Generalizing frame rotations as a basis change
-   - But also notice with the given bases that
-  \[{\begin{bmatrix} x^\prime \\ y^\prime \\ z^\prime\end{bmatrix}_{\mathcal{D}}} =
-  \spot<2>{
-  \underbrace{\begin{bmatrix}
-  \hat{\gv{d}}_1 \cdot \hat{\gv{e}}_1 & \hat{\gv{d}}_1 \cdot
-  \hat{\gv{e}}_2 & \hat{\gv{d}}_1 \cdot \hat{\gv{e}}_3 \\
-  \hat{\gv{d}}_2 \cdot \hat{\gv{e}}_1 & \hat{\gv{d}}_2 \cdot
-  \hat{\gv{e}}_2 & \hat{\gv{d}}_2 \cdot \hat{\gv{e}}_3 \\
-  \hat{\gv{d}}_3 \cdot \hat{\gv{e}}_1 & \hat{\gv{d}}_3 \cdot
-  \hat{\gv{e}}_2 & \hat{\gv{d}}_3 \cdot \hat{\gv{e}}_3
-  \end{bmatrix}}_{[\bv{M}]_{\mathcal{E} \to \mathcal{D}}, \text{ independent of
-  } \mathbf{x}}
-  }
-  {\begin{bmatrix} x \\ y \\ z \end{bmatrix}_{\mathcal{E}}}
-  \]
-*** Soft filament framework                                         :B_block:
-	:PROPERTIES:
-	:BEAMER_env: block
-	:BEAMER_ACT: <2->
-	:END:
-   - Describe lab frame, \( \mathcal{E} \), by natural bases \(\hat{i}, \hat{j}, \hat{k} \).
-   - Describe material (Lagrangian) frame, \( \mathcal{D} \), by orthonormal
-     vectors \(\hat{\gv{d}_1}, \hat{\gv{d}_2}, \hat{\gv{d}_3} \) (coordinates wrt
-     natural bases). Then
-   \[{\begin{bmatrix} x_{\mathcal{L}} \\ y_{\mathcal{L}} \\ z_{\mathcal{L}} \end{bmatrix}_{\mathcal{D}}} =
-	 \underbrace{\begin{bmatrix}
-	 \mbox{------}~\hat{\gv{d}}_1~\mbox{------} \\
-	 \mbox{------}~\hat{\gv{d}}_2~\mbox{------} \\
-	 \mbox{------}~\hat{\gv{d}}_3~\mbox{------} \\
-	 \end{bmatrix}}_{\bv{Q}}
-	 {\begin{bmatrix} x \\ y \\ z \end{bmatrix}_{\mathcal{E}}}
-   \]
-***                                                                  :B_note:
-	:PROPERTIES:
-	:BEAMER_env: note
-	:END:
-	- Derive the \( \gv{d} \cdot \gv{e} \) relations in class.
-** Generalizing frame rotations as a basis change
-   Taking it one step further we arrive at the conclusion,
-  \[
-	\underbrace{\begin{bmatrix}
-	\mbox{|} & \mbox{|}& \mbox{|}\\
-	\hat{\gv{d}_1} & \hat{\gv{d}_2} & \hat{\gv{d}_3} \\
-	\mbox{|} & \mbox{|}& \mbox{|}\\
-	\end{bmatrix}}_{\bv{Q}^{-1} = \bv{Q}^T}
-	{\begin{bmatrix} x_{\mathcal{L}} \\ y_{\mathcal{L}} \\ z_{\mathcal{L}}
-	\end{bmatrix}}
-	=
-	{\begin{bmatrix}1 & 0 & 0 \\ 0 & 1 & 0 \\0 & 0& 1\end{bmatrix}}
-	{\begin{bmatrix} x \\ y \\ z \end{bmatrix}}
-  \]
+# 	If \( \mathcal{X} \) and \(\mathcal{Y}\) are affine spaces, then every affine transformation
+# 	\(f\colon \mathcal{X}\to \mathcal{Y} \) is of the form \(\gv{x}\mapsto
+# 	\bv{M}\gv{x}+\gv{b}\) where \(\bv{M}\) is a linear transformation on the
+# 	space \( \mathcal{X}\),  \( \gv{x} \) is a vector in \( \mathcal{X} \), and \(
+# 	\gv{b} \) is a vector in \( \mathcal{Y} \).
 
-  \[
-  \Rightarrow x_{\mathcal{L}}\hat{\gv{d}_1} + y_{\mathcal{L}}\hat{\gv{d}_2} +
-  z_{\mathcal{L}}\hat{\gv{d}_3} = x\hat{i} + y\hat{j} + z\hat{k} = \gv{x} !
-  \]
-***                                                                  :B_note:
-	:PROPERTIES:
-	:BEAMER_env: note
-	:END:
-	- Again iterate that this is a passive (alias) transformation and so this is
-      the expected result.
-** Implementation of rotation as bases change
-   - We have seen that the action of frame rotation matrices correspond to a
-     bases change operation
-   - Let's implement these operations in our framework
-	 \[ R_{x}(\theta)={\begin{bmatrix}1&0&0\\0&\cos \theta &\sin \theta
-     \\0&-\sin \theta &\cos \theta \\\end{bmatrix}}\]
+# ** Affine transformations : Examples
+# *** Translations ( \( \bv{M} = \bv{0} \) and \( \gv{b} \neq \gv{0}\) )
+# 	#+CAPTION: Translation of entities, Wikimedia, CC4.0
+# 	#+ATTR_LATEX: :width 0.4\textwidth
+# 	[[file:images/translate.pdf]]
+# *** Translation *DEMO*
+# ** Linear transformations
+# *** Difference b/w linear and affine trans.                         :B_block:
+# 	:PROPERTIES:
+# 	:BEAMER_env: block
+# 	:END:
+# 	- Most of our interest lies in modeling soft filaments, for which we will be
+#       using only /linear transformations/
+# 	- In linear transformations, \( \gv{b} \equiv \gv{0} \) in vector space
+#       \(\mathcal{Y}\)
+# 	- We lose the ability to translate entities using linear transformations (
+#       zero must map to zero by definition)
+# ** But what are linear transformations?
+#    - We loosely define a linear transformation \( \gv{x} \to \bv{M}\gv{x} \) by a /matrix/
+#      ( \( \bv{M}\) ) that acts on the vector \( \gv{x} \in \mathcal{X}\), about
+#      \( \gv{0} \in \mathcal{X} \)
+#    - Check out the Wikipedia page on [[https://en.wikipedia.org/wiki/Matrix_(mathematics)][matrices]] and [[https://en.wikipedia.org/wiki/Rotation_matrix][matrix classes]] to see why they
+#      (matrices and linear transformations) are considered important.
+# ** Linear transformations : Examples[fn:1]
+# ***                                                                :B_column:
+# 	:PROPERTIES:
+# 	:BEAMER_env: column
+# 	:BEAMER_COL: 0.5
+# 	:END:
+# **** Identity
+# 	\[ \bv{M} = \begin{bmatrix}1&0&0\\0&1&0\\0&0&1\end{bmatrix} \]
+# 	#+ATTR_LATEX: :height 0.8\textwidth
+# 	[[file:images/ch_id.pdf]]
+# ***                                                                :B_column:
+# 	:PROPERTIES:
+# 	:BEAMER_env: column
+# 	:BEAMER_COL: 0.5
+# 	:END:
+# **** Reflection
+# 	\[ \bv{M} =\begin{bmatrix}-1&0&0\\0&1&0\\0&0&1\end{bmatrix} \]
+# 	#+ATTR_LATEX: :height 0.8\textwidth
+# 	[[file:images/ch_ref.pdf]]
 
-	 \[ R_{y}(\theta)={\begin{bmatrix}\cos \theta & 0 & -\sin \theta\\
-	 0&1&0 \\ \sin\theta & 0 & \cos \theta \\\end{bmatrix}} \]
+# ** Linear transformations : Examples
+# ***                                                                :B_column:
+# 	:PROPERTIES:
+# 	:BEAMER_env: column
+# 	:BEAMER_COL: 0.5
+# 	:END:
+# **** Scale
+# 	\[ \bv{M} =\begin{bmatrix}c_{x}=2&0&0\\0&c_{y}=1&0\\0&0&1\end{bmatrix} \]
+# 	#+ATTR_LATEX: :height 0.8\textwidth
+# 	[[file:images/ch_sc.pdf]]
+# ***                                                                :B_column:
+# 	:PROPERTIES:
+# 	:BEAMER_env: column
+# 	:BEAMER_COL: 0.5
+# 	:END:
+# **** Shear
+# 	\[ \bv{M} =\begin{bmatrix}1&c_{x}=0.5&0\\c_{y}=0&1&0\\0&0&1\end{bmatrix}\]
+# 	#+ATTR_LATEX: :height 0.8\textwidth
+# 	[[file:images/ch_sh.pdf]]
 
-	 \[R_{z}(\theta)={\begin{bmatrix}\cos \theta &\sin \theta &0\\-\sin
-	 \theta &\cos\theta &0\\0&0&1\\\end{bmatrix}} \]
-   - *ACTIVITY*
-** But what about arbitrary rotations?
-	- Rotations about arbitrary axes with arbitrary angles?
-***                                                                :B_column:
-	:PROPERTIES:
-	:BEAMER_env: column
-	:BEAMER_col: 0.6
-	:END:
-	 - Can we do compositions?
-	   - *Yes*, but not that intutive (means of rotation, intrinsic/extrinsic)
-	   - Not commutative (order matters) usually
-***                                                                :B_column:
-	:PROPERTIES:
-	:BEAMER_env: column
-	:BEAMER_col: 0.3
-	:END:
-	 #+ATTR_LATEX: :width 0.80\textwidth
-	 file:images/rotated_cube.jpeg
-***                                                         :B_ignoreheading:
-	:PROPERTIES:
-	:BEAMER_env: ignoreheading
-	:END:
-	 - Becomes even more complicated when we have frames depending on one another
-	   - But not a bad idea---robotics[fn:3]
-	 - *Idea*: If we know the linear bases transformation, we don't need to worry
-       about compositions etc.
-***                                                                  :B_note:
-	:PROPERTIES:
-	:BEAMER_env: note
-	:END:
-	- Mention that some means of rotation like quarternions are better suited,
-      but require more math and understanding.
-	- Mention Euler axis angle, euler roataions, quarternions
-** Let's reconsider what we know
-   - We know why \(  \gv{x}_{\mathcal{L}} = \bv{Q}\gv{x} \)
-   - We then need the *action* of \( \bv{Q} \) on \(\gv{x}\)
-   - But...
-	 - Do we know \( \bv{Q} \) ?
-	   - We need the basis \( \hat{\gv{d}}_j \)
-	 - Do we know \( \hat{\gv{d}}_j \)?
-	   - *No*
-   - We seek ways to obtain this basis \( \gv{d} \) and hence \(\bv{Q}\).
-   - We will see that we require some properties on \( \gv{d} \) to make \(
-		  \bv{Q} \) effect a rotation.
-** Obtaining \( \gv{d}, \bv{Q} \) : Properties
-   \[\bv{Q} =
-	 {\begin{bmatrix}
-	 \mbox{------}~\hat{\gv{d}}_1~\mbox{------} \\
-	 \mbox{------}~\hat{\gv{d}}_2~\mbox{------} \\
-	 \mbox{------}~\hat{\gv{d}}_3~\mbox{------} \\
-	 \end{bmatrix}}
-   \]
-*** \( \bv{Q}\)                                                     :B_block:
-	:PROPERTIES:
-	:BEAMER_env: block
-	:BEAMER_col: 0.47
-	:END:
-	+ Rows are unit vectors
-	+ Real, orthogonal matrix ( \( \bv{Q^T}\bv{Q} = \bv{Q}\bv{Q^T} = \bv{I} \) )
-	+ Eigenvalues are \( \lambda = {1, e^{\pm j \theta}}\)
-	+ Determinant \( = \prod_{i} \lambda_i = 1 \)
-*** \( \hat{\gv{d}} \)                                              :B_block:
-	:PROPERTIES:
-	:BEAMER_env: block
-	:BEAMER_col: 0.50
-	:END:
-	- \( \norm{\hat{\gv{d}_1}} = \norm{\hat{\gv{d}_2}} = 1 \)
-	- \( \hat{\gv{d}_1} \cdot \hat{\gv{d}_2} = 0 \)
-	- \( \hat{\gv{d}_1} \times \hat{\gv{d}_2} = \hat{\gv{d}_3}\)
-	- \therefore They form an orthonormal basis
-***                                                                  :B_note:
-	:PROPERTIES:
-	:BEAMER_env: note
-	:END:
-	- Motivate orthogonality by saying that the natural bases is orthogonal,
-      and so we want to preserve this in rotation (all axes rotates equally).
-      This also makes R^-1 = R^T
-	- By Gram-Schmidt theorem, we can always find an orthonormal bases given a
-      span of vectors
-	- Euler's rotation theorem: Express any roation as a single rotation about
-      an axis. Eigenvalues represent this. 1--> rotation axes. 2,3 are
-      orthogonal axes that simply has a rotation.
-	- Motivate determinant by volume. It tells expansino of a volume: 1 means
-      volume is preserved. Formulae for parallelopiped : \( u \cdot (v \times w)
-      \). They are symmetric relations.
-** Obtaining \( \gv{d}, \bv{Q} \) : Options[fn:4]
-***                                                                :B_column:
-	:PROPERTIES:
-	:BEAMER_env: column
-	:BEAMER_col: 0.6
-	:END:
-	- We only need the *action* of \( \bv{Q} \) on \(\gv{x}\)
-	- Some means/formalisms to achieve these are
-	  - Rotation matrices (gives \( \bv{Q} \) explicitly )
-	  - \(\spot<2>{\text{Euler axes and angle } \gv{r} = \theta \hat{\gv{e}} }\)
-	  - Euler rotations (precession, nutation, rotation)
-	  - Quaternions (\(w, \gv{r}\))
-	- (dis)Advantages are spread equally, although some are more equal than the others*
-***                                                                :B_column:
-	:PROPERTIES:
-	:BEAMER_env: column
-	:BEAMER_col: 0.4
-	:END:
-	#+CAPTION: Euler axis-angle
-	#+ATTR_LATEX: :width 0.45\textwidth
-	[[file:images/euler_aa.png]]
-	#+CAPTION: Euler rotations
-	#+ATTR_LATEX: :width 0.45\textwidth
-	[[file:images/euler_rot.pdf]]
+# ** Linear transformations : Examples
+# *** Rotation
+# 	#+begin_export latex
+# 	\begin{center}
+# 	\spot<2>{\( \bv{M} =\begin{bmatrix}\cos(\theta )&\sin(\theta )&0\\-\sin(\theta
+#    )&\cos(\theta )&0\\0&0&1\end{bmatrix} \text{with } \theta = \frac{\pi}{6}\)}
+# 	\end{center}
+# 	#+end_export
+#    # \[ \bv{M} =\begin{bmatrix}\cos(\theta )&\sin(\theta )&0\\-\sin(\theta
+#    # )&\cos(\theta )&0\\0&0&1\end{bmatrix} \text{with } \theta = \frac{\pi}{6}\]
+#    #+ATTR_LATEX: :height 0.5\textwidth
+# 	[[file:images/ch_rot.pdf]]
+# ** Rotations (includes reflections)
+#    - Generates new unit vectors, fundamentally changing the directions
+#      (eigenvectors) of further transformations
+#    - Does not scale the entity under consideration ( \( \abs{\lambda} \equiv  1
+#      \), more on this later...)
+# ** Frame rotations in two--dimensions
+#    Consider
+#    #+CAPTION: Rotation in two dimensions
+#    #+ATTR_LATEX: :width 0.45\textwidth
+#    file:images/cartesian_rotation.png
 
-** Rotations about fixed axis : Euler axis-angle
-*** Single rotation about an axis---\( \hat{\gv{e}} \) vector
-	- Axis : unit vector which remains unchanged by the rotation
-	- Note : Only two dofs, by normality condition
-	- Unique, for any given rotation, except for the sign
-*** Rotation through scalar \( \theta \)                            :B_block:
-	:PROPERTIES:
-	:BEAMER_env: block
-	:END:
-	- Unique, sign determined by axis \(\hat{\gv{e}} \)
-*** \( \hat{\gv{r}} = \theta \hat{\gv{e}} \)                        :B_block:
-	:PROPERTIES:
-	:BEAMER_env: block
-	:BEAMER_col: 0.6
-	:END:
-	- Called /Rotation vector/ or /Euler vector/
-***                                                                :B_column:
-	:PROPERTIES:
-	:BEAMER_env: column
-	:BEAMER_col: 0.3
-	:END:
-	#+CAPTION: Euler axis-angle
-	#+ATTR_LATEX: :width 0.45\textwidth
-	[[file:images/euler_axis.pdf]]
-** Rotations about fixed axis : Euler axis-angle
-*** Advantages
-	- Easy to understand/code up
-	- Convenient while dealing with rigid body motions
-	- Conversion to rotation matrices straightforward (and is so for all other
-      representations as well)
-*** Disadvantages
-	- Combining successive rotations not straightforward (and breaks vector addition)
-	- Corner cases when dealing with \( \theta = 0 \) and signs of \(
-      \hat{\gv{e}} \)
-** Rotation using Euler angles : Rodrigues formula
-*** Rodrigues formula
-	- Named after [[https://en.wikipedia.org/wiki/Olinde_Rodrigues][Olinde Rodrigues]]
-	- Is an efficient algorithm to rotate a vector in space, given \( \theta \)
-      and \( \hat{\gv{e}} \).
-	- Gives the exponential map that effects a transformation from the
-      axis-angle representation (our case!) to rotation matrices
-	- Basically gives us \( \bv{Q} \) given \( \theta \hat{\gv{e}} \).
-	\[ \mathbf {R} =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \]
-	where \( \mathbf{K}\) is the cross product matrix, discussed last class \(
-	\mathbf{K}\gv{v} = \hat{\gv{e}} \times \gv{v} \)
-** Rotation matrix from Rodrigues formula : structure and intuition
-	\[ \mathbf {R} =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \]
-   We need \( \bv{R} \) above to satisfy properties of a rotation matrix. Let's verify:
-   - \( \bv{R}(0) = \bv{I} \)
-   - \( \bv{R}(\theta)\bv{R}(\phi) = \bv{R}(\theta+\phi)\)
-   - \( \bv{R}\bv{R}^T = \bv{R}^T\bv{R} = \bv{I}\)
-   We note that this operator always exists and is unique for given axis-angle
-   (hence its form).
-***                                                                  :B_note:
-	:PROPERTIES:
-	:BEAMER_env: note
-	:END:
-	- Use k^4 = -k^2 in the rr^T thing
-	- Use k^T = -k.
-** Simplification using sympy
-   #+begin_src python :results output :exports both :eval never-export
-	 import sympy as sp
-	 from sympy.simplify.fu import TR8, TR9, TR10i
-	 x, y, k = sp.symbols('x y k')
-	 expr_x = 1 + sp.sin(x)*k + (1-sp.cos(x))*k**2
-	 expr_y = 1 + sp.sin(y)*k + (1-sp.cos(y))*k**2
-	 expr_n = sp.fu(expr_x * expr_y,
-					measure=lambda x: -x.count_ops())
-	 # expr = TR8(expr_x * expr_y)
-	 # print(TR9(expr))
-	 print(expr_n)
-   #+end_src
+#    \[ \begin{bmatrix} x^\prime \\ y^\prime \end{bmatrix}
+#    = \underbrace{\begin{bmatrix}\cos(\alpha )&\sin(\alpha )\\ -\sin(\alpha
+#    )&\cos(\alpha )\end{bmatrix}}_{\bv{R}} \begin{bmatrix} x\\ y\end{bmatrix}\]
+# ***                                                                  :B_note:
+# 	:PROPERTIES:
+# 	:BEAMER_env: note
+# 	:END:
+# 	Derive this thing in class.
+# ** Inverse rotations in two--dimensions
+#    Now consider the same picture, but we want to obtain \([x,y]^T\) from \( [
+#    x^\prime, y^\prime ]^T \) (the other way around).
 
-   #+RESULTS:
-   : k**4*cos(x)*cos(y) - 2*k**4*cos(x/2 - y/2)*cos(x/2 + y/2) + k**4 + 2*k**3*sin(x/2 + y/2)*cos(x/2 - y/2) - k**3*sin(x + y) + k**2*sin(x)*sin(y) - 2*k**2*cos(x/2 - y/2)*cos(x/2 + y/2) + 2*k**2 + 2*k*sin(x/2 + y/2)*cos(x/2 - y/2) + 1
+#    - Physically, this is just a rotation of \( - \alpha \) counter-clockwise (or
+#      \( \alpha \) clockwise). That means
+#    \[ \begin{bmatrix} x\\ y\end{bmatrix}
+#    = \begin{bmatrix}\cos(\alpha )& -\sin(\alpha )\\ \sin(\alpha
+#    )& \cos(\alpha )\end{bmatrix}  \begin{bmatrix} x^\prime \\ y^\prime
+#    \end{bmatrix} \]
+#    - Mathematically, if \( \gv{x}^\prime= \bv{R} \gv{x} \), then we know \(
+#      \gv{x}= \bv{R}^{-1} \gv{x}^\prime \), provided \( \bv{R}^{-1}\) exists
+#      (which does).
+#    - Then notice that
+#    \[ \bv{R}^{-1} = \begin{bmatrix}\cos(\alpha )& -\sin(\alpha )\\ \sin(\alpha
+#    )& \cos(\alpha )\end{bmatrix}  = \bv{R}^T ! \]
+#    - We will see later why holds for *all* rotation matrices...
+# ** Frame rotations in three--dimensions
+#    #+CAPTION: Rotation in three dimensions, Wikimedia CC1.0
+#    #+ATTR_LATEX: :width 0.45\textwidth
+#    [[file:images/cartesian_rot_3D.pdf]]
+#    is a natural extension of 2D results...
+# ** Beware!
+# *** Be wary about alias (passive) or alibi (active) transformations
+# ***                                                                :B_column:
+# 	:PROPERTIES:
+# 	:BEAMER_env: column
+# 	:BEAMER_col: 0.55
+# 	:END:
+# **** Alias transformations                                     :B_definition:
+# 	 :PROPERTIES:
+# 	 :BEAMER_env: definition
+# 	 :END:
+# 	 Involves rotation of the coordinate system or frame
+# 	 (change in basis)
+# **** Alibi transformations                                           :B_definition:
+# 	 :PROPERTIES:
+# 	 :BEAMER_env: definition
+# 	 :END:
+# 	 Involves rotation of the entities within the same
+# 	 frame (change in entity)
+# ***                                                                :B_column:
+# 	:PROPERTIES:
+# 	:BEAMER_env: column
+# 	:BEAMER_col: 0.5
+# 	:END:
+#    #+CAPTION: Alias-Alibi transformations, Wikimedia CC3.0
+#    #+ATTR_LATEX: :width 1.00\textwidth
+# 	[[file:images/alias_alibi.png]]
+# ***                                                         :B_ignoreheading:
+# 	:PROPERTIES:
+# 	:BEAMER_env: ignoreheading
+# 	:END:
+# 	Both are equally valid ways of representing rotations---in this class
+# 	however, we focus on alias transformations.
+# ***                                                                  :B_note:
+# 	:PROPERTIES:
+# 	:BEAMER_env: note
+# 	:END:
+# 	- Affirm that the entity does not matter. Show this for a vector or a point.
+#       Beauty of affine transformations.
+# 	- To change the formulas for passive rotations (or find reverse active
+#       rotation), transpose the matrices (then each matrix transforms the initial
+#       coordinates of a vector remaining fixed to the coordinates of the same
+#       vector measured in the rotated reference system; same rotation axis, same
+#       angles, but now the coordinate system rotates, rather than the vector).
+# ** Difference in perspectives[fn:2]
+# ***                                                             :B_quotation:
+# 	:PROPERTIES:
+# 	:BEAMER_env: quotation
+# 	:END:
+# 	" Analyzing rotation demands awareness of your desired perspective. You can rotate an object, while you stay still, or you can keep the object
+# 	fixed while you rotate yourself. It is important to be aware of which of these
+# 	perspectives applies for your problem of interest. The distinction between
+# 	these fundamentally different transformations goes beyond one being the
+# 	same as the other with an opposite rotation angle. "
+# ** TODO Frame rotation as a change in basis
+# *** More concretely
+# 	If \( \mathcal{B} \) and \( \mathcal{B}^\prime \) are two (different) bases
+# 	\( \in \mathbb{R}^n \)
+# 	+ Alibi : Change in entity \( [\gv{p}]_{\mathcal{B}} \to
+#       [\gv{p}^\prime]_{\mathcal{B}} \) given by
+#   \[ [\gv{p}^\prime]_{\mathcal{B}} = [\bv{M}]_{\mathcal{B} \to \mathcal{B}}
+#   [\gv{p}]_{\mathcal{B}} \]
+# 	+ Alias : Change in basis \( [\gv{p}]_{\mathcal{B}} \to
+#       [\gv{p}]_{\mathcal{B}^\prime} \)
+#   \[ [\gv{p}]_{\mathcal{B}^\prime} = [\bv{M}]_{\mathcal{B} \to \mathcal{B}^\prime}
+#   [\gv{p}]_{\mathcal{B}} \]
+# 	+ In our soft filament framework, \( \mathcal{B}^\prime \equiv \mathcal{L}
+#       \) and  \( \mathcal{B} \equiv \) lab frame. \( \bv{Q} \) is then the
+#       basis transformation matrix (corresponding to pure rotation of the
+#       orthonormal bases)
+# ** Frame rotation---example
+# ***                                                                :B_column:
+# 	:PROPERTIES:
+# 	:BEAMER_env: column
+# 	:BEAMER_col: 0.5
+# 	:END:
+# 	 #+begin_export latex
+# 	 \tdplotsetmaincoords{60}{100}
+# 	 \begin{center}
+# 		\begin{tikzpicture}[scale=2, tdplot_main_coords]
+# 		\draw[thick,->, color=scarlet] (0,0,0) -- (1,0,0) node[anchor=north east]{$x$};
+# 		\draw[thick,->, color=shamrockgreen] (0,0,0) -- (0,1,0) node[anchor=north west]{$y$};
+# 		\draw[thick,->, color=royalblue] (0,0,0) -- (0,0,1) node[anchor=south]{$z$};
+# 		\end{tikzpicture}
+# 	 \end{center}
+# 	 #+end_export
+# ***                                                                :B_column:
+# 	:PROPERTIES:
+# 	:BEAMER_env: column
+# 	:BEAMER_col: 0.5
+# 	:END:
+# 	 #+begin_export latex
+# 	 \tdplotsetmaincoords{60}{100}
+# 	 \begin{center}
+# 		\begin{tikzpicture}[scale=2, tdplot_main_coords]
+# 		\draw[dashed,->,line width= 1.1pt] (0,0,0) -- (1,0,0) node[anchor=north east]{$x$};
+# 		\draw[dashed,->,line width= 1.1pt] (0,0,0) -- (0,1,0) node[anchor=north west]{$y$};
+# 		\draw[dashed,->,line width= 1.1pt] (0,0,0) -- (0,0,1) node[anchor=south west]{$z$};
 
-** Rotation using Euler angles : Rodrigues formula (geometry)
-   But where did it come from?
-   *GEOMETRY* (part I)
-	#+CAPTION: Geometrical construction for deriving the Rodrigues rotation formula
-	#+ATTR_LATEX: :width 0.45\textwidth
-	[[file:images/rodrigues.pdf]]
-\[ \gv{v}_{\mathrm {rot} } =\cos \theta \,\gv{v} +(1-\cos \theta
-)(\gv {k} \cdot \gv {v} )\gv {k} +\sin \theta \,\gv {k} \times
-\gv {v} \]
-** Rotation using Euler angles : Rodrigues formula (geometry)
-   *GEOMETRY* (part II)
-   Given
-  \[ \gv {v}_{\mathrm {rot} } =\cos \theta \,\gv {v} +(1-\cos \theta
-  )(\hat{\gv {k}} \cdot {\gv{v}} ) \hat{\gv{k}} +\sin \theta \,\hat{\gv{k}} \times
-  \gv {v} \]
+# 		\coordinate (Shift) at (0,0,0);
+# 		\tdplotsetrotatedcoords{0}{0}{90}
+# 		\tdplotsetrotatedcoordsorigin{(Shift)}
 
-  With \( \mathbf{K}\gv{v} = \hat{\gv{k}} \times \gv{v} \), we have \(\mathbf{K}\left(
-  \mathbf{K} \gv{v}\right) =  \hat{\gv{k}} \times \hat{\gv{k}} \times \gv{v}
-  = (\hat{\gv{k}} \cdot \gv{v}) \hat{\gv{k}} - (\hat{\gv{k}} \cdot \hat{\gv{k}})
-  \hat{v} \) (Using vector triple product).
+# 		\draw[thick,color=scarlet,tdplot_rotated_coords,->] (0,0,0)
+# 		-- (1,0,0) node[anchor=south east]{$x’$};
+# 		\draw[thick,color=shamrockgreen,tdplot_rotated_coords,->] (0,0,0)
+# 		-- (0,1,0) node[anchor=west]{$y’$};
+# 		\draw[thick,color=royalblue,tdplot_rotated_coords,->] (0,0,0)
+# 		-- (0,0,1) node[anchor=south east]{$z’$};
+# 		\end{tikzpicture}
+# 	 \end{center}
+# 	 #+end_export
+# ***                                                         :B_ignoreheading:
+# 	:PROPERTIES:
+# 	:BEAMER_env: ignoreheading
+# 	:END:
+# 	- Represent \( (x-y-z) \) axis with a basis \( \mathcal{E}\) of unit vectors \( \hat{\gv{e}_1}, \hat{\gv{e}_2}, \hat{\gv{e}_3}\)
+# 	- Represent \( (x'-y'-z') \) axis with a basis \( \mathcal{D} \) of unit vectors \( \hat{\gv{d}_1}, \hat{\gv{d}_2}, \hat{\gv{d}_3}\)
+# 	- \( \mathcal{E} \to \mathcal{D} \)?
+# 	- Note : rotation of \( \ang{90} \) about an invariant \( z' = z \) axis
+# ** Frame rotation---example contd.
+#   \[ {\begin{bmatrix} x^\prime \\ y^\prime \\ z^\prime\end{bmatrix}} =
+#   \spot{[\bv{M}]_{\mathcal{E} \to \mathcal{D}}}
+#   {\begin{bmatrix} x \\ y \\ z \end{bmatrix}}
+#   \]
+#    - We begin by noticing that \( \begin{bmatrix} x^\prime , y^\prime , z^\prime
+#      \end{bmatrix} = \begin{bmatrix} y , -x , z \end{bmatrix}\) (from figure). Then
+#   \[ {\begin{bmatrix} x^\prime \\ y^\prime \\ z^\prime\end{bmatrix}} =
+#   {\begin{bmatrix} 0 & 1 & 0 \\ -1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}}
+#   {\begin{bmatrix} x \\ y \\ z \end{bmatrix}}
+#   \]
+#   \[\Rightarrow {\begin{bmatrix} x^\prime \\ y^\prime \\ z^\prime\end{bmatrix}} =
+#   {\begin{bmatrix} \cos(\ang{90}) & \sin(\ang{90}) & 0 \\ -\sin(\ang{90}) &
+#   \cos(\ang{90}) & 0 \\ 0 & 0 & 1 \end{bmatrix}}
+#   {\begin{bmatrix} x \\ y \\ z \end{bmatrix}}
+#   \]
+# ** Generalizing frame rotations as a basis change
+#    - But also notice with the given bases that
+#   \[{\begin{bmatrix} x^\prime \\ y^\prime \\ z^\prime\end{bmatrix}_{\mathcal{D}}} =
+#   \spot<2>{
+#   \underbrace{\begin{bmatrix}
+#   \hat{\gv{d}}_1 \cdot \hat{\gv{e}}_1 & \hat{\gv{d}}_1 \cdot
+#   \hat{\gv{e}}_2 & \hat{\gv{d}}_1 \cdot \hat{\gv{e}}_3 \\
+#   \hat{\gv{d}}_2 \cdot \hat{\gv{e}}_1 & \hat{\gv{d}}_2 \cdot
+#   \hat{\gv{e}}_2 & \hat{\gv{d}}_2 \cdot \hat{\gv{e}}_3 \\
+#   \hat{\gv{d}}_3 \cdot \hat{\gv{e}}_1 & \hat{\gv{d}}_3 \cdot
+#   \hat{\gv{e}}_2 & \hat{\gv{d}}_3 \cdot \hat{\gv{e}}_3
+#   \end{bmatrix}}_{[\bv{M}]_{\mathcal{E} \to \mathcal{D}}, \text{ independent of
+#   } \mathbf{x}}
+#   }
+#   {\begin{bmatrix} x \\ y \\ z \end{bmatrix}_{\mathcal{E}}}
+#   \]
+# *** Soft filament framework                                         :B_block:
+# 	:PROPERTIES:
+# 	:BEAMER_env: block
+# 	:BEAMER_ACT: <2->
+# 	:END:
+#    - Describe lab frame, \( \mathcal{E} \), by natural bases \(\hat{i}, \hat{j}, \hat{k} \).
+#    - Describe material (Lagrangian) frame, \( \mathcal{D} \), by orthonormal
+#      vectors \(\hat{\gv{d}_1}, \hat{\gv{d}_2}, \hat{\gv{d}_3} \) (coordinates wrt
+#      natural bases). Then
+#    \[{\begin{bmatrix} x_{\mathcal{L}} \\ y_{\mathcal{L}} \\ z_{\mathcal{L}} \end{bmatrix}_{\mathcal{D}}} =
+# 	 \underbrace{\begin{bmatrix}
+# 	 \mbox{------}~\hat{\gv{d}}_1~\mbox{------} \\
+# 	 \mbox{------}~\hat{\gv{d}}_2~\mbox{------} \\
+# 	 \mbox{------}~\hat{\gv{d}}_3~\mbox{------} \\
+# 	 \end{bmatrix}}_{\bv{Q}}
+# 	 {\begin{bmatrix} x \\ y \\ z \end{bmatrix}_{\mathcal{E}}}
+#    \]
+# ***                                                                  :B_note:
+# 	:PROPERTIES:
+# 	:BEAMER_env: note
+# 	:END:
+# 	- Derive the \( \gv{d} \cdot \gv{e} \) relations in class.
+# ** Generalizing frame rotations as a basis change
+#    Taking it one step further we arrive at the conclusion,
+#   \[
+# 	\underbrace{\begin{bmatrix}
+# 	\mbox{|} & \mbox{|}& \mbox{|}\\
+# 	\hat{\gv{d}_1} & \hat{\gv{d}_2} & \hat{\gv{d}_3} \\
+# 	\mbox{|} & \mbox{|}& \mbox{|}\\
+# 	\end{bmatrix}}_{\bv{Q}^{-1} = \bv{Q}^T}
+# 	{\begin{bmatrix} x_{\mathcal{L}} \\ y_{\mathcal{L}} \\ z_{\mathcal{L}}
+# 	\end{bmatrix}}
+# 	=
+# 	{\begin{bmatrix}1 & 0 & 0 \\ 0 & 1 & 0 \\0 & 0& 1\end{bmatrix}}
+# 	{\begin{bmatrix} x \\ y \\ z \end{bmatrix}}
+#   \]
 
-  Substitute in the original equation,
-  \[  \gv{v}_{\mathrm {rot} }=\gv {v} +(\sin \theta )\gv {K} \gv {v}
-  +(1-\cos \theta )\gv {K} ^{2}\gv {v} \,,\quad \|\gv {K} \|_{2}=1
-  \]
+#   \[
+#   \Rightarrow x_{\mathcal{L}}\hat{\gv{d}_1} + y_{\mathcal{L}}\hat{\gv{d}_2} +
+#   z_{\mathcal{L}}\hat{\gv{d}_3} = x\hat{i} + y\hat{j} + z\hat{k} = \gv{x} !
+#   \]
+# ***                                                                  :B_note:
+# 	:PROPERTIES:
+# 	:BEAMER_env: note
+# 	:END:
+# 	- Again iterate that this is a passive (alias) transformation and so this is
+#       the expected result.
+# ** Implementation of rotation as bases change
+#    - We have seen that the action of frame rotation matrices correspond to a
+#      bases change operation
+#    - Let's implement these operations in our framework
+# 	 \[ R_{x}(\theta)={\begin{bmatrix}1&0&0\\0&\cos \theta &\sin \theta
+#      \\0&-\sin \theta &\cos \theta \\\end{bmatrix}}\]
 
-  Now factor \( \gv{v} \) from the equation to get \( \gv{v}_{\mathrm {rot} } = \mathbf{R}\gv{v}\)
-** Digression: ODEs
-   - To further understand the Rodrigues rotation formula (and how it relates
-     to solving \( \frac{\partial \bv{d}_j}{\partial t} = \omega \times \bv{d}_j
-     \) ), we digress a bit and deal with ordinary differential equations (and
-     their solutions)
-   - The next lecture also deals with the same issues (time-stepping and
-     numerical stability) and the fundamentals are the same.
-*** Solve the following ODE                                       :B_example:
-	:PROPERTIES:
-	:BEAMER_ACT: <1->
-	:BEAMER_env: example
-	:END:
-	 \[ \frac{dx}{dt} = 2x \]
-*** We can't!                                                  :B_alertblock:
-	:PROPERTIES:
-	:BEAMER_env: alertblock
-	:BEAMER_ACT: <2->
-	:END:
-	 - Uniqueness and existence?
-	 - Initial conditions?
-** Digression: simple ODEs
-*** Solve the following ODE                                       :B_example:
-	:PROPERTIES:
-	:BEAMER_env: example
-	:END:
-	 \[ \frac{dx}{dt} = 2x \quad x(0) = 1 \]
-*** We can!                                                         :B_block:
-	:PROPERTIES:
-	:BEAMER_env: block
-	:END:
-	\[ x(t) = e^{2t}\]
-** Digression: system of simple ODEs
-*** Solve the following ODE                                       :B_example:
-	:PROPERTIES:
-	:BEAMER_env: example
-	:END:
-	 \[ \begin{bmatrix}\dot{x} \\ \dot{y} \end{bmatrix} =
-	 \begin{bmatrix} 5 & 0 \\ 0 & 3 \end{bmatrix} \cdot
-	 \begin{bmatrix}{x} \\ {y} \end{bmatrix} \quad x(0) = 1, y(0) = 2\]
-*** We can solve this too                                           :B_block:
-	:PROPERTIES:
-	:BEAMER_env: block
-	:END:
-	\[ x(t) = e^{5t} \quad y(t) = 2e^{3t} \]
+# 	 \[ R_{y}(\theta)={\begin{bmatrix}\cos \theta & 0 & -\sin \theta\\
+# 	 0&1&0 \\ \sin\theta & 0 & \cos \theta \\\end{bmatrix}} \]
 
-	More importantly,
-	\[ \gv{x}(t) = e^{\bv{A}t}\gv{x}(0)\]
-***                                                                  :B_note:
-	:PROPERTIES:
-	:BEAMER_env: note
-	:END:
-	- Explain matrix exponential to these dudes
-** Digression: changing it up a bit
-*** Solve the following ODE                                       :B_example:
-	:PROPERTIES:
-	:BEAMER_env: example
-	:END:
-	 \[ \begin{bmatrix}\dot{x} \\ \dot{y} \end{bmatrix} =
-	 \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix} \cdot
-	 \begin{bmatrix}{x} \\ {y} \end{bmatrix} \quad x(0) = 1, y(0) = 0\]
-*** We can solve this too!                                          :B_block:
-	:PROPERTIES:
-	:BEAMER_env: block
-	:BEAMER_ACT: <2->
-	:END:
-	\[ x(t) = cos{t} \quad y(t) = \sin{t} \]
-	*OR*
-	\[ x(\theta) = cos{\theta} \quad y(\theta) = \sin{\theta} \]
-*** Matrix exponential                                         :B_alertblock:
-	:PROPERTIES:
-	:BEAMER_env: alertblock
-	:BEAMER_ACT: <3->
-	:END:
-	We still retain \[ \gv{x}(\theta) = e^{\bv{A}\theta}\gv{x}(0) \]
-***                                                                  :B_note:
-	:PROPERTIES:
-	:BEAMER_env: note
-	:END:
-	- Use Hamiltonian. That is dy/dx = x/y and then integrate
-** Digression: changing it up a bit
-*** Solve the following ODE                                       :B_example:
-	:PROPERTIES:
-	:BEAMER_env: example
-	:END:
-	 \[ \begin{bmatrix}\dot{x} \\ \dot{y} \end{bmatrix} =
-	 \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix} \cdot
-	 \begin{bmatrix}{x} \\ {y} \end{bmatrix} \quad x(0) = 1, y(0) = 0\]
-*** What changed the solutions from exponentials to trigonometric terms? :B_block:
-	:PROPERTIES:
-	:BEAMER_env: block
-	:END:
-	- The skew-symmetry of the matrix!
-	- More importantly, a skew-symmetric matrix has a pair of imaginary
-      eigenvalues \( \pm j \theta \)
-	- We know \( \mathrm{Re}{(e^{j \theta})} = \cos(\theta) \), which is exactly
-      what we see...
-	- *IDEA* : Matrix exponentials can also be used to perform rotations!
-	- Then, can you connect it back to why \( \frac{\partial \bv{d}_j}{\partial t} = \omega \times \bv{d}_j
-     \) performs a rotation?
-** Rotation using Euler angles : Rodrigues formula (algebra)
-   With \( \mathbf{K}\gv{v} = \hat{\gv{k}} \times \gv{v} \), we have
-\[ \bv{R}=\exp(\theta \bv {K} )=\sum _{k=0}^{\infty }{\frac {(\theta \bv
-{K} )^{k}}{k!}}= \bv{I} + \theta \bv {K} + {\frac {1}{2!}}(\theta \bv {K}
-)^{2} + {\frac {1}{3!}}(\theta \bv {K} )^{3} + \cdots  \]
+# 	 \[R_{z}(\theta)={\begin{bmatrix}\cos \theta &\sin \theta &0\\-\sin
+# 	 \theta &\cos\theta &0\\0&0&1\\\end{bmatrix}} \]
+#    - *ACTIVITY*
+# ** But what about arbitrary rotations?
+# 	- Rotations about arbitrary axes with arbitrary angles?
+# ***                                                                :B_column:
+# 	:PROPERTIES:
+# 	:BEAMER_env: column
+# 	:BEAMER_col: 0.6
+# 	:END:
+# 	 - Can we do compositions?
+# 	   - *Yes*, but not that intutive (means of rotation, intrinsic/extrinsic)
+# 	   - Not commutative (order matters) usually
+# ***                                                                :B_column:
+# 	:PROPERTIES:
+# 	:BEAMER_env: column
+# 	:BEAMER_col: 0.3
+# 	:END:
+# 	 #+ATTR_LATEX: :width 0.80\textwidth
+# 	 file:images/rotated_cube.jpeg
+# ***                                                         :B_ignoreheading:
+# 	:PROPERTIES:
+# 	:BEAMER_env: ignoreheading
+# 	:END:
+# 	 - Becomes even more complicated when we have frames depending on one another
+# 	   - But not a bad idea---robotics[fn:3]
+# 	 - *Idea*: If we know the linear bases transformation, we don't need to worry
+#        about compositions etc.
+# ***                                                                  :B_note:
+# 	:PROPERTIES:
+# 	:BEAMER_env: note
+# 	:END:
+# 	- Mention that some means of rotation like quarternions are better suited,
+#       but require more math and understanding.
+# 	- Mention Euler axis angle, euler roataions, quarternions
+# ** Let's reconsider what we know
+#    - We know why \(  \gv{x}_{\mathcal{L}} = \bv{Q}\gv{x} \)
+#    - We then need the *action* of \( \bv{Q} \) on \(\gv{x}\)
+#    - But...
+# 	 - Do we know \( \bv{Q} \) ?
+# 	   - We need the basis \( \hat{\gv{d}}_j \)
+# 	 - Do we know \( \hat{\gv{d}}_j \)?
+# 	   - *No*
+#    - We seek ways to obtain this basis \( \gv{d} \) and hence \(\bv{Q}\).
+#    - We will see that we require some properties on \( \gv{d} \) to make \(
+# 		  \bv{Q} \) effect a rotation.
+# ** Obtaining \( \gv{d}, \bv{Q} \) : Properties
+#    \[\bv{Q} =
+# 	 {\begin{bmatrix}
+# 	 \mbox{------}~\hat{\gv{d}}_1~\mbox{------} \\
+# 	 \mbox{------}~\hat{\gv{d}}_2~\mbox{------} \\
+# 	 \mbox{------}~\hat{\gv{d}}_3~\mbox{------} \\
+# 	 \end{bmatrix}}
+#    \]
+# *** \( \bv{Q}\)                                                     :B_block:
+# 	:PROPERTIES:
+# 	:BEAMER_env: block
+# 	:BEAMER_col: 0.47
+# 	:END:
+# 	+ Rows are unit vectors
+# 	+ Real, orthogonal matrix ( \( \bv{Q^T}\bv{Q} = \bv{Q}\bv{Q^T} = \bv{I} \) )
+# 	+ Eigenvalues are \( \lambda = {1, e^{\pm j \theta}}\)
+# 	+ Determinant \( = \prod_{i} \lambda_i = 1 \)
+# *** \( \hat{\gv{d}} \)                                              :B_block:
+# 	:PROPERTIES:
+# 	:BEAMER_env: block
+# 	:BEAMER_col: 0.50
+# 	:END:
+# 	- \( \norm{\hat{\gv{d}_1}} = \norm{\hat{\gv{d}_2}} = 1 \)
+# 	- \( \hat{\gv{d}_1} \cdot \hat{\gv{d}_2} = 0 \)
+# 	- \( \hat{\gv{d}_1} \times \hat{\gv{d}_2} = \hat{\gv{d}_3}\)
+# 	- \therefore They form an orthonormal basis
+# ***                                                                  :B_note:
+# 	:PROPERTIES:
+# 	:BEAMER_env: note
+# 	:END:
+# 	- Motivate orthogonality by saying that the natural bases is orthogonal,
+#       and so we want to preserve this in rotation (all axes rotates equally).
+#       This also makes R^-1 = R^T
+# 	- By Gram-Schmidt theorem, we can always find an orthonormal bases given a
+#       span of vectors
+# 	- Euler's rotation theorem: Express any roation as a single rotation about
+#       an axis. Eigenvalues represent this. 1--> rotation axes. 2,3 are
+#       orthogonal axes that simply has a rotation.
+# 	- Motivate determinant by volume. It tells expansino of a volume: 1 means
+#       volume is preserved. Formulae for parallelopiped : \( u \cdot (v \times w)
+#       \). They are symmetric relations.
+# ** Obtaining \( \gv{d}, \bv{Q} \) : Options[fn:4]
+# ***                                                                :B_column:
+# 	:PROPERTIES:
+# 	:BEAMER_env: column
+# 	:BEAMER_col: 0.6
+# 	:END:
+# 	- We only need the *action* of \( \bv{Q} \) on \(\gv{x}\)
+# 	- Some means/formalisms to achieve these are
+# 	  - Rotation matrices (gives \( \bv{Q} \) explicitly )
+# 	  - \(\spot<2>{\text{Euler axes and angle } \gv{r} = \theta \hat{\gv{e}} }\)
+# 	  - Euler rotations (precession, nutation, rotation)
+# 	  - Quaternions (\(w, \gv{r}\))
+# 	- (dis)Advantages are spread equally, although some are more equal than the others*
+# ***                                                                :B_column:
+# 	:PROPERTIES:
+# 	:BEAMER_env: column
+# 	:BEAMER_col: 0.4
+# 	:END:
+# 	#+CAPTION: Euler axis-angle
+# 	#+ATTR_LATEX: :width 0.45\textwidth
+# 	[[file:images/euler_aa.png]]
+# 	#+CAPTION: Euler rotations
+# 	#+ATTR_LATEX: :width 0.45\textwidth
+# 	[[file:images/euler_rot.pdf]]
 
-  Because of skew-symmetry and orthogonality, by Cayley-Hamilton theorem we have, \(
-  \mathbf {K} ^{3}=-\mathbf {K}, \mathbf {K}^{4}=-\mathbf{K}^2,\mathbf
-  {K}^{5}=\mathbf{K},\mathbf{K}^{6}=\mathbf{K}^2
-  \).
+# ** Rotations about fixed axis : Euler axis-angle
+# *** Single rotation about an axis---\( \hat{\gv{e}} \) vector
+# 	- Axis : unit vector which remains unchanged by the rotation
+# 	- Note : Only two dofs, by normality condition
+# 	- Unique, for any given rotation, except for the sign
+# *** Rotation through scalar \( \theta \)                            :B_block:
+# 	:PROPERTIES:
+# 	:BEAMER_env: block
+# 	:END:
+# 	- Unique, sign determined by axis \(\hat{\gv{e}} \)
+# *** \( \hat{\gv{r}} = \theta \hat{\gv{e}} \)                        :B_block:
+# 	:PROPERTIES:
+# 	:BEAMER_env: block
+# 	:BEAMER_col: 0.6
+# 	:END:
+# 	- Called /Rotation vector/ or /Euler vector/
+# ***                                                                :B_column:
+# 	:PROPERTIES:
+# 	:BEAMER_env: column
+# 	:BEAMER_col: 0.3
+# 	:END:
+# 	#+CAPTION: Euler axis-angle
+# 	#+ATTR_LATEX: :width 0.45\textwidth
+# 	[[file:images/euler_axis.pdf]]
+# ** Rotations about fixed axis : Euler axis-angle
+# *** Advantages
+# 	- Easy to understand/code up
+# 	- Convenient while dealing with rigid body motions
+# 	- Conversion to rotation matrices straightforward (and is so for all other
+#       representations as well)
+# *** Disadvantages
+# 	- Combining successive rotations not straightforward (and breaks vector addition)
+# 	- Corner cases when dealing with \( \theta = 0 \) and signs of \(
+#       \hat{\gv{e}} \)
+# ** Rotation using Euler angles : Rodrigues formula
+# *** Rodrigues formula
+# 	- Named after [[https://en.wikipedia.org/wiki/Olinde_Rodrigues][Olinde Rodrigues]]
+# 	- Is an efficient algorithm to rotate a vector in space, given \( \theta \)
+#       and \( \hat{\gv{e}} \).
+# 	- Gives the exponential map that effects a transformation from the
+#       axis-angle representation (our case!) to rotation matrices
+# 	- Basically gives us \( \bv{Q} \) given \( \theta \hat{\gv{e}} \).
+# 	\[ \mathbf {R} =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \]
+# 	where \( \mathbf{K}\) is the cross product matrix, discussed last class \(
+# 	\mathbf{K}\gv{v} = \hat{\gv{e}} \times \gv{v} \)
+# ** Rotation matrix from Rodrigues formula : structure and intuition
+# 	\[ \mathbf {R} =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \]
+#    We need \( \bv{R} \) above to satisfy properties of a rotation matrix. Let's verify:
+#    - \( \bv{R}(0) = \bv{I} \)
+#    - \( \bv{R}(\theta)\bv{R}(\phi) = \bv{R}(\theta+\phi)\)
+#    - \( \bv{R}\bv{R}^T = \bv{R}^T\bv{R} = \bv{I}\)
+#    We note that this operator always exists and is unique for given axis-angle
+#    (hence its form).
+# ***                                                                  :B_note:
+# 	:PROPERTIES:
+# 	:BEAMER_env: note
+# 	:END:
+# 	- Use k^4 = -k^2 in the rr^T thing
+# 	- Use k^T = -k.
+# ** Simplification using sympy
+#    #+begin_src python :results output :exports both :eval never-export
+# 	 import sympy as sp
+# 	 from sympy.simplify.fu import TR8, TR9, TR10i
+# 	 x, y, k = sp.symbols('x y k')
+# 	 expr_x = 1 + sp.sin(x)*k + (1-sp.cos(x))*k**2
+# 	 expr_y = 1 + sp.sin(y)*k + (1-sp.cos(y))*k**2
+# 	 expr_n = sp.fu(expr_x * expr_y,
+# 					measure=lambda x: -x.count_ops())
+# 	 # expr = TR8(expr_x * expr_y)
+# 	 # print(TR9(expr))
+# 	 print(expr_n)
+#    #+end_src
 
-  With this cyclic pattern continuing for \( k \to \infty \), we have
-  \(
-  \bv{R}=\bv{I}+\left(\theta -{\frac {\theta ^{3}}{3!}}+{\frac {\theta
-  ^{5}}{5!}}-\cdots \right)\mathbf{K} +\left({\frac {\theta ^{2}}{2!}}-{\frac
-  {\theta ^{4}}{4!}} + {\frac {\theta ^{6}}{6!}}-\cdots \right) \mathbf{K} ^{2}
-  \)
+#    #+RESULTS:
+#    : k**4*cos(x)*cos(y) - 2*k**4*cos(x/2 - y/2)*cos(x/2 + y/2) + k**4 + 2*k**3*sin(x/2 + y/2)*cos(x/2 - y/2) - k**3*sin(x + y) + k**2*sin(x)*sin(y) - 2*k**2*cos(x/2 - y/2)*cos(x/2 + y/2) + 2*k**2 + 2*k*sin(x/2 + y/2)*cos(x/2 - y/2) + 1
 
-  or equivalently
+# ** Rotation using Euler angles : Rodrigues formula (geometry)
+#    But where did it come from?
+#    *GEOMETRY* (part I)
+# 	#+CAPTION: Geometrical construction for deriving the Rodrigues rotation formula
+# 	#+ATTR_LATEX: :width 0.45\textwidth
+# 	[[file:images/rodrigues.pdf]]
+# \[ \gv{v}_{\mathrm {rot} } =\cos \theta \,\gv{v} +(1-\cos \theta
+# )(\gv {k} \cdot \gv {v} )\gv {k} +\sin \theta \,\gv {k} \times
+# \gv {v} \]
+# ** Rotation using Euler angles : Rodrigues formula (geometry)
+#    *GEOMETRY* (part II)
+#    Given
+#   \[ \gv {v}_{\mathrm {rot} } =\cos \theta \,\gv {v} +(1-\cos \theta
+#   )(\hat{\gv {k}} \cdot {\gv{v}} ) \hat{\gv{k}} +\sin \theta \,\hat{\gv{k}} \times
+#   \gv {v} \]
 
-  \( \mathbf {R} =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \)
-** Rotation : Rodrigues formula implementation
-   - We have seen how the matrix exponential can give rise to rotation.
-   - Let's implement this operation in our framework
-   \[ \mathbf {R} =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \]
-   , \( \bv{K} \) being the now-familiar skew-symmetric matrix having vector elements
-   \[ \mathbf {K} = \begin{bmatrix}\,\,0&\!-k_{3}&\,\,\,k_{2}\\\,\,\,k_{3}&0&\!-k_{1}\\\!-k_{2}&\,\,k_{1}&\,\,0\end{bmatrix}
-   \]
-   - *ACTIVITY*
-** Rotation : Rodrigues formula IRL
-   - In mechanics, frame rotations are omnipresent
-   - One familiar real life example is when an elastic rod experiences a
-     torsional force
-	#+CAPTION: Euler rotations
-	#+ATTR_LATEX: :width 0.45\textwidth
-	[[file:images/twisted_bar.png]]
-   - Let's see this in our framework too...
-   - *DEMO*
-   - It was possible to code the frames up that way (linearly), because of the
-     spatial rate of change of the frame angle.
-   - *Curvature*
-** Rodrigues formula : The inverse operator
-*** What about the inverse operation?
-	Given the rotation matrix \( \bv{R}\)
-	  - Identify \( \theta \)
-	  - Identify \( \hat{\gv{e}}\), the axis
-*** Is it useful?
-	Very. Especially when:
-	- computing the angle by which two frames differ (especially in graphics)
-	- there are governing equations that need differences of, rather than
-      angles themselves (invariance principles)
-*** How to do it?
-	Using the *matrix logarithm* \( \log(\cdot)\) operator, which relies on properties of the
-	rotation matrix...
-** Rodrigues formula : The logarithm operator
-*** Formula for \( \theta \)
-	\[ \theta = \arccos\left( \frac{\text{Tr}(\mathbf{R}) - 1}{2}\right) \]
-	Why?
-	 - trace of a matrix is invariant and \( = \sum \lambda_i \).
-	 - For a rotation matrix, \( \lambda = {1, e^{\pm j \theta}} \)
-	 - \therefore \( \sum \lambda_i = 1 + 2 \cos(\theta) \)
-*** Once \( \theta \) is known, we can find \(\hat{\gv{e}}\)...
-** Rodrigues formula : The logarithm operator
-*** Finding \(\hat{\gv{e}}\)...
-	Use properties of \( \mathbf{R}\)
-   \[ \mathbf {R} =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \]
-   Transposing, using \( \mathbf{K}^T = -\mathbf{K} \) and \(  (\mathbf{K}^2)^{T} = \mathbf{K}^2 \)
-   \[ \mathbf {R}^T =\mathbf {I} - (\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \]
-   Subtracting both the equations,
-   \[ \mathbf{K} = \left( \frac{\mathbf {R} - \mathbf {R}^T}{2 \sin \theta} \right) \]
-** Summary
-   In this lecture, we
-   - understood basic linear/affine transformations relevant in mechanics
-   - investigated rotations, and interpreted them as basis-change
-     transformations
-   - saw properties on \( \gv{d}, \bv{Q} \) that linked them back to rotation
-   - learnt (+ implemented) a couple (more importantly, the Rodrigues formula)
-     of ways to rotate basis frames
-** Temporal/Spatial rates of change
-   What about temporal/spatial changes in rotation? i.e. given a frame, and
-   given its /change/, how do we predict nearby frames (in time and space)?
+#   With \( \mathbf{K}\gv{v} = \hat{\gv{k}} \times \gv{v} \), we have \(\mathbf{K}\left(
+#   \mathbf{K} \gv{v}\right) =  \hat{\gv{k}} \times \hat{\gv{k}} \times \gv{v}
+#   = (\hat{\gv{k}} \cdot \gv{v}) \hat{\gv{k}} - (\hat{\gv{k}} \cdot \hat{\gv{k}})
+#   \hat{v} \) (Using vector triple product).
 
-   *DEMO*
+#   Substitute in the original equation,
+#   \[  \gv{v}_{\mathrm {rot} }=\gv {v} +(\sin \theta )\gv {K} \gv {v}
+#   +(1-\cos \theta )\gv {K} ^{2}\gv {v} \,,\quad \|\gv {K} \|_{2}=1
+#   \]
+
+#   Now factor \( \gv{v} \) from the equation to get \( \gv{v}_{\mathrm {rot} } = \mathbf{R}\gv{v}\)
+# ** Digression: ODEs
+#    - To further understand the Rodrigues rotation formula (and how it relates
+#      to solving \( \frac{\partial \bv{d}_j}{\partial t} = \omega \times \bv{d}_j
+#      \) ), we digress a bit and deal with ordinary differential equations (and
+#      their solutions)
+#    - The next lecture also deals with the same issues (time-stepping and
+#      numerical stability) and the fundamentals are the same.
+# *** Solve the following ODE                                       :B_example:
+# 	:PROPERTIES:
+# 	:BEAMER_ACT: <1->
+# 	:BEAMER_env: example
+# 	:END:
+# 	 \[ \frac{dx}{dt} = 2x \]
+# *** We can't!                                                  :B_alertblock:
+# 	:PROPERTIES:
+# 	:BEAMER_env: alertblock
+# 	:BEAMER_ACT: <2->
+# 	:END:
+# 	 - Uniqueness and existence?
+# 	 - Initial conditions?
+# ** Digression: simple ODEs
+# *** Solve the following ODE                                       :B_example:
+# 	:PROPERTIES:
+# 	:BEAMER_env: example
+# 	:END:
+# 	 \[ \frac{dx}{dt} = 2x \quad x(0) = 1 \]
+# *** We can!                                                         :B_block:
+# 	:PROPERTIES:
+# 	:BEAMER_env: block
+# 	:END:
+# 	\[ x(t) = e^{2t}\]
+# ** Digression: system of simple ODEs
+# *** Solve the following ODE                                       :B_example:
+# 	:PROPERTIES:
+# 	:BEAMER_env: example
+# 	:END:
+# 	 \[ \begin{bmatrix}\dot{x} \\ \dot{y} \end{bmatrix} =
+# 	 \begin{bmatrix} 5 & 0 \\ 0 & 3 \end{bmatrix} \cdot
+# 	 \begin{bmatrix}{x} \\ {y} \end{bmatrix} \quad x(0) = 1, y(0) = 2\]
+# *** We can solve this too                                           :B_block:
+# 	:PROPERTIES:
+# 	:BEAMER_env: block
+# 	:END:
+# 	\[ x(t) = e^{5t} \quad y(t) = 2e^{3t} \]
+
+# 	More importantly,
+# 	\[ \gv{x}(t) = e^{\bv{A}t}\gv{x}(0)\]
+# ***                                                                  :B_note:
+# 	:PROPERTIES:
+# 	:BEAMER_env: note
+# 	:END:
+# 	- Explain matrix exponential to these dudes
+# ** Digression: changing it up a bit
+# *** Solve the following ODE                                       :B_example:
+# 	:PROPERTIES:
+# 	:BEAMER_env: example
+# 	:END:
+# 	 \[ \begin{bmatrix}\dot{x} \\ \dot{y} \end{bmatrix} =
+# 	 \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix} \cdot
+# 	 \begin{bmatrix}{x} \\ {y} \end{bmatrix} \quad x(0) = 1, y(0) = 0\]
+# *** We can solve this too!                                          :B_block:
+# 	:PROPERTIES:
+# 	:BEAMER_env: block
+# 	:BEAMER_ACT: <2->
+# 	:END:
+# 	\[ x(t) = cos{t} \quad y(t) = \sin{t} \]
+# 	*OR*
+# 	\[ x(\theta) = cos{\theta} \quad y(\theta) = \sin{\theta} \]
+# *** Matrix exponential                                         :B_alertblock:
+# 	:PROPERTIES:
+# 	:BEAMER_env: alertblock
+# 	:BEAMER_ACT: <3->
+# 	:END:
+# 	We still retain \[ \gv{x}(\theta) = e^{\bv{A}\theta}\gv{x}(0) \]
+# ***                                                                  :B_note:
+# 	:PROPERTIES:
+# 	:BEAMER_env: note
+# 	:END:
+# 	- Use Hamiltonian. That is dy/dx = x/y and then integrate
+# ** Digression: changing it up a bit
+# *** Solve the following ODE                                       :B_example:
+# 	:PROPERTIES:
+# 	:BEAMER_env: example
+# 	:END:
+# 	 \[ \begin{bmatrix}\dot{x} \\ \dot{y} \end{bmatrix} =
+# 	 \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix} \cdot
+# 	 \begin{bmatrix}{x} \\ {y} \end{bmatrix} \quad x(0) = 1, y(0) = 0\]
+# *** What changed the solutions from exponentials to trigonometric terms? :B_block:
+# 	:PROPERTIES:
+# 	:BEAMER_env: block
+# 	:END:
+# 	- The skew-symmetry of the matrix!
+# 	- More importantly, a skew-symmetric matrix has a pair of imaginary
+#       eigenvalues \( \pm j \theta \)
+# 	- We know \( \mathrm{Re}{(e^{j \theta})} = \cos(\theta) \), which is exactly
+#       what we see...
+# 	- *IDEA* : Matrix exponentials can also be used to perform rotations!
+# 	- Then, can you connect it back to why \( \frac{\partial \bv{d}_j}{\partial t} = \omega \times \bv{d}_j
+#      \) performs a rotation?
+# ** Rotation using Euler angles : Rodrigues formula (algebra)
+#    With \( \mathbf{K}\gv{v} = \hat{\gv{k}} \times \gv{v} \), we have
+# \[ \bv{R}=\exp(\theta \bv {K} )=\sum _{k=0}^{\infty }{\frac {(\theta \bv
+# {K} )^{k}}{k!}}= \bv{I} + \theta \bv {K} + {\frac {1}{2!}}(\theta \bv {K}
+# )^{2} + {\frac {1}{3!}}(\theta \bv {K} )^{3} + \cdots  \]
+
+#   Because of skew-symmetry and orthogonality, by Cayley-Hamilton theorem we have, \(
+#   \mathbf {K} ^{3}=-\mathbf {K}, \mathbf {K}^{4}=-\mathbf{K}^2,\mathbf
+#   {K}^{5}=\mathbf{K},\mathbf{K}^{6}=\mathbf{K}^2
+#   \).
+
+#   With this cyclic pattern continuing for \( k \to \infty \), we have
+#   \(
+#   \bv{R}=\bv{I}+\left(\theta -{\frac {\theta ^{3}}{3!}}+{\frac {\theta
+#   ^{5}}{5!}}-\cdots \right)\mathbf{K} +\left({\frac {\theta ^{2}}{2!}}-{\frac
+#   {\theta ^{4}}{4!}} + {\frac {\theta ^{6}}{6!}}-\cdots \right) \mathbf{K} ^{2}
+#   \)
+
+#   or equivalently
+
+#   \( \mathbf {R} =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \)
+# ** Rotation : Rodrigues formula implementation
+#    - We have seen how the matrix exponential can give rise to rotation.
+#    - Let's implement this operation in our framework
+#    \[ \mathbf {R} =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \]
+#    , \( \bv{K} \) being the now-familiar skew-symmetric matrix having vector elements
+#    \[ \mathbf {K} = \begin{bmatrix}\,\,0&\!-k_{3}&\,\,\,k_{2}\\\,\,\,k_{3}&0&\!-k_{1}\\\!-k_{2}&\,\,k_{1}&\,\,0\end{bmatrix}
+#    \]
+#    - *ACTIVITY*
+# ** Rotation : Rodrigues formula IRL
+#    - In mechanics, frame rotations are omnipresent
+#    - One familiar real life example is when an elastic rod experiences a
+#      torsional force
+# 	#+CAPTION: Euler rotations
+# 	#+ATTR_LATEX: :width 0.45\textwidth
+# 	[[file:images/twisted_bar.png]]
+#    - Let's see this in our framework too...
+#    - *DEMO*
+#    - It was possible to code the frames up that way (linearly), because of the
+#      spatial rate of change of the frame angle.
+#    - *Curvature*
+# ** Rodrigues formula : The inverse operator
+# *** What about the inverse operation?
+# 	Given the rotation matrix \( \bv{R}\)
+# 	  - Identify \( \theta \)
+# 	  - Identify \( \hat{\gv{e}}\), the axis
+# *** Is it useful?
+# 	Very. Especially when:
+# 	- computing the angle by which two frames differ (especially in graphics)
+# 	- there are governing equations that need differences of, rather than
+#       angles themselves (invariance principles)
+# *** How to do it?
+# 	Using the *matrix logarithm* \( \log(\cdot)\) operator, which relies on properties of the
+# 	rotation matrix...
+# ** Rodrigues formula : The logarithm operator
+# *** Formula for \( \theta \)
+# 	\[ \theta = \arccos\left( \frac{\text{Tr}(\mathbf{R}) - 1}{2}\right) \]
+# 	Why?
+# 	 - trace of a matrix is invariant and \( = \sum \lambda_i \).
+# 	 - For a rotation matrix, \( \lambda = {1, e^{\pm j \theta}} \)
+# 	 - \therefore \( \sum \lambda_i = 1 + 2 \cos(\theta) \)
+# *** Once \( \theta \) is known, we can find \(\hat{\gv{e}}\)...
+# ** Rodrigues formula : The logarithm operator
+# *** Finding \(\hat{\gv{e}}\)...
+# 	Use properties of \( \mathbf{R}\)
+#    \[ \mathbf {R} =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \]
+#    Transposing, using \( \mathbf{K}^T = -\mathbf{K} \) and \(  (\mathbf{K}^2)^{T} = \mathbf{K}^2 \)
+#    \[ \mathbf {R}^T =\mathbf {I} - (\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \]
+#    Subtracting both the equations,
+#    \[ \mathbf{K} = \left( \frac{\mathbf {R} - \mathbf {R}^T}{2 \sin \theta} \right) \]
+# ** Summary
+#    In this lecture, we
+#    - understood basic linear/affine transformations relevant in mechanics
+#    - investigated rotations, and interpreted them as basis-change
+#      transformations
+#    - saw properties on \( \gv{d}, \bv{Q} \) that linked them back to rotation
+#    - learnt (+ implemented) a couple (more importantly, the Rodrigues formula)
+#      of ways to rotate basis frames
+# ** Temporal/Spatial rates of change
+#    What about temporal/spatial changes in rotation? i.e. given a frame, and
+#    given its /change/, how do we predict nearby frames (in time and space)?
+
+#    *DEMO*
 * Footnotes
 
 [fn:4] Wikimedia, CC3.0 license
