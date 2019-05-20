@@ -117,6 +117,7 @@
 	 - Frame : \( \hat{\gv{e}_\rho}, \hat{\gv{e}_\phi}, \hat{\gv{e}_z}\)
 	 #+CAPTION: Cylindrical coordinate system, Wikimedia
 	 #+begin_export latex
+	 % https://tex.stackexchange.com/a/159452
 	 \tdplotsetmaincoords{60}{110}
 	 \begin{tikzpicture}[tdplot_main_coords, scale=2.8]
 		 \tikzstyle{every node}=[font=\small]
@@ -132,7 +133,7 @@
 		 \filldraw [color=metropolisblue](0.3,0.4,0.8) circle (0.03) ;
 		 \draw (-0.6,0.6,0.8) node[anchor=south]{$z=z_1$};
 		 \draw (0.6,0.8,0) node[anchor=south west]{$\phi=\phi_1$};
-		 \draw (-0.1,0.6,0.8) node[above right] { $(\rho_1,\phi_1,z_1)$};
+		 \draw [color=metropolisorange](0.3,0.7,0.8) node[above right] { $(\rho_1,\phi_1,z_1)$};
 		 \draw[thick,-latex](0.3,0.4,0.8) -- (0.48,0.64,0.8) node[anchor=north] {$\hat{\gv{e}_\rho}$};
 		 \draw[thick,-latex](0.3,0.4,0.8) -- (0.12,0.52,0.8) node[anchor=north west]{$\hat{\gv{e}_\phi}$};
 		 \draw[thick,-latex](0.3,0.4,0.8) -- (0.3,0.4,1.1) node[anchor=north west]{$\hat{\gv{e}_z}$};
@@ -157,6 +158,7 @@
 	#+CAPTION: Spherical coordinate system, Wikimedia
 	#+begin_export latex
 	% 3D axis with spherical coordinates
+	% https://wiki.physik.uzh.ch/cms/latex:example_spherical_coordinates
 	\tdplotsetmaincoords{60}{110}
 	\begin{tikzpicture}[scale=3,tdplot_main_coords]
 
