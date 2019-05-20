@@ -341,8 +341,8 @@
 	   % coordinate axes xdash and ydash
 	   \tdplotsetcoord{xdash}{1}{90}{\alphavec}
 	   \tdplotsetcoord{ydash}{1}{90}{\alphavec + 90}
-	   \draw[->,metropolisorange,dashed] (O)  -- (xdash) node[above right] {$x^{\prime}$};
-	   \draw[->,metropolisorange,dashed] (O)  -- (ydash) node[above right] {$y^{\prime}$};
+	   \draw[->,metropolisorange,dashed,thick] (O)  -- (xdash) node[above right] {$x^{\prime}$};
+	   \draw[->,metropolisorange,dashed,thick] (O)  -- (ydash) node[above right] {$y^{\prime}$};
 
 	   % Points on x and y dash
 	   \tdplotsetcoord{xdashmeet}{\rvec*cos(\phivec-\alphavec)}{90}{\alphavec}
@@ -686,9 +686,6 @@
 	- Motivate determinant by volume. It tells expansino of a volume: 1 means
       volume is preserved. Formulae for parallelopiped : \( u \cdot (v \times w)
       \). They are symmetric relations.
-** Tempo
-
-
 ** Obtaining \( \gv{d}, \bv{Q} \) : Options[fn:4]
 ***                                                                :B_column:
 	:PROPERTIES:
@@ -767,8 +764,38 @@
 	:BEAMER_col: 0.3
 	:END:
 	#+CAPTION: Euler axis-angle
-	#+ATTR_LATEX: :width 0.45\textwidth
-	[[file:images/euler_axis.pdf]]
+	# #+ATTR_LATEX: :width 0.45\textwidth
+    # [[file:images/euler_axis.pdf]]
+	#+begin_export latex
+	\tdplotsetmaincoords{60}{125}
+
+	% https://tex.stackexchange.com/a/36607
+	\newcommand{\AxisRotator}{%
+	  \tikz [x=0.8ex,y=1.0ex,line width=.2ex,-stealth,rotate=50] \draw (0,0) arc (-160:170:3 and 3);%
+	}
+	\begin{center}
+	  \begin{tikzpicture}[scale=3,tdplot_main_coords]
+
+		% variables
+		\def\rvec{1.8}
+		\def\thetavec{40}
+		\def\phivec{60}
+
+		% axes
+		\coordinate (O) at (0,0,0);
+
+		% vectors
+		\tdplotsetcoord{P}{\rvec}{\thetavec}{\phivec}
+		\draw[-stealth,metropolisorange,ultra thick] (O)  -- (P)
+		node [pos=0.5, right, color=royalblue] {$\theta$} node [above right] {$\hat{\gv{r}}=\theta \hat{\gv{e}}$};
+		\tdplotsetcoord{Phalf}{\rvec*0.6}{\thetavec}{\phivec}
+		\draw[-stealth,metropolisblue,ultra thick] (O)  -- (Phalf)
+		node [pos=0.9, color=royalblue] {\AxisRotator} node [pos=0, left] {$\hat{\gv{e}}$};
+
+	  \end{tikzpicture}
+	\end{center}
+	#+end_export
+
 ** Rotations about fixed axis : Euler axis-angle
 *** Advantages
 	- Easy to understand/code up
