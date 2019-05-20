@@ -304,10 +304,59 @@
    - Does not scale the entity under consideration ( \( \abs{\lambda} \equiv  1
      \), more on this later...)
 ** Frame rotations in two--dimensions
-   Consider
+   Consider rotation in two dimensions:
+
+
    #+CAPTION: Rotation in two dimensions
-   #+ATTR_LATEX: :width 0.45\textwidth
-   file:images/cartesian_rotation.png
+   #+begin_export latex
+   % 3D axis with spherical coordinates
+   \tdplotsetmaincoords{0}{0}
+   \begin{center}
+	 \begin{tikzpicture}[scale=3,tdplot_main_coords]
+
+	   % variables
+	   \def\rvec{0.8}
+	   \def\thetavec{90}
+	   \def\phivec{36.86}
+
+	   % variables
+	   \def\alphavec{20}
+
+	   % axes
+	   \coordinate (O) at (0,0,0);
+	   \draw[thick,->] (0,0,0) -- (1,0,0) node[anchor=north east]{$x$};
+	   \draw[thick,->] (0,0,0) -- (0,1,0) node[anchor=north west]{$y$};
+
+
+	   % vectors
+	   \tdplotsetcoord{P}{\rvec}{\thetavec}{\phivec}
+	   % Draw point at P
+	   \filldraw [color=metropolisblue](P) circle (0.02) ;
+	   \draw[-stealth,metropolisblue,thick] (O)  -- (P) node[above right] {$p$};
+	   \draw[metropolisblue]   (P)  -- (Px) node[below] {$p_x$};
+	   \draw[metropolisblue]   (P)  -- (Py) node[left] {$p_y$};
+
+	   % coordinate axes xdash and ydash
+	   \tdplotsetcoord{xdash}{1}{90}{\alphavec}
+	   \tdplotsetcoord{ydash}{1}{90}{\alphavec + 90}
+	   \draw[->,metropolisorange,dashed] (O)  -- (xdash) node[above right] {$x^{\prime}$};
+	   \draw[->,metropolisorange,dashed] (O)  -- (ydash) node[above right] {$y^{\prime}$};
+
+	   % Points on x and y dash
+	   \tdplotsetcoord{xdashmeet}{\rvec*cos(\phivec-\alphavec)}{90}{\alphavec}
+	   \tdplotsetcoord{ydashmeet}{\rvec*sin(\phivec-\alphavec)}{90}{\alphavec + 90}
+	   \draw[metropolisorange]   (P)  -- (xdashmeet) node[below right] {$p_x^{\prime}$};
+	   \draw[metropolisorange]   (P)  -- (ydashmeet) node[below left] {$p_y^{\prime}$};
+
+	   % arcs
+	   \tdplotdrawarc[->]{(O)}{0.4}{0}{\alphavec}
+	   {anchor=west}{$\alpha$}
+	   % \tdplotsetthetaplanecoords{\phivec}
+	   % \tdplotdrawarc[->,tdplot_rotated_coords]{(0,0,0)}{0.5}{0}{\thetavec}
+	   % {anchor=south west}{$\theta$}
+	 \end{tikzpicture}
+   \end{center}
+   #+end_export
 
    \[ \begin{bmatrix} x^\prime \\ y^\prime \end{bmatrix}
    = \underbrace{\begin{bmatrix}\cos(\alpha )&\sin(\alpha )\\ -\sin(\alpha
