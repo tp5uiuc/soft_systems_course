@@ -1051,14 +1051,8 @@
 	   {squarex(x) * sin(y*9) + squarey(x) * cos(y*9)}
 	   );
 
-	   % \addplot3 [z buffer=auto, fill=yellow!50, draw=black, row sep=crcr] table {
-	   % 	x y z\\
-	   % 	10 -1 -1\\
-	   % 	10 1 -1\\
-	   % 	10 1 1\\
-	   % 	10 -1 1\\
-	   % 	10 -1 -1\\
-	   % };
+	   \addplot3 [z buffer=auto, fill=metropolisorange!70, draw=black,table/row sep=\\] table[row sep=\\] {
+		 x y z\\10 -1 -1\\10 1 -1\\10 1 1\\10 -1 1\\10 -1 -1\\};
 
 	   \addplot3 [
 	   z buffer=auto, domain=-60:270, samples y=1,
