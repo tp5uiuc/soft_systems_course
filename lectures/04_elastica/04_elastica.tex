@@ -1,4 +1,4 @@
-% Created 2019-05-19 Sun 23:39
+% Created 2019-05-20 Mon 00:53
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation]{beamer}
 \usepackage[utf8]{inputenc}
@@ -55,8 +55,8 @@
 \tikzset{>=latex}
 
 \section{Coordinate/Frame transformations}
-\label{sec:orgc82c353}
-\begin{frame}[label={sec:org715ca13}]{Motivation}
+\label{sec:orgbd9d452}
+\begin{frame}[label={sec:org7c1cbe2}]{Motivation}
 \[ \gv{x}_{\mathcal{L}} = \bv{Q}\gv{x} \]
 \[ \scalebox{5}{\textbf{?}} \]
 \[ \frac{\partial \bv{d}_j}{\partial t} = \left( \bv{Q}^T
@@ -64,7 +64,7 @@
 \[ \scalebox{5}{\textbf{?}} \]
 \end{frame}
 
-\begin{frame}[label={sec:orgd177f77}]{Motivation}
+\begin{frame}[label={sec:orgde5e697}]{Motivation}
 \begin{columns}
 \begin{column}{0.7\columnwidth}
 \begin{itemize}
@@ -120,7 +120,7 @@ rather than cartesian coordinates
 \end{column}
 \end{columns}
 \end{frame}
-\begin{frame}[label={sec:orgb13465b}]{Introduction}
+\begin{frame}[label={sec:org9c64408}]{Introduction}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{block}{Cylindrical coordinates}
@@ -128,6 +128,7 @@ rather than cartesian coordinates
 \item Coordinate: \((\rho, \phi, z)\)
 \item Frame : \(\hat{\gv{e}_\rho}, \hat{\gv{e}_\phi}, \hat{\gv{e}_z}\)
 \end{itemize}
+% https://tex.stackexchange.com/a/159452
 \tdplotsetmaincoords{60}{110}
 \begin{tikzpicture}[tdplot_main_coords, scale=2.8]
 	\tikzstyle{every node}=[font=\small]
@@ -165,6 +166,7 @@ rather than cartesian coordinates
 \end{itemize}
 
 % 3D axis with spherical coordinates
+% https://wiki.physik.uzh.ch/cms/latex:example_spherical_coordinates
 \tdplotsetmaincoords{60}{110}
 \begin{tikzpicture}[scale=3,tdplot_main_coords]
 
@@ -209,7 +211,7 @@ rather than cartesian coordinates
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgaed82f8}]{Introduction}
+\begin{frame}[label={sec:orgfd243f7}]{Introduction}
 \begin{block}{Choice of coordinate system}
 \begin{itemize}
 \item We represent entities (points, vectors etc.) in the \emph{cartesian coordinate
@@ -229,7 +231,7 @@ reflection, rotation, etc. and their compositions
 \end{itemize}
 \end{definition}
 \end{frame}
-\begin{frame}[label={sec:org8c72dc8}]{Affine transformations}
+\begin{frame}[label={sec:orgd1daed2}]{Affine transformations}
 \begin{theorem}[Affine \(\leftrightarrow\) Linear]
 If \(\mathcal{X}\) and \(\mathcal{Y}\) are affine spaces, then every affine transformation
 \(f\colon \mathcal{X}\to \mathcal{Y}\) is of the form \(\gv{x}\mapsto
@@ -238,7 +240,7 @@ space \(\mathcal{X}\),  \(\gv{x}\) is a vector in \(\mathcal{X}\), and \(\gv{b}\
 \end{theorem}
 \end{frame}
 
-\begin{frame}[label={sec:org347ec8f}]{Affine transformations : Examples}
+\begin{frame}[label={sec:org54810c0}]{Affine transformations : Examples}
 \begin{block}{Translations ( \(\bv{M} = \bv{0}\) and \(\gv{b} \neq \gv{0}\) )}
 \begin{figure}[htbp]
 \centering
@@ -249,7 +251,7 @@ space \(\mathcal{X}\),  \(\gv{x}\) is a vector in \(\mathcal{X}\), and \(\gv{b}\
 \begin{block}{Translation \alert{DEMO}}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:orga2f5875}]{Linear transformations}
+\begin{frame}[label={sec:orge738dda}]{Linear transformations}
 \begin{block}{Difference b/w linear and affine trans.}
 \begin{itemize}
 \item Most of our interest lies in modeling soft filaments, for which we will be
@@ -261,7 +263,7 @@ zero must map to zero by definition)
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org43e7bc6}]{But what are linear transformations?}
+\begin{frame}[label={sec:org1ffb4d7}]{But what are linear transformations?}
 \begin{itemize}
 \item We loosely define a linear transformation \(\gv{x} \to \bv{M}\gv{x}\) by a \emph{matrix}
 ( \(\bv{M}\) ) that acts on the vector \(\gv{x} \in \mathcal{X}\), about
@@ -270,7 +272,7 @@ zero must map to zero by definition)
 (matrices and linear transformations) are considered important.
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org5582fda}]{Linear transformations : Examples\footnote{All examples from Wikipedia found in \href{https://en.wikipedia.org/wiki/Affine\_transformation\#Image\_transformation}{article ``Affine transformation''
+\begin{frame}[label={sec:orgaf6ca6a}]{Linear transformations : Examples\footnote{All examples from Wikipedia found in \href{https://en.wikipedia.org/wiki/Affine\_transformation\#Image\_transformation}{article ``Affine transformation''
 under section ``Image transformation''} and assume origin at the center of image}}
 \begin{columns}
 \begin{column}{0.5\columnwidth}
@@ -292,7 +294,7 @@ under section ``Image transformation''} and assume origin at the center of image
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgb17eeb5}]{Linear transformations : Examples}
+\begin{frame}[label={sec:org1f18c20}]{Linear transformations : Examples}
 \begin{columns}
 \begin{column}{0.5\columnwidth}
 \begin{block}{Scale}
@@ -313,7 +315,7 @@ under section ``Image transformation''} and assume origin at the center of image
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org008ecf9}]{Linear transformations : Examples}
+\begin{frame}[label={sec:orga4f99da}]{Linear transformations : Examples}
 \begin{block}{Rotation}
 \begin{center}
 \spot<2>{\( \bv{M} =\begin{bmatrix}\cos(\theta )&\sin(\theta )&0\\-\sin(\theta
@@ -325,14 +327,14 @@ under section ``Image transformation''} and assume origin at the center of image
 \end{center}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org01029d7}]{Rotations (includes reflections)}
+\begin{frame}[label={sec:org0bce30a}]{Rotations (includes reflections)}
 \begin{itemize}
 \item Generates new unit vectors, fundamentally changing the directions
 (eigenvectors) of further transformations
 \item Does not scale the entity under consideration ( \(\abs{\lambda} \equiv  1\), more on this later\ldots{})
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:orge163cc8}]{Frame rotations in two--dimensions}
+\begin{frame}[label={sec:orge72d2bc}]{Frame rotations in two--dimensions}
 Consider rotation in two dimensions:
 
 
@@ -390,7 +392,7 @@ Consider rotation in two dimensions:
 \note{:B\_note:
 Derive this thing in class.}
 \end{frame}
-\begin{frame}[label={sec:org1f4b692}]{Inverse rotations in two--dimensions}
+\begin{frame}[label={sec:org908efe3}]{Inverse rotations in two--dimensions}
 Now consider the same picture, but we want to obtain \([x,y]^T\) from \([
    x^\prime, y^\prime ]^T\) (the other way around).
 
@@ -413,7 +415,7 @@ Now consider the same picture, but we want to obtain \([x,y]^T\) from \([
 \item We will see later why holds for \alert{all} rotation matrices\ldots{}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:orgd153329}]{Frame rotations in three--dimensions}
+\begin{frame}[label={sec:org6e3f19c}]{Frame rotations in three--dimensions}
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.45\textwidth]{images/cartesian_rot_3D.pdf}
@@ -421,7 +423,7 @@ Now consider the same picture, but we want to obtain \([x,y]^T\) from \([
 \end{figure}
 is a natural extension of 2D results\ldots{}
 \end{frame}
-\begin{frame}[label={sec:org5611912}]{Beware!}
+\begin{frame}[label={sec:org60919bf}]{Beware!}
 \begin{block}{Be wary about alias (passive) or alibi (active) transformations}
 \end{block}
 \begin{columns}
@@ -456,7 +458,7 @@ vector measured in the rotated reference system; same rotation axis, same
 angles, but now the coordinate system rotates, rather than the vector).
 \end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:org526c927}]{Difference in perspectives\footnote{\href{https://iopscience.iop.org/book/978-0-7503-1454-1}{Rotation, Reflection, and Frame Changes---Orthogonal tensors in computational engineering mechanics, RM Brannon, IOP Publishing 2018}}}
+\begin{frame}[label={sec:orgce19634}]{Difference in perspectives\footnote{\href{https://iopscience.iop.org/book/978-0-7503-1454-1}{Rotation, Reflection, and Frame Changes---Orthogonal tensors in computational engineering mechanics, RM Brannon, IOP Publishing 2018}}}
 \begin{quotation} %% :B\_quotation:
 `` Analyzing rotation demands awareness of your desired perspective. You can rotate an object, while you stay still, or you can keep the object
 fixed while you rotate yourself. It is important to be aware of which of these
@@ -465,7 +467,7 @@ these fundamentally different transformations goes beyond one being the
 same as the other with an opposite rotation angle. ''
 \end{quotation}
 \end{frame}
-\begin{frame}[label={sec:orgf53be5c}]{Frame rotation as a change in basis}
+\begin{frame}[label={sec:orgbb16e1d}]{Frame rotation as a change in basis}
 \begin{block}{More concretely}
 If \(\mathcal{B}\) and \(\mathcal{B}^\prime\) are two (different) bases
 \(\in \mathbb{R}^n\)
@@ -488,7 +490,7 @@ orthonormal bases)
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org042c326}]{Frame rotation---example}
+\begin{frame}[label={sec:org233a679}]{Frame rotation---example}
 \begin{columns}
 \begin{column}{0.5\columnwidth}
 \tdplotsetmaincoords{60}{100}
@@ -529,7 +531,7 @@ orthonormal bases)
 \item Note : rotation of \(\ang{90}\) about an invariant \(z' = z\) axis
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:orge23164a}]{Frame rotation---example contd.}
+\begin{frame}[label={sec:orgf328fa3}]{Frame rotation---example contd.}
 \[ {\begin{bmatrix} x^\prime \\ y^\prime \\ z^\prime\end{bmatrix}} =
   \spot{[\bv{M}]_{\mathcal{E} \to \mathcal{D}}}
   {\begin{bmatrix} x \\ y \\ z \end{bmatrix}}
@@ -548,7 +550,7 @@ orthonormal bases)
   {\begin{bmatrix} x \\ y \\ z \end{bmatrix}}
   \]
 \end{frame}
-\begin{frame}[label={sec:org19eade9}]{Generalizing frame rotations as a basis change}
+\begin{frame}[label={sec:org4b2a63c}]{Generalizing frame rotations as a basis change}
 \begin{itemize}
 \item But also notice with the given bases that
 \end{itemize}
@@ -587,7 +589,7 @@ natural bases). Then
 \item Derive the \(\gv{d} \cdot \gv{e}\) relations in class.
 \end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:orge885d39}]{Generalizing frame rotations as a basis change}
+\begin{frame}[label={sec:orgacdb9e3}]{Generalizing frame rotations as a basis change}
  Taking it one step further we arrive at the conclusion,
 \[
 	\underbrace{\begin{bmatrix}
@@ -612,7 +614,7 @@ natural bases). Then
 the expected result.
 \end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:orgd8cae28}]{Implementation of rotation as bases change}
+\begin{frame}[label={sec:org8b8906c}]{Implementation of rotation as bases change}
 \begin{itemize}
 \item We have seen that the action of frame rotation matrices correspond to a
 bases change operation
@@ -628,7 +630,7 @@ bases change operation
 \item \alert{ACTIVITY}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org8bfaacd}]{But what about arbitrary rotations?}
+\begin{frame}[label={sec:org1d18e21}]{But what about arbitrary rotations?}
 \begin{itemize}
 \item Rotations about arbitrary axes with arbitrary angles?
 \end{itemize}
@@ -663,7 +665,7 @@ but require more math and understanding.
 \item Mention Euler axis angle, euler roataions, quarternions
 \end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:org1e3d617}]{Let's reconsider what we know}
+\begin{frame}[label={sec:org8d0dfbd}]{Let's reconsider what we know}
 \begin{itemize}
 \item We know why \(\gv{x}_{\mathcal{L}} = \bv{Q}\gv{x}\)
 \item We then need the \alert{action} of \(\bv{Q}\) on \(\gv{x}\)
@@ -682,7 +684,7 @@ but require more math and understanding.
 \item We will see that we require some properties on \(\gv{d}\) to make \(\bv{Q}\) effect a rotation.
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org07e2818}]{Obtaining \(\gv{d}, \bv{Q}\) : Properties}
+\begin{frame}[label={sec:org2a207ad}]{Obtaining \(\gv{d}, \bv{Q}\) : Properties}
 \[\bv{Q} =
 	 {\begin{bmatrix}
 	 \mbox{------}~\hat{\gv{d}}_1~\mbox{------} \\
@@ -726,7 +728,11 @@ orthogonal axes that simply has a rotation.
 volume is preserved. Formulae for parallelopiped : \(u \cdot (v \times w)\). They are symmetric relations.
 \end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:org6dcd2c9}]{Obtaining \(\gv{d}, \bv{Q}\) : Options\footnote{Wikimedia, CC3.0 license}}
+\begin{frame}[label={sec:orgb510b93}]{Tempo}
+\end{frame}
+
+
+\begin{frame}[label={sec:org287648d}]{Obtaining \(\gv{d}, \bv{Q}\) : Options\footnote{Wikimedia, CC3.0 license}}
 \begin{columns}
 \begin{column}{0.6\columnwidth}
 \begin{itemize}
@@ -742,11 +748,37 @@ volume is preserved. Formulae for parallelopiped : \(u \cdot (v \times w)\). The
 \end{itemize}
 \end{column}
 \begin{column}{0.4\columnwidth}
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.45\textwidth]{images/euler_aa.png}
-\caption{Euler axis-angle}
-\end{figure}
+\tdplotsetmaincoords{60}{125}
+
+% https://tex.stackexchange.com/a/36607
+\newcommand{\AxisRotator}{%
+	\tikz [x=0.8ex,y=1.0ex,line width=.2ex,-stealth,rotate=50] \draw (0,0) arc (-150:150:1 and 1);%
+}
+\begin{center}
+	\begin{tikzpicture}[scale=1.8,tdplot_main_coords]
+
+	% variables
+	\def\rvec{1.8}
+	\def\thetavec{40}
+	\def\phivec{60}
+
+	% axes
+	\coordinate (O) at (0,0,0);
+	\draw[thick,->] (0,0,0) -- (1,0,0) node[anchor=north east]{$x$};
+	\draw[thick,->] (0,0,0) -- (0,1,0) node[anchor=north west]{$y$};
+	\draw[thick,->] (0,0,0) -- (0,0,1) node[anchor=south]{$z$};
+
+	% vectors
+	\tdplotsetcoord{P}{\rvec}{\thetavec}{\phivec}
+	\draw[-stealth,metropolisorange,thick] (O)  -- (P) node [near end] {\AxisRotator}
+	node [pos=0.6, below right] {$\theta$} node [above] {$\hat{\gv{e}}$};
+
+	% Draw the ball
+	\shade [ball color=black!20] (0,0) circle [radius=1.5ex];
+
+	\end{tikzpicture}
+\end{center}
+
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.45\textwidth]{images/euler_rot.pdf}
@@ -756,7 +788,7 @@ volume is preserved. Formulae for parallelopiped : \(u \cdot (v \times w)\). The
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org3c72cf0}]{Rotations about fixed axis : Euler axis-angle}
+\begin{frame}[label={sec:org8ed07a8}]{Rotations about fixed axis : Euler axis-angle}
 \begin{block}{Single rotation about an axis---\(\hat{\gv{e}}\) vector}
 \begin{itemize}
 \item Axis : unit vector which remains unchanged by the rotation
@@ -786,7 +818,7 @@ volume is preserved. Formulae for parallelopiped : \(u \cdot (v \times w)\). The
 \end{column}
 \end{columns}
 \end{frame}
-\begin{frame}[label={sec:org8bd68cf}]{Rotations about fixed axis : Euler axis-angle}
+\begin{frame}[label={sec:org67541d3}]{Rotations about fixed axis : Euler axis-angle}
 \begin{block}{Advantages}
 \begin{itemize}
 \item Easy to understand/code up
@@ -802,7 +834,7 @@ representations as well)
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org8b52558}]{Rotation using Euler angles : Rodrigues formula}
+\begin{frame}[label={sec:org156dabc}]{Rotation using Euler angles : Rodrigues formula}
 \begin{block}{Rodrigues formula}
 \begin{itemize}
 \item Named after \href{https://en.wikipedia.org/wiki/Olinde\_Rodrigues}{Olinde Rodrigues}
@@ -816,7 +848,7 @@ axis-angle representation (our case!) to rotation matrices
 where \(\mathbf{K}\) is the cross product matrix, discussed last class \(\mathbf{K}\gv{v} = \hat{\gv{e}} \times \gv{v}\)
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org4f9367e}]{Rotation matrix from Rodrigues formula : structure and intuition}
+\begin{frame}[label={sec:orgd5d1f75}]{Rotation matrix from Rodrigues formula : structure and intuition}
  \[ \mathbf {R} =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \]
 We need \(\bv{R}\) above to satisfy properties of a rotation matrix. Let's verify:
 \begin{itemize}
@@ -832,7 +864,7 @@ We note that this operator always exists and is unique for given axis-angle
 \item Use k\^{}T = -k.
 \end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:orgafb03a8},fragile]{Simplification using sympy}
+\begin{frame}[label={sec:org50297f4},fragile]{Simplification using sympy}
  \begin{minted}[]{python}
 import sympy as sp
 from sympy.simplify.fu import TR8, TR9, TR10i
@@ -851,7 +883,7 @@ k**4*cos(x)*cos(y) - 2*k**4*cos(x/2 - y/2)*cos(x/2 + y/2) + k**4 + 2*k**3*sin(x/
 \end{verbatim}
 \end{frame}
 
-\begin{frame}[label={sec:org4259807}]{Rotation using Euler angles : Rodrigues formula (geometry)}
+\begin{frame}[label={sec:org2fa8f9c}]{Rotation using Euler angles : Rodrigues formula (geometry)}
 But where did it come from?
 \alert{GEOMETRY} (part I)
 \begin{figure}[htbp]
@@ -863,7 +895,7 @@ But where did it come from?
 )(\gv {k} \cdot \gv {v} )\gv {k} +\sin \theta \,\gv {k} \times
 \gv {v} \]
 \end{frame}
-\begin{frame}[label={sec:org730dea1}]{Rotation using Euler angles : Rodrigues formula (geometry)}
+\begin{frame}[label={sec:org49d10ad}]{Rotation using Euler angles : Rodrigues formula (geometry)}
  \alert{GEOMETRY} (part II)
  Given
 \[ \gv {v}_{\mathrm {rot} } =\cos \theta \,\gv {v} +(1-\cos \theta
@@ -882,7 +914,7 @@ Substitute in the original equation,
 
 Now factor \(\gv{v}\) from the equation to get \(\gv{v}_{\mathrm {rot} } = \mathbf{R}\gv{v}\)
 \end{frame}
-\begin{frame}[label={sec:orgea351df}]{Digression: ODEs}
+\begin{frame}[label={sec:orgef22532}]{Digression: ODEs}
 \begin{itemize}
 \item To further understand the Rodrigues rotation formula (and how it relates
 to solving \(\frac{\partial \bv{d}_j}{\partial t} = \omega \times \bv{d}_j\) ), we digress a bit and deal with ordinary differential equations (and
@@ -900,7 +932,7 @@ numerical stability) and the fundamentals are the same.
 \end{itemize}
 \end{alertblock}
 \end{frame}
-\begin{frame}[label={sec:orgcb7198e}]{Digression: simple ODEs}
+\begin{frame}[label={sec:org9fce38a}]{Digression: simple ODEs}
 \begin{example}[Solve the following ODE]
 \[ \frac{dx}{dt} = 2x \quad x(0) = 1 \]
 \end{example}
@@ -908,7 +940,7 @@ numerical stability) and the fundamentals are the same.
 \[ x(t) = e^{2t}\]
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org232dd71}]{Digression: system of simple ODEs}
+\begin{frame}[label={sec:org617519c}]{Digression: system of simple ODEs}
 \begin{example}[Solve the following ODE]
 \[ \begin{bmatrix}\dot{x} \\ \dot{y} \end{bmatrix} =
 	 \begin{bmatrix} 5 & 0 \\ 0 & 3 \end{bmatrix} \cdot
@@ -925,7 +957,7 @@ More importantly,
 \item Explain matrix exponential to these dudes
 \end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:orgd67e1a4}]{Digression: changing it up a bit}
+\begin{frame}[label={sec:org911622f}]{Digression: changing it up a bit}
 \begin{example}[Solve the following ODE]
 \[ \begin{bmatrix}\dot{x} \\ \dot{y} \end{bmatrix} =
 	 \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix} \cdot
@@ -944,7 +976,7 @@ We still retain \[ \gv{x}(\theta) = e^{\bv{A}\theta}\gv{x}(0) \]
 \item Use Hamiltonian. That is dy/dx = x/y and then integrate
 \end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:orgef49d77}]{Digression: changing it up a bit}
+\begin{frame}[label={sec:org27b593b}]{Digression: changing it up a bit}
 \begin{example}[Solve the following ODE]
 \[ \begin{bmatrix}\dot{x} \\ \dot{y} \end{bmatrix} =
 	 \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix} \cdot
@@ -962,7 +994,7 @@ what we see\ldots{}
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org67e314e}]{Rotation using Euler angles : Rodrigues formula (algebra)}
+\begin{frame}[label={sec:orgf827253}]{Rotation using Euler angles : Rodrigues formula (algebra)}
 With \(\mathbf{K}\gv{v} = \hat{\gv{k}} \times \gv{v}\), we have
 \[ \bv{R}=\exp(\theta \bv {K} )=\sum _{k=0}^{\infty }{\frac {(\theta \bv
 {K} )^{k}}{k!}}= \bv{I} + \theta \bv {K} + {\frac {1}{2!}}(\theta \bv {K}
@@ -980,7 +1012,7 @@ or equivalently
 
 \(\mathbf {R} =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2}\)
 \end{frame}
-\begin{frame}[label={sec:org6fe38d2}]{Rotation : Rodrigues formula implementation}
+\begin{frame}[label={sec:org4cc216d}]{Rotation : Rodrigues formula implementation}
 \begin{itemize}
 \item We have seen how the matrix exponential can give rise to rotation.
 \item Let's implement this operation in our framework
@@ -993,7 +1025,7 @@ or equivalently
 \item \alert{ACTIVITY}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:orgd31ff57}]{Rotation : Rodrigues formula IRL}
+\begin{frame}[label={sec:org79a6519}]{Rotation : Rodrigues formula IRL}
 \begin{itemize}
 \item In mechanics, frame rotations are omnipresent
 \item One familiar real life example is when an elastic rod experiences a
@@ -1010,7 +1042,7 @@ spatial rate of change of the frame angle.
 \item \alert{Curvature}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org71fc8d5}]{Rodrigues formula : The inverse operator}
+\begin{frame}[label={sec:orga163b11}]{Rodrigues formula : The inverse operator}
 \begin{block}{What about the inverse operation?}
 Given the rotation matrix \(\bv{R}\)
 \begin{itemize}
@@ -1031,7 +1063,7 @@ Using the \alert{matrix logarithm} \(\log(\cdot)\) operator, which relies on pro
 rotation matrix\ldots{}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org15bd99c}]{Rodrigues formula : The logarithm operator}
+\begin{frame}[label={sec:org9b614cf}]{Rodrigues formula : The logarithm operator}
 \begin{block}{Formula for \(\theta\)}
 \[ \theta = \arccos\left( \frac{\text{Tr}(\mathbf{R}) - 1}{2}\right) \]
 Why?
@@ -1044,7 +1076,7 @@ Why?
 \begin{block}{Once \(\theta\) is known, we can find \(\hat{\gv{e}}\)\ldots{}}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org831ac24}]{Rodrigues formula : The logarithm operator}
+\begin{frame}[label={sec:org80e78ae}]{Rodrigues formula : The logarithm operator}
 \begin{block}{Finding \(\hat{\gv{e}}\)\ldots{}}
  Use properties of \(\mathbf{R}\)
 \[ \mathbf {R} =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \]
@@ -1054,7 +1086,7 @@ Subtracting both the equations,
 \[ \mathbf{K} = \left( \frac{\mathbf {R} - \mathbf {R}^T}{2 \sin \theta} \right) \]
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:orgac31a1b}]{Summary}
+\begin{frame}[label={sec:orgcceee59}]{Summary}
 In this lecture, we
 \begin{itemize}
 \item understood basic linear/affine transformations relevant in mechanics
@@ -1065,7 +1097,7 @@ transformations
 of ways to rotate basis frames
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:orgf91b839}]{Temporal/Spatial rates of change}
+\begin{frame}[label={sec:org75a3481}]{Temporal/Spatial rates of change}
 What about temporal/spatial changes in rotation? i.e. given a frame, and
 given its \emph{change}, how do we predict nearby frames (in time and space)?
 

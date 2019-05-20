@@ -686,6 +686,9 @@
 	- Motivate determinant by volume. It tells expansino of a volume: 1 means
       volume is preserved. Formulae for parallelopiped : \( u \cdot (v \times w)
       \). They are symmetric relations.
+** Tempo
+
+
 ** Obtaining \( \gv{d}, \bv{Q} \) : Options[fn:4]
 ***                                                                :B_column:
 	:PROPERTIES:
@@ -705,8 +708,39 @@
 	:BEAMER_col: 0.4
 	:END:
 	#+CAPTION: Euler axis-angle
-	#+ATTR_LATEX: :width 0.45\textwidth
-	[[file:images/euler_aa.png]]
+	#+begin_export latex
+	\tdplotsetmaincoords{60}{125}
+
+	% https://tex.stackexchange.com/a/36607
+	\newcommand{\AxisRotator}{%
+	  \tikz [x=0.8ex,y=1.0ex,line width=.2ex,-stealth,rotate=50] \draw (0,0) arc (-150:150:1 and 1);%
+	}
+	\begin{center}
+	  \begin{tikzpicture}[scale=1.8,tdplot_main_coords]
+
+		% variables
+		\def\rvec{1.8}
+		\def\thetavec{40}
+		\def\phivec{60}
+
+		% axes
+		\coordinate (O) at (0,0,0);
+		\draw[thick,->] (0,0,0) -- (1,0,0) node[anchor=north east]{$x$};
+		\draw[thick,->] (0,0,0) -- (0,1,0) node[anchor=north west]{$y$};
+		\draw[thick,->] (0,0,0) -- (0,0,1) node[anchor=south]{$z$};
+
+		% vectors
+		\tdplotsetcoord{P}{\rvec}{\thetavec}{\phivec}
+		\draw[-stealth,metropolisorange,thick] (O)  -- (P) node [near end] {\AxisRotator}
+		node [pos=0.6, below right] {$\theta$} node [above] {$\hat{\gv{e}}$};
+
+		% Draw the ball
+		\shade [ball color=black!20] (0,0) circle [radius=1.5ex];
+
+	  \end{tikzpicture}
+	\end{center}
+	#+end_export
+
 	#+CAPTION: Euler rotations
 	#+ATTR_LATEX: :width 0.45\textwidth
 	[[file:images/euler_rot.pdf]]
