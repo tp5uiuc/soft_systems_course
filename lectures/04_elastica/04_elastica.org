@@ -732,6 +732,7 @@
 		node [pos=0.6, below right] {$\theta$} node [above] {$\hat{\gv{e}}$};
 
 		% Draw the ball
+		% https://tex.stackexchange.com/questions/54193/how-to-draw-a-shaded-sphere
 		\shade [ball color=black!20] (0,0) circle [radius=1.5ex];
 
 	  \end{tikzpicture}
@@ -1008,8 +1009,69 @@
    - One familiar real life example is when an elastic rod experiences a
      torsional force
 	#+CAPTION: Euler rotations
-	#+ATTR_LATEX: :width 0.45\textwidth
-	[[file:images/twisted_bar.png]]
+	# #+ATTR_LATEX: :width 0.45\textwidth
+    # [[file:images/twisted_bar.png]]
+
+   #+begin_export latex
+   \begin{center}
+   \begin{tikzpicture}[
+	   declare function={squarex(\t) =
+	   (\t < 0.25) ? 1 : (
+	   (\t < 0.5) ? (1 - (\t-0.25) * 8) : (
+	   (\t < 0.75) ? -1 : (-1 + (\t - 0.75) * 8)
+	   )
+	   ;},
+	   declare function={squarey(\t) =
+	   (\t < 0.25) ? (-1 + \t*8) : (
+	   (\t < 0.5) ? 1 : (
+	   (\t < 0.75) ? (1 - (\t - 0.5) * 8) : -1
+	   )
+	   ;}
+	   ]
+	   \begin{axis}[
+	   axis equal image,
+	   z buffer=sort,
+	   hide axis,
+	   domain=0:1, y domain = 0:10, samples y = 25,
+	   ylabel =y, xlabel=x,
+	   clip=false
+	   ]
+
+	   \addplot3 [
+	   z buffer=none, domain=0:330, samples y=1,
+	   ultra thick, metropolisblue, -latex] (
+	   -0.5,
+	   {sin(x)*1.5},
+	   {cos(x)*1.5}
+	   );
+
+	   \addplot3 [surf, shader=flat, fill=metropolisorange!70, draw=metropolisblue] (
+	   y,
+	   {squarex(x) * cos(y*9) - squarey(x) * sin(y*9)},
+	   {squarex(x) * sin(y*9) + squarey(x) * cos(y*9)}
+	   );
+
+	   % \addplot3 [z buffer=auto, fill=yellow!50, draw=black, row sep=crcr] table {
+	   % 	x y z\\
+	   % 	10 -1 -1\\
+	   % 	10 1 -1\\
+	   % 	10 1 1\\
+	   % 	10 -1 1\\
+	   % 	10 -1 -1\\
+	   % };
+
+	   \addplot3 [
+	   z buffer=auto, domain=-60:270, samples y=1,
+	   ultra thick, metropolisblue, latex-] (
+	   10.5,
+	   {sin(x)*1.5},
+	   {cos(x)*1.5}
+	   );
+	   \end{axis}
+   \end{tikzpicture}
+   \end{center}
+   #+end_export
+
    - Let's see this in our framework too...
    - *DEMO*
    - It was possible to code the frames up that way (linearly), because of the
