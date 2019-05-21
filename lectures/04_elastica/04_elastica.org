@@ -78,6 +78,7 @@
 		  axis equal,
 		  axis lines=middle,
 		  grid=major,
+		  major grid style={line width=.2pt,draw=gray!50},
 		  xlabel=$\Re(z)$,
 		  ylabel=$\Im(z)$,
 		  disabledatascaling]
@@ -116,6 +117,8 @@
 		  axis equal,
 		  axis lines=middle,
 		  grid=both,
+		  grid style={line width=.1pt, draw=gray!20},
+		  major grid style={line width=.2pt,draw=gray!50},
 		  minor tick num=3,
 		  xlabel=$x$,
 		  ylabel=$y$,
