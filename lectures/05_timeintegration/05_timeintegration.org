@@ -112,7 +112,7 @@
 	 - \( \gv{f}(\gv{u}, t) =  \bv{A}(t)\gv{u}\)
    - *Constant-coefficient* ODE?
 	 - \( \gv{f}(\gv{u}, t) =  \bv{A}\gv{u}\)
-** Numerical methods: Euler's forward method [fn:1]
+** Numerical methods: Euler's forward method
 *** text                                                           :B_column:
 	:PROPERTIES:
 	:BEAMER_env: column
@@ -129,9 +129,53 @@
 	:END:
 
 	#+CAPTION: Geometrical desciption of Euler's method
-	#+ATTR_LATEX: :width 0.8\textwidth
-	[[file:images/euler_geometry.pdf]]
+	# #+ATTR_LATEX: :width 0.8\textwidth
+	# [[file:images/euler_geometry.pdf]]
+	#+begin_export latex
+	\begin{center}
+	  \begin{tikzpicture}[
+		declare function={func(\x)=sin(deg(pi*\x));},
+		declare function={funcder(\x)=pi*cos(deg(pi*\x));}]
+		\begin{axis}%
+		  [grid=none,
+		  axis x line=bottom,
+		  axis y line=left,
+		  domain=0.41:0.57,
+		  xmin=0.38,
+		  xmax=0.6,
+		  ymin=0.95,
+		  ymax=1.01,
+		  xlabel={$t$},
+		  ylabel={$u(t)$},
+		  ticks=none,
+		  height=1.12\textwidth,
+		  enlargelimits=false,
+		  ]
+		  \addplot[smooth, very thick,
+		  color=metropolisorange]{func(x)};
+		  % For each in pgfplots is painful, see
+		  % https://tex.stackexchange.com/q/264168
+		  \addplot[thick, color=metropolisblue, mark=*] coordinates
+		  { (0.41, {func(0.41)}) ({0.45}, {func(0.41) + funcder(0.41)*0.04}) };
+		  \foreach \a in {0.45, 0.49,..., 0.57}
+          {\edef
+			\temp{
+			% \noexpand\addplot coordinates { (\x,0.96) (\x,1.02)};
+			\noexpand\addplot[thick, color=metropolisblue, mark=*] coordinates
+			{ (\a, {func(\a - 0.04) + funcder(\a - 0.04)*0.04}) ({\a + 0.04}, {func(\a) + funcder(\a)*0.04}) };
+			}\temp
+		  }
 
+		  %\pgfplotsinvokeforeach {0.41, 0.45,..., 0.53}{
+			% \addplot{\a*x^2};
+			% \addplot coordinates { (#1, {func(#1)}) ({#1 + 0.04}, {func(#1) + funcder(#1)*0.04}) };
+			% \addplot coordinates { (#1, #1) (#1 + 0.04, #1 + 0.04) };
+			% \draw (axis cs:#1, func(#1)) -- (axis cs:{#1 + 0.04}, {func(#1) + funcder(#1)*0.04});
+			% }
+		\end{axis}
+	  \end{tikzpicture}
+	\end{center}
+	#+end_export
 ***                                                         :B_ignoreheading:
 	:PROPERTIES:
 	:BEAMER_env: ignoreheading
@@ -803,5 +847,3 @@
 [fn:3] Oleg Alexandrov, Public Domain, Wikimedia
 
 [fn:2] By a *lot*
-
-[fn:1] Wikimedia

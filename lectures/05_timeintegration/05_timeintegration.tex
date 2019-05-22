@@ -1,4 +1,4 @@
-% Created 2019-05-21 Tue 23:41
+% Created 2019-05-22 Wed 13:09
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation]{beamer}
 \usepackage[utf8]{inputenc}
@@ -54,8 +54,8 @@
 \maketitle
 \tikzset{>=latex}
 \section{Time-marching algorithms}
-\label{sec:orgc26911d}
-\begin{frame}[label={sec:orgeafbd59}]{Motivation}
+\label{sec:orgfb26656}
+\begin{frame}[label={sec:orgc989907}]{Motivation}
 \begin{example}[Solve the following ODE]
 \[ \frac{dx}{dt} = 2x \quad x(0) = 1 \]
 \end{example}
@@ -64,7 +64,7 @@
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:org37c37bc}]{Motivation}
+\begin{frame}[label={sec:org74f51f9}]{Motivation}
 \begin{example}[Solve the following ODE]
 \[ \frac{dx}{dt} = \sin(\cos x^{\frac{4}{3}}) + 4\sin^2(t) \quad x(0) = 1 \]
 \end{example}
@@ -73,7 +73,7 @@
 Use a time-marching algorithm that can solve the above equation, albeit numerically
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org23ebe7a}]{Introduction}
+\begin{frame}[label={sec:org977fe19}]{Introduction}
 \begin{itemize}
 \item As seen in the last lecture, all our (temporal/spatial) rate of frame change
 vectors (that effect rotations) are precisely of this form
@@ -84,7 +84,7 @@ More generally, we can solve problems of the form
 which is a partial differential equation (PDE), wherein \(\mathbf{F}\) is
 any arbitrary function.
 \end{frame}
-\begin{frame}[label={sec:orgbc2aed7}]{Examples}
+\begin{frame}[label={sec:orge2555b0}]{Examples}
 \begin{itemize}
 \item Population dynamics (Lotka-Volterra)
 \[ \begin{aligned}
@@ -100,7 +100,7 @@ any arbitrary function.
 \item Need not be time variable
 \end{itemize}}
 \end{frame}
-\begin{frame}[label={sec:org545f3d6}]{Introduction}
+\begin{frame}[label={sec:orgca0a26a}]{Introduction}
 \begin{itemize}
 \item We investigate three different (classes of) time-marching algorithms for
 autonomous problems (?!):
@@ -118,7 +118,7 @@ at specfic time points, \(t^0, t^1, \cdots, t^n\).
 \item Finally, we \emph{compare} these methods based on general and problem-specific properties\ldots{}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org66424b8}]{Problem statement}
+\begin{frame}[label={sec:org4a15269}]{Problem statement}
 \begin{itemize}
 \item Need function \(\gv{u} : [0, T] \to \mathbb{R}^n\) so that
 \begin{itemize}
@@ -133,7 +133,7 @@ equation. Typically \(k = 1,2\)
 \item Meaningful only when accompanied by \(k\) initial conditions
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org0d5a411}]{Some properties of ODEs}
+\begin{frame}[label={sec:org3c5ed4e}]{Some properties of ODEs}
 \begin{itemize}
 \item \alert{Autonomous} ODE?
 \begin{itemize}
@@ -155,7 +155,7 @@ this later)
 \end{itemize}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org4a40955}]{Numerical methods: Euler's forward method \footnote{Wikimedia}}
+\begin{frame}[label={sec:org00880ff}]{Numerical methods: Euler's forward method}
 \begin{columns}
 \begin{column}{0.5\columnwidth}
 \begin{itemize}
@@ -168,21 +168,58 @@ this later)
 \end{itemize}
 \end{column}
 \begin{column}{0.4\columnwidth}
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.8\textwidth]{images/euler_geometry.pdf}
-\caption{Geometrical desciption of Euler's method}
-\end{figure}
+\begin{center}
+	\begin{tikzpicture}[
+	declare function={func(\x)=sin(deg(pi*\x));},
+	declare function={funcder(\x)=pi*cos(deg(pi*\x));}]
+	\begin{axis}%
+		[grid=none,
+		axis x line=bottom,
+		axis y line=left,
+		domain=0.41:0.57,
+		xmin=0.38,
+		xmax=0.6,
+		ymin=0.95,
+		ymax=1.01,
+		xlabel={$t$},
+		ylabel={$u(t)$},
+		ticks=none,
+		height=1.12\textwidth,
+		enlargelimits=false,
+		]
+		\addplot[smooth, very thick,
+		color=metropolisorange]{func(x)};
+		% For each in pgfplots is painful, see
+		% https://tex.stackexchange.com/q/264168
+		\addplot[thick, color=metropolisblue, mark=*] coordinates
+		{ (0.41, {func(0.41)}) ({0.45}, {func(0.41) + funcder(0.41)*0.04}) };
+		\foreach \a in {0.45, 0.49,..., 0.57}
+        {\edef
+		\temp{
+		% \noexpand\addplot coordinates { (\x,0.96) (\x,1.02)};
+		\noexpand\addplot[thick, color=metropolisblue, mark=*] coordinates
+		{ (\a, {func(\a - 0.04) + funcder(\a - 0.04)*0.04}) ({\a + 0.04}, {func(\a) + funcder(\a)*0.04}) };
+		}\temp
+		}
+
+		%\pgfplotsinvokeforeach {0.41, 0.45,..., 0.53}{
+		% \addplot{\a*x^2};
+		% \addplot coordinates { (#1, {func(#1)}) ({#1 + 0.04}, {func(#1) + funcder(#1)*0.04}) };
+		% \addplot coordinates { (#1, #1) (#1 + 0.04, #1 + 0.04) };
+		% \draw (axis cs:#1, func(#1)) -- (axis cs:{#1 + 0.04}, {func(#1) + funcder(#1)*0.04});
+		% }
+	\end{axis}
+	\end{tikzpicture}
+\end{center}
 \end{column}
 \end{columns}
-
 \[ u(t_{0}+dt)=u(t_{0})+dt \cdot u'(t_{0})+{\frac {1}{2}}dt^{2} \cdot u''(t_{0})+O(dt^{3}). \]
 \begin{itemize}
 \item First order because local slope approximation is \(\order{dt}\)
 \end{itemize}
 \end{frame}
 
-\begin{frame}[label={sec:orgbc3da48}]{General explicit time stepping schemes}
+\begin{frame}[label={sec:orgcef3aea}]{General explicit time stepping schemes}
 \begin{itemize}
 \item Explicit schemes approximate the next iterate \(t^{n+1}\) using:
 \end{itemize}
@@ -194,7 +231,7 @@ this later)
 details vary\footnote{By a \alert{lot}}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:orgdf1d709}]{Some more time stepping schemes\footnote{Oleg Alexandrov, Public Domain, Wikimedia}}
+\begin{frame}[label={sec:orga7069b9}]{Some more time stepping schemes\footnote{Oleg Alexandrov, Public Domain, Wikimedia}}
 With \(\dot{x} = f(x)\),
 \begin{block}{Euler forward}
 \[ x^{n+1} = x^{n} + f(x^{n}) \cdot dt \]
@@ -223,7 +260,7 @@ x^{n+1} &= x + f({x}^{*}) \cdot dt \\
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgc67cba5}]{Some more time stepping schemes}
+\begin{frame}[label={sec:orgd2a2929}]{Some more time stepping schemes}
 \begin{block}{Runge Kutta-4}
 \begin{equation*}
 \begin{aligned}
@@ -242,7 +279,7 @@ second order ODEs
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:orgde8f7de}]{Function evaluations}
+\begin{frame}[label={sec:org90df665}]{Function evaluations}
 \begin{itemize}
 \item Our first attempt at comparing schemes is the number of functional
 evaluations for one time step\ldots{}
@@ -267,7 +304,7 @@ Verlet* & 1\\
 \end{tabular}
 \end{table}
 \end{frame}
-\begin{frame}[label={sec:orgd631d24}]{Convergence/ Consistency}
+\begin{frame}[label={sec:org61f7a05}]{Convergence/ Consistency}
 Suppose the numerical solution at some time \(t\) is \(\gv{u}\), and the
 exact solution at the same time is \(\tilde{\gv{u}}\).
 \begin{definition}[Convergence]
@@ -280,7 +317,7 @@ A numerical method is said to be consistent if the error, \(e_{dt}:=\lVert\tilde
 \[ \lim_{dt \to 0} \frac{e_{dt}}{dt} = 0\]
 \end{definition}
 \end{frame}
-\begin{frame}[label={sec:orgdace736}]{Order of convergence}
+\begin{frame}[label={sec:org126aa18}]{Order of convergence}
 \begin{definition}[Order of accuracy]
 The numerical solution \(\gv{u}\) is said to be \(p^{\text{th}}\)-order
 accurate if the error, \(e(dt):=\lVert\tilde{\gv{u}}-\gv{u} \rVert\)
@@ -294,7 +331,7 @@ the solution \(\gv{u}\)
  is notated as
 \[ \lVert\tilde{\gv{u}}-\gv{u} \rVert = \order{h^p}\]
 \end{frame}
-\begin{frame}[label={sec:org39431a5}]{Order of convergence : Importance}
+\begin{frame}[label={sec:orge05c994}]{Order of convergence : Importance}
 \begin{columns}
 \begin{column}{0.32\columnwidth}
 \begin{block}{First order}
@@ -353,7 +390,7 @@ the solution \(\gv{u}\)
 \end{alertblock}
 \end{frame}
 
-\begin{frame}[label={sec:org4d63654}]{Order of convergence : Implementation}
+\begin{frame}[label={sec:org3def343}]{Order of convergence : Implementation}
 \begin{block}{Model problem definition}
 Let's solve this problem, and test out methods for convergence:
 \[ \frac{dy}{dt} = -y \quad,\quad  y(0) = 1 \]
@@ -372,14 +409,14 @@ Notice:
 \alert{ACTIVITY}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org88abf87}]{Order of accuracy : Results}
+\begin{frame}[label={sec:org6807018}]{Order of accuracy : Results}
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.6\textwidth]{code/ooa.pdf}
 \caption{Schemes exhibit different orders of accuracy}
 \end{figure}
 \end{frame}
-\begin{frame}[label={sec:org421dbf1}]{Order of accuracy : Results}
+\begin{frame}[label={sec:org7426126}]{Order of accuracy : Results}
 \begin{table}[htbp]
 \caption{\label{tab_sym_snake_params}
 Order of accuracy for different schemes}
@@ -396,7 +433,7 @@ Verlet* & ?\\
 \end{tabular}
 \end{table}
 \end{frame}
-\begin{frame}[label={sec:org21c861d}]{Bottomline}
+\begin{frame}[label={sec:org7b83680}]{Bottomline}
 \begin{itemize}
 \item Order of accuracy is a measure of ``goodness'' of algorithm
 \item Higher-order accurate algorithms commit less error for a given \(h\).
@@ -404,7 +441,7 @@ Verlet* & ?\\
 ultimately number of operations performed)
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org4273bc5}]{Higher order ODEs}
+\begin{frame}[label={sec:org144f34a}]{Higher order ODEs}
 We consider a harmonic oscillator, i.e. a linear spring-mass system:
 \[ \ddot{x} + \omega^2 x = 0\]
 \begin{columns}
@@ -457,7 +494,7 @@ We consider a harmonic oscillator, i.e. a linear spring-mass system:
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgd7cdd04}]{Conservation laws in typical higher order ODEs}
+\begin{frame}[label={sec:orgcac9ab3}]{Conservation laws in typical higher order ODEs}
 The system is \alert{Hamiltonian} as the energy is conserved:
 \[ \underbrace{H(x(t), \dot{x}(t))}_{\text{Hamiltonian/total energy}} = \underbrace{x^2(t)}_{\text{Potential energy}} +
    \underbrace{\dot{x}^2(t)}_{\text{Kinetic energy}} \equiv 1\]
@@ -517,7 +554,7 @@ portrait (right)
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgb417ce9}]{Conversion to lower order ODE}
+\begin{frame}[label={sec:org52f9f4e}]{Conversion to lower order ODE}
 Let's convert the second order ODE to two first order ODEs, by considering \(y = \dot{x} \Rightarrow\)
 \[ \begin{pmatrix} \dot{x} \\ \dot{y} \end{pmatrix} = \begin{bmatrix} 0 & 1\\-1
    & 0 \end{bmatrix} \begin{pmatrix} {x} \\ {y} \end{pmatrix} \]
@@ -549,7 +586,7 @@ with \(\gv{y} = \dot{\gv{x}}\)
 	f(x - h) = f(x) - f'(x) h + f''(x)h^2/2! + \cdots \]
 and add them up}
 \end{frame}
-\begin{frame}[label={sec:org3988cf1}]{More schemes}
+\begin{frame}[label={sec:org2f79240}]{More schemes}
 Another example of a scheme for this model equation is
 \begin{block}{Velocity Verlet algorithm}
 \begin{equation*}
@@ -568,7 +605,7 @@ both position \(\gv{x}\) and velocity \(\gv{y}\)
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:orge5cec4e}]{Energy-preserving/symplectic schemes}
+\begin{frame}[label={sec:org847ee4b}]{Energy-preserving/symplectic schemes}
 \begin{block}{Why do we even care about these schemes?}
 \begin{itemize}
 \item Clearly, RK4 has higher order of convergence and it must be better?
@@ -584,7 +621,7 @@ They always conserve energy by design!
 \alert{ACTIVITY}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:orgeb10a6f}]{Energy-preserving/symplectic schemes}
+\begin{frame}[label={sec:org8c767c6}]{Energy-preserving/symplectic schemes}
 \begin{itemize}
 \item The harmonic equation arises from Newton's fundamental laws of motion,
 without dissipative forces \(\Rightarrow\) energy needs to be conserved
@@ -598,7 +635,7 @@ bounded solutions (counter examples?)
 \end{itemize}
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org9d243c3}]{But why is it energy preserving?\footnote{Peter Young, \href{https://young.physics.ucsc.edu/242/leapfrog.pdf}{Course Notes:Physics 115/242}}}
+\begin{frame}[label={sec:orgaac263b}]{But why is it energy preserving?\footnote{Peter Young, \href{https://young.physics.ucsc.edu/242/leapfrog.pdf}{Course Notes:Physics 115/242}}}
 \begin{itemize}
 \item Because it preserves the area in the \(x-p\) phase space (thus the area-preserving
 property seen earlier)
@@ -627,7 +664,7 @@ In the case of symplectic schemes, we require \(\det \bv{J} = 1\)
 \end{column}
 \end{columns}
 \end{frame}
-\begin{frame}[label={sec:org2c86f63}]{Area preserviation of Verlet and Euler algorithms}
+\begin{frame}[label={sec:org6f8ff26}]{Area preserviation of Verlet and Euler algorithms}
 From a different perspective,
 \(\begin{pmatrix} \delta x_1 \\ \delta v_1 \end{pmatrix} = \bv{J}\begin{pmatrix} \delta x_0
    \\ \delta v_0 \end{pmatrix}\)
@@ -660,7 +697,7 @@ Break it down to
 \end{columns}
 Calculate \(\det \bv{J}\)\ldots{}
 \end{frame}
-\begin{frame}[label={sec:orgc913e23}]{Bottomline}
+\begin{frame}[label={sec:org76b767b}]{Bottomline}
 \begin{itemize}
 \item The evolution of dynamics of the soft filament also relies on some form of energy
 conservation (translational/rotational/bending/twist/shear/stretch) as the
@@ -671,7 +708,7 @@ governing equations are Newton's laws
 \alert{Counterpoint} In reality, there is always dissipation (frictional forces,
  viscous forces, drag forces not included in either of the above, etc.)
 \end{frame}
-\begin{frame}[label={sec:org9e7f253}]{Why did forward Euler blow-up?}
+\begin{frame}[label={sec:orgbb9cad7}]{Why did forward Euler blow-up?}
 \begin{itemize}
 \item Because it was unstable\ldots{}related to the stability of a method (alternatively instability)
 \end{itemize}
@@ -691,7 +728,7 @@ governing equations are Newton's laws
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:orgba8f990}]{Why did forward Euler blow-up?}
+\begin{frame}[label={sec:org0b54814}]{Why did forward Euler blow-up?}
 \begin{itemize}
 \item \(\abs{1 + h \lambda}\) is the \alert{amplification factor}
 \item The condition on the amplification factor implies the existence of a
@@ -703,7 +740,7 @@ governing equations are Newton's laws
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org85829bf}]{What about backward Euler?}
+\begin{frame}[label={sec:org7e16496}]{What about backward Euler?}
 \begin{block}{Backward Euler algorithm}
 \begin{itemize}
 \item Find out what happens to the numerical solution using backward Euler when applied to
@@ -723,7 +760,7 @@ y_k &= \left( \frac{1}{1 - h \lambda} \right)^k y_{0}
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org0baac54}]{What about Verlet ?}
+\begin{frame}[label={sec:orga6ac0fa}]{What about Verlet ?}
 \begin{block}{Can it blow up?}
 \end{block}
 \begin{block}<2->{It can!}
@@ -734,7 +771,7 @@ quantity and hence can not blow up
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org4d8a1e5}]{Bottomline}
+\begin{frame}[label={sec:org0e2d771}]{Bottomline}
 \begin{itemize}
 \item Stability is another measure of how ``good'' a time-marching algorithm is
 \item For \alert{explicit} schemes, main concern in time-step selection is usually
@@ -742,7 +779,7 @@ quantity and hence can not blow up
 \item For \alert{implicit} schemes, \alert{accuracy} determines the time-step selection
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:orgb670d88}]{Stiff ODEs}
+\begin{frame}[label={sec:org633767a}]{Stiff ODEs}
 \begin{block}{What are stiff problems?}
 \begin{itemize}
 \item Hard to define exactly
@@ -759,7 +796,7 @@ magnitude (what is this called again?)
 \end{itemize}
 \end{alertblock}
 \end{frame}
-\begin{frame}[label={sec:org30bb564}]{Stiff ODEs}
+\begin{frame}[label={sec:orgacaf0dd}]{Stiff ODEs}
 \begin{itemize}
 \item Why not just \emph{small} or \emph{large} magnitude?
 \begin{itemize}
@@ -782,7 +819,7 @@ with large timesteps
 \end{itemize}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org50f721a}]{Stiff ODEs}
+\begin{frame}[label={sec:org31299f6}]{Stiff ODEs}
 \begin{block}{Implicit methods}
 \begin{itemize}
 \item Large time steps?
@@ -801,7 +838,7 @@ partially offset the cost of solving a stiff problem)
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:org341808d}]{Summary}
+\begin{frame}[label={sec:orgd7ede04}]{Summary}
 \begin{table}[htbp]
 \caption{\label{tab_sym_snake_params}
 Properties of different explicit schemes}
@@ -818,7 +855,7 @@ Verlet & 2 & 1 & Yes\\
 \end{tabular}
 \end{table}
 \end{frame}
-\begin{frame}[label={sec:orgc33a74f}]{Credits}
+\begin{frame}[label={sec:org06a99f6}]{Credits}
 \begin{block}{A good chunk of the material in these slides are taken from Prof. Andreas Kloeckner's CS450 lectures}
 \end{block}
 \end{frame}
