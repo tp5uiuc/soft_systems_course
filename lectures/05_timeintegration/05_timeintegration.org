@@ -527,29 +527,31 @@
 	:BEAMER_COL: 0.5
 	:END:
 	#+begin_export latex
-	 \begin{center}
-	 \begin{tikzpicture}[scale=0.62]
+	\begin{center}
+	  \begin{tikzpicture}
 		\begin{axis}%
-		[grid=both,
-		minor tick num=4,
-		grid style={line width=.1pt, draw=gray!10},
-		major grid style={line width=.2pt,draw=gray!50},
-		axis lines=middle,
-		domain=0:7,
-		x label style={at={(axis description cs:1.1,0.5)},anchor=east},
-		y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south},
-		xlabel={t},
-		ylabel={u(t)},
-		title style={at={(0.5,0)},anchor=north,yshift=-0.1},
-		title={Time domain},
-		enlargelimits={abs=0.2}
-		]
-		  \addplot[samples=200,smooth,scarlet,line width=2pt]{cos(deg(x))};
-		  \addplot[samples=200,smooth,royalblue,line width=2pt]{-sin(deg(x))};
-		  \legend{$x(t)$,$\dot{x}(t)$}
+		  [grid=both,
+		  minor tick num=4,
+		  grid style={line width=.1pt, draw=gray!10},
+		  major grid style={line width=.2pt,draw=gray!50},
+		  axis lines=middle,
+		  domain=0:7,
+		  x label style={at={(axis description cs:1.1,0.5)},anchor=east},
+		  y label style={at={(axis description cs:-0.1,.5)},rotate=90,anchor=south},
+		  xlabel={$t$},
+		  ylabel={$u(t)$},
+		  width=1.1\textwidth,
+		  title style={at={(0.5,0)},anchor=north,yshift=-0.1},
+		  title={Time domain},
+		  enlargelimits={abs=0.2}
+		  ]
+		  \addplot[samples=200,smooth,metropolisorange,very thick]{cos(deg(x))}
+		  node[pos=0.1, right]{{\small $x(t)$}};
+		  \addplot[samples=200,smooth,metropolisblue,very thick]{-sin(deg(x))}
+		  node[pos=0.99, below left, anchor=north east]{{\small $\dot{x}(t)$}};
 		\end{axis}
-	 \end{tikzpicture}
-	 \end{center}
+	  \end{tikzpicture}
+	\end{center}
 	#+end_export
 ***                                                                :B_column:
 	:PROPERTIES:
@@ -557,28 +559,32 @@
 	:BEAMER_COL: 0.5
 	:END:
 	#+begin_export latex
-	 \begin{center}
-	 \begin{tikzpicture}[scale=0.62]
+	\begin{center}
+	  \begin{tikzpicture}
 		\begin{axis}%
-		[grid=both,
-		minor tick num=4,
-		grid style={line width=.1pt, draw=gray!10},
-		major grid style={line width=.2pt,draw=gray!50},
-		axis lines=middle,
-		xmin=-1.1, xmax=1.1, ymin=-1.1, ymax=1.1,
-		axis equal,
-		x label style={at={(axis description cs:1.1,0.5)},anchor=east},
-		y label style={at={(axis description cs:0.5,1.1)},anchor=south},
-		xlabel={\textcolor{scarlet}{x}},
-		ylabel={\textcolor{royalblue}{$\dot{x}$}},
-		title style={at={(0.5,0)},anchor=north,yshift=-0.1},
-		title={Phase portrait},
-		enlargelimits={abs=0.2}
-		]
-		  \draw[line width=2] (axis cs: 0, 0) circle [radius=1];
+		  [grid=both,
+		  minor tick num=4,
+		  grid style={line width=.1pt, draw=gray!10},
+		  major grid style={line width=.2pt,draw=gray!50},
+		  axis lines=middle,
+		  width=1\textwidth,
+		  xmin=-1.1, xmax=1.1, ymin=-1.1, ymax=1.1,
+		  axis equal,
+		  x label style={at={(axis description cs:0.98,0.5)},anchor=south east},
+		  y label style={at={(axis description cs:0.5,0.98)},anchor=north west},
+		  xlabel={\textcolor{metropolisorange}{$x$}},
+		  ylabel={\textcolor{metropolisblue}{$\dot{x}$}},
+		  title style={at={(0.5,1.1)},anchor=south},
+		  title={Phase portrait},
+		  enlargelimits=true,
+		  disabledatascaling
+		  ]
+		  \draw[very thick, black] (axis cs: 0, 0) circle [radius=1];
+		  \draw[thick, black, ->] (axis cs:0, 0)--(axis cs:0.707106, 0.707106);
+		  \draw [thick,->] (0.4,0) arc (0:45:0.4) node [midway, right]{$t$};
 		\end{axis}
-	 \end{tikzpicture}
-	 \end{center}
+	  \end{tikzpicture}
+	\end{center}
 	#+end_export
 
 ** Conversion to lower order ODE
