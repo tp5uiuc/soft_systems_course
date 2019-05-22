@@ -368,8 +368,10 @@
 
 	   % axes
 	   \coordinate (O) at (0,0,0);
-	   \draw[thick,->] (0,0,0) -- (1,0,0) node[anchor=north east]{$x$};
-	   \draw[thick,->] (0,0,0) -- (0,1,0) node[anchor=north west]{$y$};
+	   % \draw[thick,->] (0,0,0) -- (1,0,0) node[anchor=north east]{$x$};
+	   % \draw[thick,->] (0,0,0) -- (0,1,0) node[anchor=north west]{$y$};
+	   \draw[thick,<->] (1,0,0) node[anchor=north east]{$x$} -- (0,0,0) --
+	   (0,1,0) node[anchor=north west]{$y$};
 
 
 	   % vectors
@@ -383,8 +385,12 @@
 	   % coordinate axes xdash and ydash
 	   \tdplotsetcoord{xdash}{1}{90}{\alphavec}
 	   \tdplotsetcoord{ydash}{1}{90}{\alphavec + 90}
-	   \draw[->,metropolisorange,dashed,thick] (O)  -- (xdash) node[above right] {$x^{\prime}$};
-	   \draw[->,metropolisorange,dashed,thick] (O)  -- (ydash) node[above right] {$y^{\prime}$};
+	   %\draw[->,metropolisorange,dashed,thick] (O)  -- (xdash) node[above right] {$x^{\prime}$};
+	   %\draw[->,metropolisorange,dashed,thick] (O)  -- (ydash) node[above right] {$y^{\prime}$};
+	   \draw[thick,dashed,metropolisorange,<->,rotate=\alphavec] (1,0,0) node[above right]{$x^{\prime}$}-- (O) --
+	   (0,1,0) node[above right]{$y^{\prime}$};
+	   % \draw[thick,dashed,metropolisorange,<->] (ydash) node[above right]{$x^{\prime}$}-- (O) --
+	   % (xdash) node[above right]{$y^{\prime}$};
 
 	   % Points on x and y dash
 	   \tdplotsetcoord{xdashmeet}{\rvec*cos(\phivec-\alphavec)}{90}{\alphavec}
@@ -486,7 +492,7 @@
 	perspectives applies for your problem of interest. The distinction between
 	these fundamentally different transformations goes beyond one being the
 	same as the other with an opposite rotation angle. "
-** TODO Frame rotation as a change in basis
+** Frame rotation as a change in basis
 *** More concretely
 	If \( \mathcal{B} \) and \( \mathcal{B}^\prime \) are two (different) bases
 	\( \in \mathbb{R}^n \)
