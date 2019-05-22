@@ -402,8 +402,48 @@
   *ACTIVITY*
 ** Order of accuracy : Results
    #+CAPTION: Schemes exhibit different orders of accuracy
-   #+ATTR_LATEX: :width 0.6\textwidth
-   file:code/ooa.pdf
+   # #+ATTR_LATEX: :width 0.6\textwidth
+   #  file:code/ooa.pdf
+
+	#+begin_export latex
+	% Need to run the notebook first
+	\begin{center}
+		\begin{tikzpicture}
+			\begin{loglogaxis}[
+				enlargelimits=true,
+				grid=both,
+				grid style={line width=.1, draw=gray!20},
+				major grid style={line width=.2,draw=gray!50},
+				xlabel=$dt$,
+				ylabel=$e(dt)$,
+				height=1.0\textheight
+				]
+				% Euler backward/forward
+				\addplot [mark=*, mark size=2.5, scarlet, very thick]
+				table {code/data/euler_bwd_ooa.txt} node [midway, above left, anchor=south east]
+				{Euler bwd/fwd};
+				\addplot [metropolisblue, dashed, thick]
+				table {code/data/euler_bwd_ooa_slopes.txt};
+
+				% Midpoitn
+				\addplot [mark=*, mark size=2.5, royalblue, very thick]
+				table {code/data/midpoint_method_ooa.txt} node [pos=0.8, below , anchor=north west]
+				{Midpoint};
+				\addplot [metropolisblue, dashed, thick]
+				table {code/data/midpoint_method_ooa_slopes.txt};
+
+				% RK4
+				\addplot [mark=*, mark size=2.5, metropolisorange, very thick]
+				table {code/data/rk4_ooa.txt} node [midway, below right, anchor=north west]
+				{RK4};
+				\addplot [metropolisblue, dashed, thick]
+				table {code/data/rk4_ooa_slopes.txt};
+
+			\end{loglogaxis}
+		\end{tikzpicture}
+	\end{center}
+	#+end_export
+
 ** Order of accuracy : Results
 	#+CAPTION: Order of accuracy for different schemes
 	#+NAME: tab_sym_snake_params
