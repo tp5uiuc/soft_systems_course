@@ -11,9 +11,11 @@
 # #+LATEX_CLASS_OPTIONS: [notes]
 #+LATEX_HEADER:\usetheme[progressbar=frametitle]{metropolis}
 #+LATEX_HEADER:\usepackage{tikz}
+#+LATEX_HEADER:\usepackage{tikz-3dplot}
 #+LATEX_HEADER:\usepackage{pgfplots}
 #+LATEX_HEADER:\pgfplotsset{compat=newest}
 #+LATEX_HEADER:\usepackage{spot}
+#+LATEX_HEADER:\usetikzlibrary{calc,patterns,decorations.pathmorphing,decorations.markings}
 #+LATEX_HEADER:\newcommand{\gv}[1]{\ensuremath{\mbox{\boldmath$ #1 $}}}
 #+LATEX_HEADER:\newcommand{\bv}[1]{\ensuremath{\mathbf{#1}}}
 #+LATEX_HEADER:\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
@@ -23,9 +25,15 @@
 #+LATEX_HEADER:\definecolor{scarlet}{rgb}{1.0, 0.13, 0.0}
 #+LATEX_HEADER:\definecolor{shamrockgreen}{rgb}{0.0, 0.62, 0.38}
 #+LATEX_HEADER:\definecolor{royalblue}{rgb}{0.25, 0.41, 0.88}
+#+LATEX_HEADER:\definecolor{metropolisorange}{RGB}{235,129,27}
+#+LATEX_HEADER:\definecolor{metropolisblue}{RGB}{35,55,59}
 #+OPTIONS:   H:2 num:t toc:nil ::t |:t ^:{} -:t f:t *:t <:t
 #+OPTIONS:   tex:t d:nil todo:t pri:nil tags:nil
 #+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col) %8BEAMER_OPT(Opt)
+
+#+begin_export latex
+\tikzset{>=latex}
+#+end_export
 * Time-marching algorithms
 ** Motivation
 *** Solve the following ODE                                       :B_example:
@@ -308,7 +316,7 @@
    - Higher-order accurate algorithms commit less error for a given \( h \).
    - But they are costly (in terms number of function evaluations, and
      ultimately number of operations performed)
-** Higher order ODEs [fn:4]
+** Higher order ODEs
    We consider a harmonic oscillator, i.e. a linear spring-mass system:
    \[ \ddot{x} + \omega^2 x = 0\]
 ***                                                                :B_column:
@@ -327,8 +335,42 @@
 	:BEAMER_COL: 0.4
 	:END:
 	#+CAPTION: Harmonic oscillator
-	#+ATTR_LATEX: :width 1.0\textwidth
-	[[file:images/oscillator_spring.png]]
+
+	#+begin_export latex
+	\tikzset{boxstyle/.style={draw,outer sep=0pt,thick}}
+	% https://tex.stackexchange.com/a/13952
+	\begin{center}
+		\begin{tikzpicture}[scale=1]
+		\tikzstyle{spring}=[thick,decorate,color=metropolisblue, decoration={zigzag,pre length=4,post length=4,segment length=10}]
+		\tikzstyle{ground}=[fill,pattern=north east lines,draw=none,minimum width=8,minimum height=3]
+
+		\node (M) [boxstyle, minimum width=50, minimum height=50, color=metropolisblue] {$m$};
+
+		\node (ground) [ground,anchor=north,yshift=-10,minimum width=80] at (M.south) {};
+		\draw (ground.north east) -- (ground.north west);
+		\draw [thick] (M.south west) ++ (8pt,-5pt) circle (5pt) (M.south east) ++ (-8pt,-5pt) circle(5pt);
+		% \draw [thick] (M.south west) ++ (8,-5) circle[radius=5pt];
+		% \draw [thick]
+
+		\node (wall) [ground, rotate=-90, minimum width=80, xshift=-10, yshift=-80] {};
+		\draw (wall.north east) -- (wall.north west);
+
+		% Syntax ($(A)!(C)!(B)$), specifies the projection of (C) on the line
+		% from (A) to (B),
+		% <name>.<number> syntax https://tex.stackexchange.com/a/426804
+		\draw [spring] (M.180) -- ($(wall.north east)!(M.180)!(wall.north west)$)
+		node [midway, above]{$kx$};
+
+		% Draw x position beginning and end
+		% Interesection of north east ground with horizontal wall and 10 pt line
+		\draw [thick, color=metropolisblue] ($(wall.south west)!(ground.north west)!(wall.north west)$) --
+		++ (0pt,-5pt) coordinate (c) -- ++(0pt,-5pt);
+		\draw [thick, color=metropolisblue, ->] (c) -- ($(M.south west)!(c)!(M.north west)$)
+		node[right]{$x$};
+
+		\end{tikzpicture}
+	\end{center}
+	#+end_export
 
 ** Conservation laws in typical higher order ODEs
    The system is *Hamiltonian* as the energy is conserved:
@@ -750,8 +792,6 @@
 * Footnotes
 
 [fn:5] Peter Young, [[https://young.physics.ucsc.edu/242/leapfrog.pdf][Course Notes:Physics 115/242]]
-
-[fn:4] Unknown source
 
 [fn:3] Oleg Alexandrov, Public Domain, Wikimedia
 
