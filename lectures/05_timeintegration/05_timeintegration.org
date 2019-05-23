@@ -16,6 +16,7 @@
 #+LATEX_HEADER:\pgfplotsset{compat=newest}
 #+LATEX_HEADER:\usepackage{spot}
 #+LATEX_HEADER:\usetikzlibrary{calc,patterns,decorations.pathmorphing,decorations.markings}
+#+LATEX_HEADER:\usepgfplotslibrary{groupplots}
 #+LATEX_HEADER:\newcommand{\gv}[1]{\ensuremath{\mbox{\boldmath$ #1 $}}}
 #+LATEX_HEADER:\newcommand{\bv}[1]{\ensuremath{\mathbf{#1}}}
 #+LATEX_HEADER:\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
@@ -543,7 +544,8 @@
 		  width=1.1\textwidth,
 		  title style={at={(0.5,0)},anchor=north,yshift=-0.1},
 		  title={Time domain},
-		  enlargelimits={abs=0.2}
+		  enlargelimits=true,
+		  % enlargelimits={abs=0.2}
 		  ]
 		  \addplot[samples=200,smooth,metropolisorange,very thick]{cos(deg(x))}
 		  node[pos=0.1, right]{{\small $x(t)$}};
@@ -567,21 +569,22 @@
 		  grid style={line width=.1pt, draw=gray!10},
 		  major grid style={line width=.2pt,draw=gray!50},
 		  axis lines=middle,
-		  width=1\textwidth,
+		  width=1.1\textwidth,
 		  xmin=-1.1, xmax=1.1, ymin=-1.1, ymax=1.1,
 		  axis equal,
 		  x label style={at={(axis description cs:0.98,0.5)},anchor=south east},
-		  y label style={at={(axis description cs:0.5,0.98)},anchor=north west},
+		  y label style={at={(axis description cs:0.5,0.98)},anchor=west},
 		  xlabel={\textcolor{metropolisorange}{$x$}},
 		  ylabel={\textcolor{metropolisblue}{$\dot{x}$}},
-		  title style={at={(0.5,1.1)},anchor=south},
+		  title style={at={(0.5,-0.2)},anchor=south},
+		  % title style={at={(0.5,0.0)},anchor=north},
 		  title={Phase portrait},
 		  enlargelimits=true,
 		  disabledatascaling
 		  ]
 		  \draw[very thick, black] (axis cs: 0, 0) circle [radius=1];
 		  \draw[thick, black, ->] (axis cs:0, 0)--(axis cs:0.707106, 0.707106);
-		  \draw [thick,->] (0.4,0) arc (0:45:0.4) node [midway, right]{$t$};
+		  \draw [thick,->] (0.4,0) arc (0:45:0.4) node [midway, right]{{\scriptsize $t$}};
 		\end{axis}
 	  \end{tikzpicture}
 	\end{center}
@@ -751,10 +754,16 @@
      *stability region* in the complex plane
    - *DEMO*
    #+NAME: stability_region_bloc
-   #+begin_src python :exports results :results file :session stable :eval never-export
+   #+begin_src python :exports results :results output :session stable :eval never-export
 	 import numpy as np
 	 from matplotlib import pyplot as plt
 	 import seaborn as sns
+
+	 import os
+	 DATA_PATH = os.path.join(os.getcwd(), os.path.join('code', 'data'))
+
+	 if not os.path.isdir(DATA_PATH):
+		 os.makedirs(DATA_PATH)
 
 	 ## Set rc parameters
 	 sns.set_style(
@@ -793,7 +802,7 @@
 	 fig, axes = plt.subplots(1,3)
 
 	 # Plot euler forward in the first
-	 z = np.exp(1j* np.pi * np.linspace(0.0, 2.0, 200, endpoint=True))
+	 z = np.exp(1j* np.pi * np.linspace(0.0, 2.0, 30, endpoint=True))
 	 r = z - 1
 	 axes[0].set_xlabel(r'$\mathrm{Re}$')
 	 axes[0].set_ylabel(r'$\mathrm{Im}$')
@@ -807,6 +816,9 @@
 	 axes[0].spines['bottom'].set_position('zero')
 	 axes[0].spines['top'].set_color('none')
 	 axes[0].grid(True)
+	 # EF
+	 temp = np.vstack((np.real(r), np.imag(r)))
+	 np.savetxt(os.path.join(DATA_PATH, 'euler_fwd_stability.txt'), temp.T, delimiter='\t')
 
 	 # Plot euler backward in the second
 	 r = z + 1
@@ -822,11 +834,14 @@
 	 axes[1].spines['bottom'].set_position('zero')
 	 axes[1].spines['top'].set_color('none')
 	 axes[1].grid(True)
+	 temp = np.vstack((np.real(r), np.imag(r)))
+	 np.savetxt(os.path.join(DATA_PATH, 'euler_bwd_stability.txt'), temp.T, delimiter='\t')
 
 
 	 # Plot RK4 in the third
 	 w = 0
 	 W = 0
+	 z = np.exp(1j* np.pi * np.linspace(0.0, 2.0, 150, endpoint=True))
 	 for i in range(1, z.shape[0]):
 		 w = w - (1.0 + w + 0.5*w**2 + w**3/6. + w**4/24. - z[i]**4)/ (1.0 + w + 0.5*w**2 + w**3/6.)
 		 W = np.hstack((W, w))
@@ -843,13 +858,95 @@
 	 axes[2].spines['top'].set_color('none')
 	 axes[2].grid(True)
 
+	 # RK
+	 temp = np.vstack((np.real(W), np.imag(W)))
+	 np.savetxt(os.path.join(DATA_PATH, 'rk4_stability.txt'), temp.T, delimiter='\t')
 
-	 fig.savefig(FILE_NAME, bbox_inches='tight')
-	 FILE_NAME
+	 # # Use this in conjunction with session and results file
+	 # fig.savefig(FILE_NAME, bbox_inches='tight')
+	 # FILE_NAME
+
+	 # # Generate tikz
+	 # import matplotlib2tikz
+	 # print(matplotlib2tikz.get_tikz_code())
+	 # matplotlib2tikz.save("test.tex")
+
+	 # Write to file to read as tikz
+
    #+end_src
 
    #+RESULTS: stability_region_bloc
-   [[file:images/stability.pdf]]
+
+   #+begin_export latex
+   % This file was created by matplotlib2tikz v0.7.4.
+   \begin{center}
+   \begin{tikzpicture}[scale=0.45]
+	   \begin{groupplot}[group style={group size=3 by 1}]
+	   \nextgroupplot[
+	   title={Euler forward},
+	   grid=both,
+	   grid style={line width=.1pt, draw=gray!10},
+	   major grid style={line width=.2pt,draw=gray!50},
+	   axis equal,
+	   xmin=-2.2, xmax=0.2,
+	   ymin=-1.2, ymax=1.2,
+	   minor tick num=4,
+	   xlabel={\(\displaystyle \mathrm{Re}\)},
+	   ylabel={\(\displaystyle \mathrm{Im}\)},
+	   enlargelimits=false,
+	   disabledatascaling
+	   ]
+
+	   \draw[very thick, metropolisorange, fill=metropolisorange, fill opacity=0.3]
+	   (axis cs: -1, 0) circle [radius=1];
+	   % \addplot [very thick, metropolisorange, fill=metropolisorange, fill opacity=0.3]
+	   % table {code/data/euler_fwd_stability.txt};
+
+	   \nextgroupplot[
+	   title={Euler backward},
+	   grid=both,
+	   grid style={line width=.1pt, draw=gray!10},
+	   major grid style={line width=.2pt,draw=gray!50},
+	   axis equal,
+	   xmin=-0.2, xmax=2.2,
+	   ymin=-1.2, ymax=1.2,
+	   minor tick num=4,
+	   xlabel={\(\mathrm{Re}\)},
+	   enlargelimits=false,
+	   disabledatascaling
+	   ]
+	   % \addplot [fill=metropolisorange, fill opacity=0.3]
+	   % table [row sep=\\]{
+	   % -0.5 -1.5\\
+	   % 2.5 -1.5\\
+	   % 2.5 1.5\\
+	   % -0.5 1.5\\
+	   % -0.5 -1.5};
+	   \filldraw[fill=metropolisorange, fill opacity=0.3]
+	   (axis cs: -1, -2) rectangle (3,2);
+	   \draw[very thick, metropolisorange, fill=white, fill opacity=0.6]
+	   (axis cs: 1, 0) circle [radius=1];
+	   % \addplot [thick, metropolisorange] table {code/data/euler_bwd_stability.txt};
+
+	   \nextgroupplot[
+	   title={Runge-Kutta--4},
+	   grid=both,
+	   grid style={line width=.1pt, draw=gray!10},
+	   major grid style={line width=.2pt,draw=gray!50},
+	   axis equal,
+	   xmin=-3, xmax=1,
+	   ymin=-3, ymax=3,
+	   minor tick num=4,
+	   xlabel={\(\mathrm{Re}\)},
+	   enlargelimits=false,
+	   disabledatascaling,
+	   ]
+	   \addplot [thick, metropolisorange, fill=metropolisorange,
+	   fill opacity=0.3] table {code/data/rk4_stability.txt};
+	   \end{groupplot}
+   \end{tikzpicture}
+   \end{center}
+   #+end_export
 
 ** What about backward Euler?
 *** Backward Euler algorithm                                        :B_block:
