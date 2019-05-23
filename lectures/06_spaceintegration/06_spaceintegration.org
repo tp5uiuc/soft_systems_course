@@ -11,7 +11,8 @@
 # #+LATEX_CLASS_OPTIONS: [notes]
 #+LATEX_HEADER:\usetheme[progressbar=frametitle]{metropolis}
 #+LATEX_HEADER:\usepackage{tikz}
-#+LATEX_HEADER:\usetikzlibrary{intersections,calc}
+#+LATEX_HEADER:\usepackage{tikz-3dplot}
+#+LATEX_HEADER:\usetikzlibrary{intersections,calc,shapes.geometric}
 #+LATEX_HEADER:\usepackage{pgfplots}
 #+LATEX_HEADER:\pgfplotsset{compat=newest}
 #+LATEX_HEADER:\usepackage{spot}
@@ -24,9 +25,15 @@
 #+LATEX_HEADER:\definecolor{scarlet}{rgb}{1.0, 0.13, 0.0}
 #+LATEX_HEADER:\definecolor{shamrockgreen}{rgb}{0.0, 0.62, 0.38}
 #+LATEX_HEADER:\definecolor{royalblue}{rgb}{0.25, 0.41, 0.88}
+#+LATEX_HEADER:\definecolor{metropolisorange}{RGB}{235,129,27}
+#+LATEX_HEADER:\definecolor{metropolisblue}{RGB}{35,55,59}
 #+OPTIONS:   H:2 num:t toc:nil ::t |:t ^:{} -:t f:t *:t <:t
 #+OPTIONS:   tex:t d:nil todo:t pri:nil tags:nil
 #+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col) %8BEAMER_OPT(Opt)
+
+#+begin_export latex
+\tikzset{>=latex}
+#+end_export
 * Introduction
 ** Integration and differentiation of functions
    More specifically numerical integration (*quadrature*) and differentiation
@@ -73,8 +80,107 @@
 	\) while reducing number of function evaluations and robust to numerical errors
 ** TODO Midpoint and Trapezoidal rules
    #+CAPTION: Midpoint and trapezoidal rules
-   #+ATTR_LATEX: :width 0.8\textwidth
-   [[file:images/midpoint.jpg]]
+   # #+ATTR_LATEX: :width 0.8\textwidth
+   # [[file:images/midpoint.jpg]]
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.5
+	:END:
+	 #+begin_export latex
+	 \begin{center}
+		 \begin{tikzpicture}[
+		 declare function={func(\x)=sin(deg(pi*\x));},
+		 declare function={funcder(\x)=pi*cos(deg(pi*\x));}]
+		 \begin{axis}%
+			 [grid=none,
+			 axis x line=bottom,
+			 axis y line=left,
+			 domain=1.52:1.62,
+			 xmin=1.50,
+			 xmax=1.64,
+			 ymax=-0.92,
+			 ymin=-1.02,
+			 xlabel={$t$},
+			 ylabel={$u(t)$},
+			 ticks=none,
+			 width=1.1\textwidth,
+			 title={Midpoint rule},
+			 title style={at={(0.5,1.0)},anchor=north},
+			 enlargelimits=false,
+			 ]
+			 \addplot[smooth, very thick,
+			 color=metropolisorange]{func(x)};
+
+			 % Add rectangle betewen 1.53 and 1.61
+			 \filldraw[thick, color=metropolisblue, fill=metropolisblue, fill opacity=0.2]
+			 (axis cs: 1.53, \pgfkeysvalueof{/pgfplots/ymin})
+			 rectangle (axis cs: 1.61,{func(1.57)});
+
+			 % Draw point
+			 \node (M) [circle, minimum size=5, inner sep=0, fill=metropolisorange]
+			 at (axis cs: 1.57, {func(1.57)}) {};
+
+		 \end{axis}
+		 \end{tikzpicture}
+	 \end{center}
+	 #+end_export
+
+***                                                                :B_column:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_COL: 0.5
+	:END:
+	 #+begin_export latex
+	 \begin{center}
+		 \begin{tikzpicture}[
+		 declare function={func(\x)=sin(deg(pi*\x));},
+		 declare function={funcder(\x)=pi*cos(deg(pi*\x));}]
+		 \begin{axis}%
+			 [grid=none,
+			 axis x line=bottom,
+			 axis y line=left,
+			 domain=1.52:1.62,
+			 xmin=1.50,
+			 xmax=1.64,
+			 ymax=-0.92,
+			 ymin=-1.02,
+			 xlabel={$t$},
+			 ylabel={$u(t)$},
+			 ticks=none,
+			 width=1.1\textwidth,
+			 title={Trapezoidal rule},
+			 title style={at={(0.5,1.0)},anchor=north},
+			 enlargelimits=false,
+			 disabledatascaling
+			 ]
+			 \addplot[smooth, very thick,
+			 color=metropolisorange]{func(x)};
+
+			 % Draw point
+			 \node (M) [circle, minimum size=5, inner sep=0, fill=metropolisorange]
+			 at (axis cs: 1.57, {func(1.57)}) {};
+
+			 % Add trapezoid betewen 1.53 and 1.61 by first defining coordinates
+			 % https://tex.stackexchange.com/a/324328
+			 \path (M) + (axis cs:-0.04,{-funcder(1.57)*0.04}) coordinate (A);
+			 \path (A) + (axis cs:0.0,\pgfkeysvalueof{/pgfplots/ymin}) coordinate (Ad);
+			 \path (M) + (axis cs:0.04, {funcder(1.57)*0.04}) coordinate (B);
+			 \path (B) + (axis cs:0.0,\pgfkeysvalueof{/pgfplots/ymin}) coordinate (Bd);
+
+			 \draw [thick, color=metropolisblue, fill=metropolisblue, fill opacity=0.2]
+			 (M) -- (A) -- (Ad) -- (Bd) -- (B) -- cycle;
+
+			 % Add rectangle betewen 1.53 and 1.61
+			 \draw[dashed, thin]
+			 (axis cs: 1.53, \pgfkeysvalueof{/pgfplots/ymin})
+			 rectangle (axis cs: 1.61,{func(1.57)});
+
+		 \end{axis}
+		 \end{tikzpicture}
+	 \end{center}
+	 #+end_export
+
 *** Midpoint rule
 	\[ I_h = (b-a) f \left( \frac{a + b}{2} \right) \]
 *** Trapezoidal rule
