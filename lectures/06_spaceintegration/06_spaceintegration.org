@@ -474,20 +474,102 @@
 *** Local polynomial representations                                :B_block:
 	:PROPERTIES:
 	:BEAMER_env: block
-	:BEAMER_COL: 0.6
 	:END:
 	Finite differences assume your function is locally a polynomial (order
 	depending upon the order of the finite difference calculation) and takes
 	derivatives of these polynomials...
+*** Local polynomial representations                               :B_column:
+	:PROPERTIES:
+	:BEAMER_COL: 0.48
+	:BEAMER_env: column
+	:END:
+
+	\tikz[baseline=-2]{\draw[color=metropolisblue, thick] (0,0)--(1,0);}
+	\rightarrow Forward difference
+
+	\tikz[baseline=-2]{\draw[color=scarlet, thick] (0,0)--(1,0);}
+	\rightarrow Backward difference
+
+	\tikz[baseline=-2]{\draw[color=royalblue, thick] (0,0)--(1,0);}
+	\rightarrow Central difference
 ***                                                                :B_column:
 	:PROPERTIES:
 	:BEAMER_env: column
 	:BEAMER_COL: 0.5
 	:END:
    #+CAPTION: First derivative approximation
-   #+ATTR_LATEX: :width 1.0\textwidth
-	[[file:images/fdiff.jpg]]
+   # #+ATTR_LATEX: :width 1.0\textwidth
+   # [[file:images/fdiff.jpg]]
+	#+begin_export latex
+	\begin{center}
+		\begin{tikzpicture}[
+		declare function={func(\x)=sin(deg(pi*\x));},
+		declare function={funcder(\x)=pi*cos(deg(pi*\x));}]
+		\begin{axis}%
+			[grid=none,
+			axis x line=bottom,
+			axis y line=none,
+			domain=1.45:1.57,
+			xmin=1.47,
+			xmax=1.56,
+			ymax=-0.975,
+			ymin=-1.005,
+			ticks=none,
+			height=1.0\textwidth,
+			enlargelimits=false,
+			clip=true,
+			disabledatascaling
+			]
+			\addplot[smooth, very thick,
+			color=metropolisorange]{func(x)} node[pos=0.1, above, anchor=south east]
+			{{\scriptsize$f(x)$}};
 
+			% Draw points
+			\node (M) [circle, minimum size=5, inner sep=0, fill=metropolisorange]
+			at (axis cs: 1.5, {func(1.5)}) {};
+			\node (N) [circle, minimum size=5, inner sep=0, fill=metropolisorange]
+			at (axis cs: 1.52, {func(1.52)}) {};
+			\node (O) [circle, minimum size=5, inner sep=0, fill=metropolisorange]
+			at (axis cs: 1.55, {func(1.55)}) {};
+
+			% % Add trapezoid betewen 1.53 and 1.61 by first defining coordinates
+			% % https://tex.stackexchange.com/a/324328
+			% \path (M) + (axis cs: 0.0, \pgfkeysvalueof{/pgfplots/ymin}) coordinate (Mx);
+			% \path (N) + (axis cs: 0.0, \pgfkeysvalueof{/pgfplots/ymin}) coordinate (Nx);
+
+			% Add trapezoid betewen 1.53 and 1.61 by first defining coordinates
+			% https://tex.stackexchange.com/a/324328
+			\coordinate (Mx) at (axis cs: 1.5,\pgfkeysvalueof{/pgfplots/ymin});
+			\coordinate (Nx) at (axis cs: 1.52,\pgfkeysvalueof{/pgfplots/ymin});
+			\coordinate (Ox) at (axis cs: 1.55,\pgfkeysvalueof{/pgfplots/ymin});
+
+			% Draw derivatve from yn to yn+1 first
+			% 0.44 to 0.48
+			\draw[color=metropolisblue, thick] (M) -- (N);
+			\draw[color=scarlet, thick] (N) -- (O);
+			\draw[color=royalblue, thick] (O) -- (M);
+
+			% node[pos=0, below right, anchor=west]{{\scriptsize $y^n$}}
+			% node[below right, anchor=north west]{{\scriptsize $y^{n+1}$}}
+			% node[right, anchor=south west]{Estd.};
+
+			% % Draw actual derivatve line
+			% \addplot[color=royalblue, thick] coordinates
+			% { (0.44, {func(0.46) - 0.02*funcder(0.46) }) (0.48,
+			% {func(0.46) + 0.02*funcder(0.46)}) } node[above]{Actual};
+
+			% Draw connections to ground now
+			\draw[dashed] (M) -- (Mx) node [above left, anchor=south east]
+			{{\scriptsize$x-h$}};
+			\draw[dashed] (N) -- (Nx) node [above left, anchor=south east]
+			{{\scriptsize$x$}};
+			\draw[dashed] (O) -- (Ox) node [above left, anchor=south east]
+			{{\scriptsize$x+h$}};
+
+		\end{axis}
+		\end{tikzpicture}
+	\end{center}
+	#+end_export
 ** How do these perform (accuracy) ?
    *DEMO* using calculation of \( \frac{df}{dx} \)
    - Order of accuracy depends upon the Taylor series representation (*Taylor
