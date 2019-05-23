@@ -897,7 +897,7 @@
 	   disabledatascaling
 	   ]
 
-	   \draw[very thick, metropolisorange, fill=metropolisorange, fill opacity=0.3]
+	   \draw[very thick, metropolisblue, fill=metropolisorange, fill opacity=0.3]
 	   (axis cs: -1, 0) circle [radius=1];
 	   % \addplot [very thick, metropolisorange, fill=metropolisorange, fill opacity=0.3]
 	   % table {code/data/euler_fwd_stability.txt};
@@ -924,7 +924,7 @@
 	   % -0.5 -1.5};
 	   \filldraw[fill=metropolisorange, fill opacity=0.3]
 	   (axis cs: -1, -2) rectangle (3,2);
-	   \draw[very thick, metropolisorange, fill=white, fill opacity=0.6]
+	   \draw[very thick, metropolisblue, fill=white, fill opacity=0.6]
 	   (axis cs: 1, 0) circle [radius=1];
 	   % \addplot [thick, metropolisorange] table {code/data/euler_bwd_stability.txt};
 
@@ -941,7 +941,7 @@
 	   enlargelimits=false,
 	   disabledatascaling,
 	   ]
-	   \addplot [thick, metropolisorange, fill=metropolisorange,
+	   \addplot [thick, metropolisblue, fill=metropolisorange,
 	   fill opacity=0.3] table {code/data/rk4_stability.txt};
 	   \end{groupplot}
    \end{tikzpicture}
