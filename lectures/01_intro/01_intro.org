@@ -45,7 +45,7 @@
 	}
 	subgraph cluster_1 {
 		style=filled;
-		color=royalblue1;
+		color=orange1;
 		// graph [truecolor bgcolor=royalblue1]
 		node [shape=rectangle, style=filled, color=white];
 		a2 [shape=diamond, label=" Optimal solution "];
@@ -58,15 +58,15 @@
 	}
   #+END_SRC
 
-*** Workflow                                                          :BMCOL:
+*** Workflow                                                 :B_column:BMCOL:
 		:PROPERTIES:
-		:BEAMER_opt: c
 		:BEAMER_col: 0.5
+		:BEAMER_env: column
 	    :END:
-#+CAPTION: Inverse design cycle
-#+ATTR_LATEX: :width 1\textwidth
-#+RESULTS: design_workflow
-[[file:images/inverse_design.pdf]]
+		#+CAPTION: Inverse design cycle
+		#+ATTR_LATEX: :width 1\textwidth
+		#+RESULTS: design_workflow
+		[[file:images/inverse_design.pdf]]
 
 *** Explain                                                           :BMCOL:
 		:PROPERTIES:
@@ -158,9 +158,12 @@
 
   subgraph cluster_0 {
 	  style=filled;
-	  color=royalblue1;
+	  // fillcolor=white;
+	  color=navyblue;
 	  // graph [truecolor bgcolor=royalblue1]
+	  fontcolor=white;
 	  node [shape=rect, style=filled,color=white];
+	  edge [color=white];
 	  a0 [label=" Game engine "]
 	  a1 [label=" Image processing "]
 	  a2 [label=" Learning "]
@@ -184,7 +187,7 @@
   subgraph cluster_2 {
 	  style=filled;
 	  // graph [truecolor bgcolor=palegreen3]
-	  color=palegreen3;
+	  color=orange1;
 	  node [shape=rect,style=filled,color=white];
 
 	  c0 [label="SDL : C/C++"]
@@ -201,10 +204,10 @@
 *** Workflow                                                          :BMCOL:
 		:PROPERTIES:
 		:BEAMER_opt: c
-		:BEAMER_col: 0.7
+		:BEAMER_col: 0.75
 	    :END:
 #+CAPTION: Workflow
-#+ATTR_LATEX: :width 1\textwidth
+#+ATTR_LATEX: :width 1.1\textwidth
 #+RESULTS: dot_workflow
 [[file:images/dot_success.pdf]]
 
