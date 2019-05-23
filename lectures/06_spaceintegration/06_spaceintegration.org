@@ -78,7 +78,7 @@
 
 	Choose \( x_i \) and \(\omega_i\) to minimize error \( \abs{\tilde{I} -I_h }
 	\) while reducing number of function evaluations and robust to numerical errors
-** TODO Midpoint and Trapezoidal rules
+** Midpoint and Trapezoidal rules
    #+CAPTION: Midpoint and trapezoidal rules
    # #+ATTR_LATEX: :width 0.8\textwidth
    # [[file:images/midpoint.jpg]]
@@ -258,12 +258,12 @@
    \coordinate (p11) at (9.5,4.7);
 
    % The cyan background
-   \fill[royalblue!10]
+   \fill[metropolisblue, fill opacity = 0.2]
    (p2|-0,0) -- (p2) -- (p3) -- (p4) -- (p5) -- (p6) -- (p7) -- (p8) -- (p9) -- (p10) -- (p10|-0,0) -- cycle;
    % the dark cyan stripe
-   \fill[royalblue!30] (p6|-0,0) -- (p6) -- (p7) -- (p7|-0,0) -- cycle;
+   \fill[metropolisblue, fill opacity = 0.6] (p6|-0,0) -- (p6) -- (p7) -- (p7|-0,0) -- cycle;
    % the curve
-   \draw[thick,royalblue]
+   \draw[thick,metropolisorange]
    (p1) to[out=70,in=180] (p2) to[out=0,in=150]
    (p3) to[out=-50,in=230] (p4) to[out=30,in=220]
    (p5) to[out=50,in=150] (p6) to[out=-30,in=180]
@@ -284,7 +284,7 @@
    \node[below] at (x axis) {$x$};
    \node[left] at (y axis) {$y$};
    % label for the function
-   \node[above,text=royalblue] at (p11) {$y=f(x)$};
+   \node[above,text=metropolisorange] at (p11) {$y=f(x)$};
    \end{tikzpicture}
    \end{center}
    #+end_export
