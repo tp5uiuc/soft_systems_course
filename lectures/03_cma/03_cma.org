@@ -180,7 +180,7 @@
 	  made up of rank-one decompositions
 	- ~numpy~ checks for PD and throws an error
 	- Now explain why you set \( A=CC^T \)
-** Covariance Matrix [fn:4]
+** TODO Covariance Matrix [fn:4]
 *** \( \mathcal{N}(\gv{0}, \bv{I})\)                                :B_block:
 	:PROPERTIES:
 	:BEAMER_env: block
@@ -269,6 +269,13 @@
 		\end{tikzpicture}
 	\end{center}
 	#+end_export
+***                                                                  :B_note:
+	:PROPERTIES:
+	:BEAMER_env: note
+	:END:
+	- Independence and identical distributions
+	- Intution from Brad Osgood's notes on Fourier Transforms 3.7
+	- End with CMA discovers the dependence and distribution of each random variable
 ** Covariance Matrix
 *** \( \mathcal{N}(\gv{0}, \bv{I})\)                                :B_block:
 	:PROPERTIES:
