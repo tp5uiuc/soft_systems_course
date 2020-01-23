@@ -17,7 +17,11 @@ OS is also marked.
 - ~Jupyter~ for installing notebooks. IMPORTANT: The instructions for installing
   ~Jupyter~ are attached at the end of this guide and is OS-agnostic.
 
-* OS-agnostic method (Easiest and definitely works)
+* OS-agnostic method #1 (Easiest and definitely works)
+Install your favorite Python IDE (Integrated Development Environment) such as
+~PyCharm~ or ~Spyder~, to name a few. The list is non-exhaustive and an internet search
+should reveal more.
+* OS-agnostic method #2 (Easiest and definitely works)
 We can load a virtual machine in your environment---it's essentially an 'OS' that
 runs inside your 'OS'.
 ** Follow the steps [[https://andreask.cs.illinois.edu/ComputeVirtualMachineImages][listed here]] [fn:7]. Download both:
