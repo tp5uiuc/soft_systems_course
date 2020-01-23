@@ -117,7 +117,7 @@
    - Free and open-source
    - Object oriented with sensible data structures
    - Interactive[fn:1] (and thus extensible)
-   - Open source packages[fn:2] (163,402 as of January 1, 2019)
+   - Open source packages[fn:2] (214,413 as of January 23, 2020)
    - Widely used as an application/library API[fn:3]
    - $\therefore$ productivity
 
@@ -236,7 +236,7 @@
 #+ATTR_LATEX: :width 0.9\textwidth
 [[file:images/nacl.jpg]]
 
-** Your favorite applications use Python! [fn:3]
+** Your favorite applications use Python!
 
    - Dropbox
    - Spotify
@@ -673,8 +673,9 @@ If you get stuck:
 
 ** Installation/Setup
     - Fetch the install instructions at Compass (Setup -> 00_setup_basics.pdf) and follow it.
-    - Even a VirtualMachine (the OS agnostic step in the install instructions) is
-      fine, for the purposes of learning Python.
+	- Try and perform the OS agnostic steps in the install instructions first,
+      for the purposes of learning Python in today's lecture.
+	- If you still can't get it setup, use a cloud-based REPL (~repl.it, onlinegdb.com~)
 	- What is : ~Python~, ~Python3~, ~pip~, ~conda~, ~easy_install~, ~jupyter~
 	- (Logistics) Exercises will be prescribed in the form of ~jupyter~ notebooks
 
@@ -687,11 +688,10 @@ If you get stuck:
   - ~and, as, assert, break, class, continue, def, del, elif, else, except,
   exec, finally, for, from, global, if, import, in, is, lambda, not, or,
   pass, print, raise, return, try, while, with, yield~
-  - Calculation::inexact arithmetic--Python: 0.1+0.2 = 0.3? Show matlab also has the same issue.
-
+  - EXERCISE : ::inexact arithmetic--Python: 0.1+0.2 = 0.3? Show matlab
   - Python 3: 1/3 = 0.3333. Switch to Python2 gotcha. Show that 1/3 is 0;
   - Addition of strings "hello" + "wprld"
-  - Multiplication of strings as concatenation "hello"*4
+  - EXERCISE : given x, find 4.3 x**4 - 3.2x**3 + 2.1x**2 - 1.0x + 10.0
 ***                                                         :B_ignoreheading:
 	:PROPERTIES:
 	:BEAMER_env: ignoreheading
@@ -1202,7 +1202,7 @@ If you get stuck:
 #+ATTR_LATEX: :width 0.8\textwidth
 [[file:images/while_loop.png]]
 
-** The ~while-else~ loop? [fn:12]
+** The ~while-else~ loop?
 ***                                                                :B_column:
 	:PROPERTIES:
 	:BEAMER_env: column
@@ -1245,7 +1245,7 @@ If you get stuck:
     - Where do you think it is useful? I mean we could have just put it at the
       end with the rest of the stuff no?
     - Thats where our friend break comes in!
-** ~break~ statement [fn:12]
+** ~break~ statement
 
 ***                                                                :B_column:
 	:PROPERTIES:
@@ -1287,7 +1287,7 @@ If you get stuck:
 #+ATTR_LATEX: :width 0.8\textwidth
 [[file:images/while_loop_with_else_break.png]]
 
-** ~break~ statement contd [fn:12]
+** ~break~ statement contd
 ***                                                                :B_column:
 	:PROPERTIES:
 	:BEAMER_env: column
