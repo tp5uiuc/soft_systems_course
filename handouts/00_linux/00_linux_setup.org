@@ -156,13 +156,13 @@ Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-L
 		conda install -c anaconda numpy scipy matplotlib pandas
    #+END_SRC
 - [[https://www.python.org/downloads/windows/][Alternatively you can also download the official Python installer from the source]]. I
-  didn't test this option out. [fn:5]
+  didn't test this option out.
 
 * MacOS
 Try any one of the following methods.
 
 ** Method #1 (Recommended, Easiest)
-- Once again, ~Python3~ can be installed directly using the ~Conda~ distribution [fn:4]. [[https://www.anaconda.com/download/#macos][Installation of the Anaconda distribution for systems running MacOS can be found here.]]
+- Once again, ~Python3~ can be installed directly using the ~Conda~ distribution. [[https://www.anaconda.com/download/#macos][Installation of the Anaconda distribution for systems running MacOS can be found here.]]
 - Enjoy using ~Python~ from the ~Conda~ distribution on the ~Terminal~.
 - To install packages in the current virtual environment (details skipped for
   brevity) do
@@ -173,7 +173,7 @@ Try any one of the following methods.
 
 ** Method #2
    - [[https://www.python.org/downloads/mac-osx/][Alternatively, download the Python installer]]. I do not recommend this
-     option. [fn:5]
+     option.
 
 ** Method #3 (Use a package manager)
    - MacOS sorely misses a package manager for installation of binaries. So you
@@ -181,11 +181,11 @@ Try any one of the following methods.
    - The installation might seem long drawn (I have listed the time needed
      below), but will usually proceed without difficulty. You can consult the
      reference [fn:6] if you face any issues. The steps are given below:
-	 + Download ~Xcode~ from the MacOS App Store [[https://developer.apple.com/xcode/][found here]] and install it, if you have not
-       done so before. You will need an Apple account (can be created for free) to do so. This step will take you some time, as
-       detailed [[https://stackoverflow.com/questions/32701043/how-long-should-xcode-7-installation-take][here]] for example (I remember it taking me 1.5-2 *hours*).
-       Consult [[https://medium.com/@LondonAppBrewery/how-to-download-and-setup-xcode-10-for-ios-development-b63bed1865c][this link]] if you face any difficulties or contact me.
-	 + Next you need to install ~Command Line Tools~ of ~Xcode~. Type in the
+	 # + Download ~Xcode~ from the MacOS App Store [[https://developer.apple.com/xcode/][found here]] and install it, if you have not
+     #   done so before. You will need an Apple account (can be created for free) to do so. This step will take you some time, as
+     #   detailed [[https://stackoverflow.com/questions/32701043/how-long-should-xcode-7-installation-take][here]] for example (I remember it taking me 1.5-2 *hours*).
+     #   Consult [[https://medium.com/@LondonAppBrewery/how-to-download-and-setup-xcode-10-for-ios-development-b63bed1865c][this link]] if you face any difficulties or contact me.
+	 + You need to install ~Command Line Tools~ of ~Xcode~. Type in the
        following in the terminal to see if you have already installed it
 		#+BEGIN_SRC sh :exports code
            xcode-select -p
@@ -205,7 +205,7 @@ Try any one of the following methods.
 		#+BEGIN_SRC powershell :exports code
            ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 		#+END_SRC
-		Quoting [fn:6],
+		Quoting Hitchhiker's guide to ~Python~,
 
 		  "The script will explain what changes it will make and prompt you before the installation begins."
 
