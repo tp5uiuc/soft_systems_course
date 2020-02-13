@@ -1831,7 +1831,7 @@ If you get stuck:
    - ~read()~ instead of ~readlines()~ does the same thing, but with subtle differences
 
 ** Basic I/O continued
-   - Later on we will see how to storing matrices and arrays using the ~loadtxt~
+   - Later on we will see how to store matrices and arrays using the ~loadtxt~
      and ~savetxt~ methods from ~numpy~
    - Other packages also have many I/O options---for example ~Pandas~ has many
      ~csv~ manipulations
