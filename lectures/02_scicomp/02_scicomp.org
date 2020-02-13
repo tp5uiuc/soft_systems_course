@@ -58,7 +58,7 @@
 	- Also have ~logspace, geomspace~ for other progressions
 	- Multidimensional array creation using ~meshgrid, ndgrid~ and others
 	- Other useful ones are ~ones~ (which generates matrix with all 1), ~zeros~
-      (simliar) and ~eye~ (identity matrix)
+      (similar) and ~eye~ (identity matrix)
 
 ** Random numbers
 ***                                                                  :B_note:
