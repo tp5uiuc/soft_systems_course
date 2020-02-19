@@ -154,7 +154,7 @@ fixed-size knapsack and must fill it with the most valuable items. "
 	  \begin{tikzpicture}[
 		  declare function={shiftedellipsoid=0.25*(3^0.5*(x-3)+(y-5))^2 + 5*0.25*(3^0.5*(y-5)-(x-3))^2;}, scale=1.0]
 		  \begin{axis}[
-			  width=0.6\textwidth,
+			  width=0.8\textwidth,
 			  view={0}{90},
 			  enlargelimits=false,
 			  grid=major,
@@ -163,7 +163,9 @@ fixed-size knapsack and must fill it with the most valuable items. "
 			  xlabel=$x_1$,
 			  ylabel=$x_2$,
 		  ]
-		  \addplot3 [contour gnuplot={levels={1,5,10,15,20},labels=false,draw color=black},
+		  \addplot3 [contour filled={levels={1,5,10,15,20,35,50, 100, 200, 400},labels=false},
+          thick,samples=50,samples y=50] {shiftedellipsoid};
+		  \addplot3 [contour gnuplot={levels={1,5,10,15,20,35,50,100, 200, 400},labels=false,draw color=black},
           thick,samples=50,samples y=50] {shiftedellipsoid};
 		  \addplot [mark=*,
 			mark size=2.5pt, metropolisorange, mark options={fill=metropolisorange}] coordinates {(3,5)};
@@ -193,7 +195,7 @@ fixed-size knapsack and must fill it with the most valuable items. "
 ** Details
  The (unshifted) Rastrigin function is shown in [[cref:rastr]] for the case of two-dimensions.
 
- #+ATTR_LATEX: :width 0.7\textwidth
+ #+ATTR_LATEX: :width 0.9\textwidth
  #+CAPTION: The (shifted) Rastrigin function in two dimensions
  #+NAME: rastr
 [[file:images/shifted_rastrigin.pdf]]
