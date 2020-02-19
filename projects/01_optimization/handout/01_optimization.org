@@ -3,6 +3,18 @@
 #+AUTHOR: Mattia Gazzola
 #+OPTIONS:   H:2 num:t toc:nil date:nil ::t |:t ^:{} -:t f:t *:t <:t
 #+LATEX_HEADER: \usepackage{cleveref}
+#+LATEX_HEADER:\usepackage{tikz}
+#+LATEX_HEADER:\usetikzlibrary{backgrounds,matrix,fit,calc}
+#+LATEX_HEADER:\usepackage{pgfplots}
+#+LATEX_HEADER:\pgfplotsset{compat=1.16}
+#+LATEX_HEADER:\definecolor{metropolisorange}{RGB}{235,129,27}
+
+#+begin_export latex
+	\pgfplotsset{
+	colormap={whitered}{color(0cm)=(white); rgb255(1cm)=(235,129,27)}
+	}
+#+end_export
+
 
 *Issue Date* : \today
 
@@ -136,10 +148,33 @@ fixed-size knapsack and must fill it with the most valuable items. "
 
   Graphically, it's contour plot is depicted in [[cref:ellipsoid]] for several
 	values of \( c \).
-  #+ATTR_LATEX: :width 0.5\textwidth
-  #+CAPTION: The rotated hyper-ellipsoid in two dimensions, the horizontal axis corresponds to \( x_1 \) and the vertical to \( x_2 \)
-  #+NAME: ellipsoid
-  [[file:images/ellipsoid.eps]]
+  #+begin_export latex
+  \begin{figure}[h!]
+  \begin{center}
+	  \begin{tikzpicture}[
+		  declare function={shiftedellipsoid=0.25*(3^0.5*(x-3)+(y-5))^2 + 5*0.25*(3^0.5*(y-5)-(x-3))^2;}, scale=1.0]
+		  \begin{axis}[
+			  width=0.6\textwidth,
+			  view={0}{90},
+			  enlargelimits=false,
+			  grid=major,
+			  domain=-2:8,
+			  y domain=0:10,
+			  xlabel=$x_1$,
+			  ylabel=$x_2$,
+		  ]
+		  \addplot3 [contour gnuplot={levels={1,5,10,15,20},labels=false,draw color=black},
+          thick,samples=50,samples y=50] {shiftedellipsoid};
+		  \addplot [mark=*,
+			mark size=2.5pt, metropolisorange, mark options={fill=metropolisorange}] coordinates {(3,5)};
+		  \end{axis}
+	  \end{tikzpicture}
+	\end{center}
+	\caption{The rotated hyper-ellipsoid in two dimensions, the horizontal axis corresponds to \( x_1 \) and the vertical to \( x_2 \)}
+	\label{ellipsoid}
+  \end{figure}
+#+end_export
+
 
   Your task is to find the optimum of this function using
   - GA
@@ -159,9 +194,41 @@ fixed-size knapsack and must fill it with the most valuable items. "
  The (unshifted) Rastrigin function is shown in [[cref:rastr]] for the case of two-dimensions.
 
  #+ATTR_LATEX: :width 0.7\textwidth
- #+CAPTION: The (unshifted) Rastrigin function in two dimensions, taken from [[https://stackoverflow.com/a/43112733][this SO thread]]
+ #+CAPTION: The (shifted) Rastrigin function in two dimensions
  #+NAME: rastr
- [[file:images/rastrigin.png]]
+[[file:images/shifted_rastrigin.pdf]]
+
+ # The source code is now in a separate file, but we use it's generated PDF here
+# #+begin_export latex
+#   \begin{figure}[h!]
+#   \begin{center}
+# 	  \begin{tikzpicture}[
+# 		  declare function={rastrigin=20 + (x^2 - 10*cos(deg(2.0*pi*x))) + (y^2 - 10*cos(deg(2.0*pi*y)));}, scale=1.0]
+# 		  \begin{axis}[
+# 			  width=0.6\textwidth,
+# 			  colormap name=whitered,
+# 			  view={45}{65},
+# 			  enlargelimits=false,
+# 			  grid=major,
+# 			  domain=-5:5,
+# 			  y domain=-5:5,
+# 			  samples=51,
+# 			  xlabel=$x_1$,
+# 			  ylabel=$x_2$,
+# 			  zlabel={$f_{\text{rastrigin}}$},
+# 			  colorbar,
+# 		  ]
+# 		  \addplot3 [surf] {rastrigin};
+# 		  \draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
+# 		  \draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+# 		  \end{axis}
+# 	  \end{tikzpicture}
+# 	\end{center}
+# 	\caption{The shifted Rastrigin function in two dimensions}
+# 	\label{rastr}
+#   \end{figure}
+# #+end_export
+
 
  It is a multi-modal function with several regularly distributed local minima,
  and can be generalized to arbitrary dimensions using the analytical formula

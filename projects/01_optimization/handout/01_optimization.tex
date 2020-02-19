@@ -1,4 +1,4 @@
-% Created 2020-02-19 Wed 05:43
+% Created 2020-02-19 Wed 08:00
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -20,6 +20,11 @@
 \usepackage{siunitx}
 \usepackage{minted}
 \usepackage{cleveref}
+\usepackage{tikz}
+\usetikzlibrary{backgrounds,matrix,fit,calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\definecolor{metropolisorange}{RGB}{235,129,27}
 \author{Mattia Gazzola}
 \date{}
 \title{Project 1: Evolutionary Optimization Algorithms\\\medskip
@@ -34,6 +39,11 @@
 \begin{document}
 
 \maketitle
+\pgfplotsset{
+colormap={whitered}{color(0cm)=(white); rgb255(1cm)=(235,129,27)}
+}
+
+
 \textbf{Issue Date} : \today
 
 \textbf{Teaching Assistant} : Tejaswin Parthasarathy, \texttt{tp5@illinois.edu}
@@ -51,7 +61,7 @@
 \end{itemize}
 
 \section{Guidelines}
-\label{sec:org08ff66c}
+\label{sec:org945a6bb}
 General advice that pertains to all the problems include:
 \begin{enumerate}
 \item Pick sensible representation, fitness function, selection and mutation
@@ -70,14 +80,14 @@ on academic integrity---plagiarism will not be tolerated!
 \end{enumerate}
 
 \section{The Knapsack problem}
-\label{sec:orgd3fbedb}
+\label{sec:orgb1b16ac}
 \subsection{Definition}
-\label{sec:org28c8544}
+\label{sec:org7cbefcb}
   Use genetic algorithm and rank-\(\mu\), weighted recombination version of the CMA
 evolutionary strategy discussed in class to find the solution to the \textbf{0/1 variant} of
 the Knapsack problem.
 \subsection{Details}
-\label{sec:orga27c589}
+\label{sec:org1689650}
 More details about the 0/1 Knapsack problem are contained in the lecture slides.
 Alternatively, the \href{https://en.wikipedia.org/wiki/Knapsack\_problem}{Wikipedia} page also has a lot of information about this
 problem. Quoting the introductory text,
@@ -138,13 +148,13 @@ item_weights : Weight of each item, a (n_items, ) numpy array
 \end{minted}
 
 \section{Minima of the parabola}
-\label{sec:org4556899}
+\label{sec:org6e0ca6d}
 \subsection{Definition}
-\label{sec:orgbec5d62}
+\label{sec:org9f18b34}
   Use genetic algorithm and rank-\(\mu\), weighted recombination version of the CMA
 evolutionary strategy discussed in class to find the minima of a simple parabola.
 \subsection{Details}
-\label{sec:orge78b53a}
+\label{sec:org79fec33}
 The one-dimensional parabola is a continuous, convex, unimodal function. We
 pick the parabola given by the formula
 \begin{equation}
@@ -160,14 +170,14 @@ and compare the performance of these algorithms on this function.
 Furthermore, explore the effect of the parameters (particularly in GA) on the
 performance of the algorithms. Start your search using a randomly initialized population around \(\mathbf{x}_0 = \mathbf{0}\)---the vector of zeros.
 \section{Minima of the Rotated Hyper-Ellipsoid}
-\label{sec:org42e239f}
+\label{sec:org729893e}
 \subsection{Definition}
-\label{sec:org1627775}
+\label{sec:orgfce6c3a}
   Use genetic algorithm and rank-\(\mu\), weighted recombination version of the CMA
 evolutionary strategy discussed in class to find the minima of the
 two-dimensional rotated ellispoid.
 \subsection{Details}
-\label{sec:orgef057b4}
+\label{sec:org29a33d2}
 The two-dimensional Rotated Hyper-Ellipsoid is a continuous, convex, unimodal
 and non-separable function. We pick the variant that is rotated \(\frac{\pi}{6} \; \si{rad}\) clockwise from the \(x_1\)-axis and shifted along
 both axes, given by the formula below:
@@ -179,12 +189,31 @@ f(\mathbf{x}) = \left( \dfrac{\sqrt{3}}{2} (x_1 - 3) + \dfrac{1}{2} (x_2 - 5) \r
 
 Graphically, it's contour plot is depicted in \cref{ellipsoid} for several
   values of \(c\).
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.5\textwidth]{images/ellipsoid.eps}
-\caption{\label{ellipsoid}
-The rotated hyper-ellipsoid in two dimensions, the horizontal axis corresponds to \(x_1\) and the vertical to \(x_2\)}
+\begin{figure}[h!]
+\begin{center}
+	\begin{tikzpicture}[
+		declare function={shiftedellipsoid=0.25*(3^0.5*(x-3)+(y-5))^2 + 5*0.25*(3^0.5*(y-5)-(x-3))^2;}, scale=1.0]
+		\begin{axis}[
+			width=0.6\textwidth,
+			view={0}{90},
+			enlargelimits=false,
+			grid=major,
+			domain=-2:8,
+			y domain=0:10,
+			xlabel=$x_1$,
+			ylabel=$x_2$,
+		]
+		\addplot3 [contour gnuplot={levels={1,5,10,15,20},labels=false,draw color=black},
+        thick,samples=50,samples y=50] {shiftedellipsoid};
+		\addplot [mark=*,
+		mark size=2.5pt, metropolisorange, mark options={fill=metropolisorange}] coordinates {(3,5)};
+		\end{axis}
+	\end{tikzpicture}
+\end{center}
+\caption{The rotated hyper-ellipsoid in two dimensions, the horizontal axis corresponds to \( x_1 \) and the vertical to \( x_2 \)}
+\label{ellipsoid}
 \end{figure}
+
 
 Your task is to find the optimum of this function using
 \begin{itemize}
@@ -196,23 +225,24 @@ explore the effect of the parameters on the performance of the algorithms.
 Start your search using a randomly initialized population around \(\mathbf{x}_0 = \mathbf{0}\)---the vector of zeros.
 
 \section{Minima of the Rastrigin function}
-\label{sec:orga5188da}
+\label{sec:orgee6ffd4}
 \subsection{Definition}
-\label{sec:org6b5e753}
+\label{sec:org3f11070}
   Use the rank-\(\mu\), weighted recombination version of the CMA
 evolutionary strategy discussed in class to find the minima of the shifted
 \emph{Rastrigin} function in two and five dimensions.
 
 \subsection{Details}
-\label{sec:orgee4a182}
+\label{sec:orgb684f03}
 The (unshifted) Rastrigin function is shown in \cref{rastr} for the case of two-dimensions.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.7\textwidth]{images/rastrigin.png}
+\includegraphics[width=0.7\textwidth]{images/shifted_rastrigin.pdf}
 \caption{\label{rastr}
-The (unshifted) Rastrigin function in two dimensions, taken from \href{https://stackoverflow.com/a/43112733}{this SO thread}}
+The (shifted) Rastrigin function in two dimensions}
 \end{figure}
+
 
 It is a multi-modal function with several regularly distributed local minima,
 and can be generalized to arbitrary dimensions using the analytical formula
