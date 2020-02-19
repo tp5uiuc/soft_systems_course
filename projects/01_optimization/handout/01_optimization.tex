@@ -1,4 +1,4 @@
-% Created 2019-02-10 Sun 00:41
+% Created 2020-02-19 Wed 05:43
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -38,7 +38,7 @@
 
 \textbf{Teaching Assistant} : Tejaswin Parthasarathy, \texttt{tp5@illinois.edu}
 
-\textbf{Submission Date/Time}: Wednesday 11:59 PM, 27 February, 2019
+\textbf{Submission Date/Time}: Wednesday 11:59 PM, 04 March, 2020
 
 \textbf{Submission Instructions}:
 \begin{itemize}
@@ -51,13 +51,13 @@
 \end{itemize}
 
 \section{Guidelines}
-\label{sec:org50c965a}
+\label{sec:org08ff66c}
 General advice that pertains to all the problems include:
 \begin{enumerate}
 \item Pick sensible representation, fitness function, selection and mutation
 operators and parameters wherever applicable.
 \item Remember to present (during the project evaluation) the motivation for the
-algorithmic design choices you have chosen\ldots{}
+algorithmic design choices you have made\ldots{}
 \item Explore as much as possible---change parameters, selection/mutation
 operators etc\ldots{} We want you to learn how the optimizer ``thinks'' and works.
 \item We will evaluate your work based on your understanding and findings, and
@@ -70,14 +70,14 @@ on academic integrity---plagiarism will not be tolerated!
 \end{enumerate}
 
 \section{The Knapsack problem}
-\label{sec:org3ea5df5}
+\label{sec:orgd3fbedb}
 \subsection{Definition}
-\label{sec:orgcf445dc}
+\label{sec:org28c8544}
   Use genetic algorithm and rank-\(\mu\), weighted recombination version of the CMA
 evolutionary strategy discussed in class to find the solution to the \textbf{0/1 variant} of
 the Knapsack problem.
 \subsection{Details}
-\label{sec:orgefaf654}
+\label{sec:orga27c589}
 More details about the 0/1 Knapsack problem are contained in the lecture slides.
 Alternatively, the \href{https://en.wikipedia.org/wiki/Knapsack\_problem}{Wikipedia} page also has a lot of information about this
 problem. Quoting the introductory text,
@@ -138,13 +138,13 @@ item_weights : Weight of each item, a (n_items, ) numpy array
 \end{minted}
 
 \section{Minima of the parabola}
-\label{sec:org9429c0f}
+\label{sec:org4556899}
 \subsection{Definition}
-\label{sec:orge331595}
+\label{sec:orgbec5d62}
   Use genetic algorithm and rank-\(\mu\), weighted recombination version of the CMA
 evolutionary strategy discussed in class to find the minima of a simple parabola.
 \subsection{Details}
-\label{sec:orgaeef201}
+\label{sec:orge78b53a}
 The one-dimensional parabola is a continuous, convex, unimodal function. We
 pick the parabola given by the formula
 \begin{equation}
@@ -160,14 +160,14 @@ and compare the performance of these algorithms on this function.
 Furthermore, explore the effect of the parameters (particularly in GA) on the
 performance of the algorithms. Start your search using a randomly initialized population around \(\mathbf{x}_0 = \mathbf{0}\)---the vector of zeros.
 \section{Minima of the Rotated Hyper-Ellipsoid}
-\label{sec:orgc26df46}
+\label{sec:org42e239f}
 \subsection{Definition}
-\label{sec:orgfaf3974}
+\label{sec:org1627775}
   Use genetic algorithm and rank-\(\mu\), weighted recombination version of the CMA
 evolutionary strategy discussed in class to find the minima of the
 two-dimensional rotated ellispoid.
 \subsection{Details}
-\label{sec:org1a1c949}
+\label{sec:orgef057b4}
 The two-dimensional Rotated Hyper-Ellipsoid is a continuous, convex, unimodal
 and non-separable function. We pick the variant that is rotated \(\frac{\pi}{6} \; \si{rad}\) clockwise from the \(x_1\)-axis and shifted along
 both axes, given by the formula below:
@@ -183,7 +183,7 @@ Graphically, it's contour plot is depicted in \cref{ellipsoid} for several
 \centering
 \includegraphics[width=0.5\textwidth]{images/ellipsoid.eps}
 \caption{\label{ellipsoid}
-The rotated hyper-ellipsoid in two dimensions, the horizonal axis corresponds to \(x_1\) and the vertical to \(x_2\)}
+The rotated hyper-ellipsoid in two dimensions, the horizontal axis corresponds to \(x_1\) and the vertical to \(x_2\)}
 \end{figure}
 
 Your task is to find the optimum of this function using
@@ -196,15 +196,15 @@ explore the effect of the parameters on the performance of the algorithms.
 Start your search using a randomly initialized population around \(\mathbf{x}_0 = \mathbf{0}\)---the vector of zeros.
 
 \section{Minima of the Rastrigin function}
-\label{sec:org287503a}
+\label{sec:orga5188da}
 \subsection{Definition}
-\label{sec:orgad53ef5}
+\label{sec:org6b5e753}
   Use the rank-\(\mu\), weighted recombination version of the CMA
 evolutionary strategy discussed in class to find the minima of the shifted
 \emph{Rastrigin} function in two and five dimensions.
 
 \subsection{Details}
-\label{sec:org216ea6a}
+\label{sec:orgee4a182}
 The (unshifted) Rastrigin function is shown in \cref{rastr} for the case of two-dimensions.
 
 \begin{figure}[htbp]
@@ -222,7 +222,7 @@ function):
 \begin{equation}
 f(\mathbf{x}) = 10d + \sum_{i=1}^{d} \left[ (x_i - 2)^2 - 10 \cos\left(2 \pi (x_i - 2) \right) \right]
 \end{equation}
-where\(d\) is the number of dimensions.
+where \(d\) is the number of dimensions.
 
 
 You need to find the local minima for this function in

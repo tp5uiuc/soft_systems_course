@@ -8,7 +8,7 @@
 
 *Teaching Assistant* : Tejaswin Parthasarathy, ~tp5@illinois.edu~
 
-*Submission Date/Time*: Wednesday 11:59 PM, 27 February, 2019
+*Submission Date/Time*: Wednesday 11:59 PM, 04 March, 2020
 
 *Submission Instructions*:
  - You need to submit both your presentation (as ~.pdf~, ~.ppt[x]~ or ~.key~) and code
@@ -23,7 +23,7 @@
   1. Pick sensible representation, fitness function, selection and mutation
      operators and parameters wherever applicable.
   2. Remember to present (during the project evaluation) the motivation for the
-     algorithmic design choices you have chosen...
+     algorithmic design choices you have made...
   3. Explore as much as possible---change parameters, selection/mutation
      operators etc... We want you to learn how the optimizer "thinks" and works.
   4. We will evaluate your work based on your understanding and findings, and
@@ -137,7 +137,7 @@ fixed-size knapsack and must fill it with the most valuable items. "
   Graphically, it's contour plot is depicted in [[cref:ellipsoid]] for several
 	values of \( c \).
   #+ATTR_LATEX: :width 0.5\textwidth
-  #+CAPTION: The rotated hyper-ellipsoid in two dimensions, the horizonal axis corresponds to \( x_1 \) and the vertical to \( x_2 \)
+  #+CAPTION: The rotated hyper-ellipsoid in two dimensions, the horizontal axis corresponds to \( x_1 \) and the vertical to \( x_2 \)
   #+NAME: ellipsoid
   [[file:images/ellipsoid.eps]]
 
@@ -171,7 +171,7 @@ fixed-size knapsack and must fill it with the most valuable items. "
  \begin{equation}
  f(\mathbf{x}) = 10d + \sum_{i=1}^{d} \left[ (x_i - 2)^2 - 10 \cos\left(2 \pi (x_i - 2) \right) \right]
  \end{equation}
- where\( d \) is the number of dimensions.
+ where \( d \) is the number of dimensions.
 
 
  You need to find the local minima for this function in
