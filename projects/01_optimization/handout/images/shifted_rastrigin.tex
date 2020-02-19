@@ -10,14 +10,14 @@ colormap={whitered}{color(0cm)=(white); rgb255(1cm)=(235,129,27)}
 
 \begin{document}
 	\begin{tikzpicture}[
-	  declare function={rastrigin=20 + (x^2 - 10*cos(deg(2.0*pi*x))) + (y^2 - 10*cos(deg(2.0*pi*y)));}, scale=1.0]
+	  declare function={rastrigin=20 + ((x-2)^2 - 10*cos(deg(2.0*pi*(x-2)))) + ((y-2)^2 - 10*cos(deg(2.0*pi*(y-2))));}, scale=1.0]
 	  \begin{axis}[
 		colormap name=whitered,
 		view={45}{65},
 		enlargelimits=false,
 		grid=major,
-		domain=-5:5,
-		y domain=-5:5,
+		domain=-3:7,
+		y domain=-3:7,
 		samples=81,
 		xlabel=$x_1$,
 		ylabel=$x_2$,
@@ -25,8 +25,8 @@ colormap={whitered}{color(0cm)=(white); rgb255(1cm)=(235,129,27)}
 		colorbar,
 		]
 		\addplot3 [surf] {rastrigin};
-		\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
-		\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
+		\draw [black!50] (axis cs:0.5,2,0) -- (axis cs:3.5,2,0);
+		\draw [black!50] (axis cs:2,0.5,0) -- (axis cs:2,3.5,0);
 	  \end{axis}
 	\end{tikzpicture}
 \end{document}
