@@ -16,11 +16,11 @@
 #+end_export
 
 
-*Issue Date* : \today
+*Issue Date* : \today (originally posted on February 19, 2020)
 
 *Teaching Assistant* : Tejaswin Parthasarathy, ~tp5@illinois.edu~
 
-*Submission Date/Time*: Wednesday 11:59 PM, 04 March, 2020
+*Submission Date/Time*: Wednesday 11:59 PM, 11 March, 2020
 
 *Submission Instructions*:
  - You need to submit both your presentation (as ~.pdf~, ~.ppt[x]~ or ~.key~) and code
@@ -29,6 +29,10 @@
    ~.7z~ or other formats) and name the compressed file as ~<net_id>_code_01~
  - Submit your presentation file(s) packaged as a ~.zip~ or ~.tar.gz~ files (please do not use
    ~.7z~ or other formats) and name the compressed file as ~<net_id>_slides_01~
+ - If you are working in a group, its sufficient if *one* member of the group submits both the code
+   and slides. It goes without saying that this submission (both code and presentation) should
+   contain the names of *all* group members (as comments in the code and as subtitles in the
+   slides).
 
 * Guidelines
   General advice that pertains to all the problems include:

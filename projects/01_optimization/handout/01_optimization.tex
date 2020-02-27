@@ -1,4 +1,4 @@
-% Created 2020-02-19 Wed 16:16
+% Created 2020-02-27 Thu 10:24
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -44,11 +44,11 @@ colormap={whitered}{color(0cm)=(white); rgb255(1cm)=(235,129,27)}
 }
 
 
-\textbf{Issue Date} : \today
+\textbf{Issue Date} : \today (originally posted on February 19, 2020)
 
 \textbf{Teaching Assistant} : Tejaswin Parthasarathy, \texttt{tp5@illinois.edu}
 
-\textbf{Submission Date/Time}: Wednesday 11:59 PM, 04 March, 2020
+\textbf{Submission Date/Time}: Wednesday 11:59 PM, 11 March, 2020
 
 \textbf{Submission Instructions}:
 \begin{itemize}
@@ -58,10 +58,14 @@ colormap={whitered}{color(0cm)=(white); rgb255(1cm)=(235,129,27)}
 \texttt{.7z} or other formats) and name the compressed file as \texttt{<net\_id>\_code\_01}
 \item Submit your presentation file(s) packaged as a \texttt{.zip} or \texttt{.tar.gz} files (please do not use
 \texttt{.7z} or other formats) and name the compressed file as \texttt{<net\_id>\_slides\_01}
+\item If you are working in a group, its sufficient if \textbf{one} member of the group submits both the code
+and slides. It goes without saying that this submission (both code and presentation) should
+contain the names of \textbf{all} group members (as comments in the code and as subtitles in the
+slides).
 \end{itemize}
 
 \section{Guidelines}
-\label{sec:org6f1dc00}
+\label{sec:org294ea9a}
 General advice that pertains to all the problems include:
 \begin{enumerate}
 \item Pick sensible representation, fitness function, selection and mutation
@@ -80,14 +84,14 @@ on academic integrity---plagiarism will not be tolerated!
 \end{enumerate}
 
 \section{The Knapsack problem}
-\label{sec:org5040fda}
+\label{sec:org26e3e46}
 \subsection{Definition}
-\label{sec:orge822e9e}
+\label{sec:org3ea49c7}
   Use genetic algorithm and rank-\(\mu\), weighted recombination version of the CMA
 evolutionary strategy discussed in class to find the solution to the \textbf{0/1 variant} of
 the Knapsack problem.
 \subsection{Details}
-\label{sec:org49419fa}
+\label{sec:org9fa65e3}
 More details about the 0/1 Knapsack problem are contained in the lecture slides.
 Alternatively, the \href{https://en.wikipedia.org/wiki/Knapsack\_problem}{Wikipedia} page also has a lot of information about this
 problem. Quoting the introductory text,
@@ -148,13 +152,13 @@ item_weights : Weight of each item, a (n_items, ) numpy array
 \end{minted}
 
 \section{Minima of the parabola}
-\label{sec:orgd4a4ec6}
+\label{sec:org78a6b7b}
 \subsection{Definition}
-\label{sec:org7f9d461}
+\label{sec:org1443661}
   Use genetic algorithm and rank-\(\mu\), weighted recombination version of the CMA
 evolutionary strategy discussed in class to find the minima of a simple parabola.
 \subsection{Details}
-\label{sec:org736f122}
+\label{sec:org6849e81}
 The one-dimensional parabola is a continuous, convex, unimodal function. We
 pick the parabola given by the formula
 \begin{equation}
@@ -170,14 +174,14 @@ and compare the performance of these algorithms on this function.
 Furthermore, explore the effect of the parameters (particularly in GA) on the
 performance of the algorithms. Start your search using a randomly initialized population around \(\mathbf{x}_0 = \mathbf{0}\)---the vector of zeros.
 \section{Minima of the Rotated Hyper-Ellipsoid}
-\label{sec:org720ef6e}
+\label{sec:org9e9c5b9}
 \subsection{Definition}
-\label{sec:org642927e}
+\label{sec:org5bf52a8}
   Use genetic algorithm and rank-\(\mu\), weighted recombination version of the CMA
 evolutionary strategy discussed in class to find the minima of the
 two-dimensional rotated ellispoid.
 \subsection{Details}
-\label{sec:org16b214a}
+\label{sec:org3f2458a}
 The two-dimensional Rotated Hyper-Ellipsoid is a continuous, convex, unimodal
 and non-separable function. We pick the variant that is rotated \(\frac{\pi}{6} \; \si{rad}\) clockwise from the \(x_1\)-axis and shifted along
 both axes, given by the formula below:
@@ -227,15 +231,15 @@ explore the effect of the parameters on the performance of the algorithms.
 Start your search using a randomly initialized population around \(\mathbf{x}_0 = \mathbf{0}\)---the vector of zeros.
 
 \section{Minima of the Rastrigin function}
-\label{sec:orgc6ccff0}
+\label{sec:org3c17a57}
 \subsection{Definition}
-\label{sec:org181c1a2}
+\label{sec:orgbaa36cf}
   Use the rank-\(\mu\), weighted recombination version of the CMA
 evolutionary strategy discussed in class to find the minima of the shifted
 \emph{Rastrigin} function in two and five dimensions.
 
 \subsection{Details}
-\label{sec:orga494290}
+\label{sec:org3debb82}
 The (unshifted) Rastrigin function is shown in \cref{rastr} for the case of two-dimensions.
 
 \begin{figure}[htbp]
