@@ -180,6 +180,9 @@
 	  made up of rank-one decompositions
 	- ~numpy~ checks for PD and throws an error
 	- Now explain why you set \( A=CC^T \)
+** Normal Distribution[fn:3]
+#+CAPTION: The Normal Distribution
+[[file:images/The_Normal_Distribution.pdf]]
 ** TODO Covariance Matrix [fn:4]
 *** \( \mathcal{N}(\gv{0}, \bv{I})\)                                :B_block:
 	:PROPERTIES:
@@ -629,8 +632,8 @@
 				colorbar,
 			]
 			\addplot3 [surf] {bivar(mu1,sigma1,mu2,sigma2)};
-			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
-			\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
+			%\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (x,2.5,{normal(mu1,sigma1)});
+			%\addplot3 [domain=-2.5:2.5,samples=31, samples y=0, thick, smooth] (-2.5,x,{normal(mu2,sigma2)});
 
 			\draw [black!50] (axis cs:-2.5,0,0) -- (axis cs:2.5,0,0);
 			\draw [black!50] (axis cs:0,-2.5,0) -- (axis cs:0,2.5,0);
@@ -710,7 +713,7 @@
 	:PROPERTIES:
 	:BEAMER_env: ignoreheading
 	:END:
-	\[ \sigma  = \frac{1}{N} \sum_{i=1}^{N}(x_i - \mu)^2 \]
+	\[ \sigma^2  = \frac{1}{N} \sum_{i=1}^{N}(x_i - \mu)^2 \]
 	where \(\mu \) is the mean and \( N \) is the number of samples.
 
 ** Variance
@@ -1461,6 +1464,8 @@
 	  - Waits for shroom at 0.40
 	  - Waits for bullet at 0.45, 0.49
 * Footnotes
+
+[fn:3][[https://upload.wikimedia.org/wikipedia/commons/2/25/The_Normal_Distribution.svg][ Wikimedia Commons]]
 
 [fn:4] [[https://www.slideshare.net/OsamaSalaheldin2/cmaes-presentation][CMAes overview, Slideshare]]
 
