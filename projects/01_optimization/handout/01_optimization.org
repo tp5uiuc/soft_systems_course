@@ -20,7 +20,7 @@
 
 *Teaching Assistant* : Tejaswin Parthasarathy, ~tp5@illinois.edu~
 
-*Submission Date/Time*: Wednesday 11:59 PM, 11 March, 2020
+*Submission Date/Time*: Friday 11:59 PM, 13 March, 2020
 
 *Submission Instructions*:
  - You need to submit both your presentation (as ~.pdf~, ~.ppt[x]~ or ~.key~) and code
