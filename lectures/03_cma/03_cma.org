@@ -26,6 +26,9 @@
 #+LATEX_HEADER:\definecolor{shamrockgreen}{rgb}{0.0, 0.62, 0.38}
 #+LATEX_HEADER:\definecolor{royalblue}{rgb}{0.25, 0.41, 0.88}
 #+LATEX_HEADER:\definecolor{metropolisorange}{RGB}{235,129,27}
+#+LATEX_HEADER:\definecolor{deeppink}{RGB}{205,16,118}
+#+LATEX_HEADER:\definecolor{burple}{RGB}{104,50,227}
+#+LATEX_HEADER: \setmonofont{Iosevka Semibold}
 #+OPTIONS:   H:2 num:t toc:nil ::t |:t ^:{} -:t f:t *:t <:t
 #+OPTIONS:   tex:t d:nil todo:t pri:nil tags:nil
 #+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col) %8BEAMER_OPT(Opt)
@@ -1246,6 +1249,495 @@
 	\[  f_{\text{fitness}} (\gv{x}) = f(\gv{x}_{\text{repaired}}) + \alpha \norm{\gv{x} -
 \gv{x}_{\text{repaired}}}^2 \]
 
+* Some "realistic" examples
+** Brachistochrone problem
+*** Basd                                                     :B_column:BMCOL:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_col: 0.5
+	:END:
+
+	#+CAPTION: Johannes Bernoulli
+	[[file:images/Johann_Bernoulli2.jpg]]
+***                                                          :B_column:BMCOL:
+	:PROPERTIES:
+	:BEAMER_env: column
+	:BEAMER_col: 0.5
+	:END:
+	 #+begin_export latex
+	 \begin{center}
+	   \begin{tikzpicture}[baseline,scale=1.2]
+		 \draw [-latex] (-0.5, 0) -- (4, 0) node [right] {$x$};
+		 \draw [-latex] (0, 0.5) -- (0, -2) node [below] {$y$};
+
+		 %\node [circle,fill=black,inner sep=0pt,minimum size=3pt,label=below:{$\frac{3}{2}$}] (a) at (2/3,0) {};
+		 \node [anchor = south east] (a) {$A$};
+
+		 %\node at (3, -1) [circ] {};
+		 \node at (3, -1) [right] (b) {$B$};
+		 \draw [thick, black] (0, 0) parabola bend (2, -1.5) (3, -1);
+		 \draw [thin, gray, dashed] (0, 0) -- (3, -1);
+		 \draw [black, fill=black] circle [radius=0.05];
+		 \draw [black, fill=black] (3,-1) circle [radius=0.05];
+		 \draw [black, fill=metropolisorange] (0.86, -1) circle [radius=0.1];
+		 \node at (2, -1.5) [below] {$y = f(x)$};
+		 \draw [->] (3.8, -0.5) -- (3.8, -1.8) node [below] {$\gv{g}$};
+	   \end{tikzpicture}
+	 \end{center}
+	#+end_export
+	\( \beta \rho \acute{\alpha} \chi \iota \sigma \tau o \varsigma \)
+	(/brachistos/ or shortest) \( \chi
+	\rho \acute{o} \nu o \varsigma \) (/chronos/ or time)
+** Brachistochrone problem
+***                                                                   :BMCOL:
+	:PROPERTIES:
+	:BEAMER_col: 0.35
+	:END:
+	[[file:images/Johann_Bernoulli2.jpg]]
+***                                                       :B_quotation:BMCOL:
+	:PROPERTIES:
+	:BEAMER_env: quotation
+	:BEAMER_col: 0.7
+	:END:
+	 #+begin_export latex
+	  {\small ``I, Johann Bernoulli, address the most brilliant mathematicians in the
+	  world..... Following the example set by Pascal, Fermat, etc., I hope to
+	  gain the gratitude of the whole scientific community by placing before the
+	  finest mathematicians of our time a problem which will test their methods and
+	  the strength of their intellect..."}
+
+	  {\small ``...Given two points A and B in a vertical plane, what is the curve traced out by a
+	  point acted on only by gravity, which starts at A and reaches B in the shortest time."}
+	#+end_export
+
+** Brachistochrone problem : more formally
+***                                                         :B_ignoreheading:
+	:PROPERTIES:
+	:BEAMER_env: ignoreheading
+	:END:
+	 #+begin_export latex
+	 \begin{center}
+	   \begin{tikzpicture}[baseline, scale=0.8]
+		 \draw [-latex] (-0.5, 0) -- (4, 0) node [right] {$x$};
+		 \draw [-latex] (0, 0.5) -- (0, -2) node [below] {$y$};
+
+		 %\node [circle,fill=black,inner sep=0pt,minimum size=3pt,label=below:{$\frac{3}{2}$}] (a) at (2/3,0) {};
+		 \node [anchor = south east] (a) {$A$};
+
+		 %\node at (3, -1) [circ] {};
+		 \node at (3, -1) [right] (b) {$B$};
+		 \draw [thick, black] (0, 0) parabola bend (2, -1.5) (3, -1);
+		 \draw [thin, gray, dashed] (0, 0) -- (3, -1);
+		 \draw [black, fill=black] circle [radius=0.05];
+		 \draw [black, fill=black] (3,-1) circle [radius=0.05];
+		 \draw [black, fill=metropolisorange] (0.86, -1) circle [radius=0.1];
+		 \node at (2, -1.5) [below] {$y = f(x)$};
+		 \draw [->] (3.8, -0.5) -- (3.8, -1.8) node [below] {$\gv{g}$};
+	   \end{tikzpicture}
+	 \end{center}
+	#+end_export
+***  Brachistochrone problem                                   :B_definition:
+	:PROPERTIES:
+	:BEAMER_env: definition
+	:END:
+	 For \( x : [x_A, x_B] \), let
+	 \( \mathbf{x} \mapsto \begin{pmatrix} x \\ y(x) \end{pmatrix},
+	 y : [0, x] \to \mathbb{R} \) with BoCos.
+	 # \ni y(x_*) = y_* ; *=A,B\).
+
+	 Find \( y^*  = \mathop{\mathrm{arg\,min}_y} L[y] \mathrel{\mathop:}= t_B(y, y',y'') \) where
+	 \( t : \mathbb{R}^3 \to \mathbb{R}^+ \) is trajectory time.
+**** In the context of optimization \( \left( \mathcal{C}^2, \mathbb{R}, f, \leq \right)\)
+	 By solving \( \ddot{x} = \frac{g_x + y' \left[ g_y - y'' \dot{x}^2 \right]}{1 + y'^2} \)
+	 with \(x(A) = x_A, \dot{x}(A) = 0\) to obtain \( x = f(t, y, y', y''') \).
+	 Then \( t \mathrel{\mathop:}= f^{-1}(x, y, y', y''') \)
+** Requirements
+*** Simulation                                                 :B_alertblock:
+	:PROPERTIES:
+	:BEAMER_env: alertblock
+	:END:
+	 - *Numerical solution* of non-linear Ordinary Differential Equation (ODE)
+*** Optimization problem                                       :B_alertblock:
+	:PROPERTIES:
+	:BEAMER_env: alertblock
+	:END:
+	 - *Representation* of \( \mathcal{C}^2 \)
+	 - Definition of *fitness function*
+	 - Black-box *optimizer* (we pick CMAes in this case)
+	 - *Constraints* on domain and range
+	   - not all \( \mathcal{C}^2 \) are feasible (boundary conditions!)
+** ODE solver
+*** Ordinary Differential Equation                             :B_definition:
+	:PROPERTIES:
+	:BEAMER_env: definition
+	:END:
+	\[ \frac{dy}{dt} = f(t, y, y', \dots, y^{k})\]
+	accompanied by \(k\) initial conditions \Rightarrow solved by \( y(t) \).
+   - Few non-linear problems can be solved analytically \Rightarrow *numerical methods*
+   - /Timesteppers/---Euler, Runge-Kutta etc.
+*** Scipy's ODE solver                                            :B_example:
+	:PROPERTIES:
+	:BEAMER_env: example
+	:END:
+	- ~scipy.integrate.odeint~ *DEMO*
+	- many options ~RK23, RK45, BDF,...~
+	- can specify error tolerances ~rtol~, ~atol~
+** Representation
+*** Function space \(\mathcal{C}^2 \to \mathbb{R}\)?
+	- Our optimizer works ONLY with real numbers
+*** Linear combination of basis functions                           :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	- \( \forall x \in D\), \(f(x) = \sum_{i=1}^{N} c_i \phi_i(x)\)
+	- look for /good/ values of \(c_i\)
+*** Polynomial                                                        :BMCOL:
+	:PROPERTIES:
+	:BEAMER_col: 0.32
+	:END:
+	 #+begin_export latex
+	 \begin{center}
+		 \begin{tikzpicture}[scale=0.48]
+			 \begin{axis}[
+						 title={Polynomial bases},
+						 xmin=0,
+						 xmax=1,
+						 ymin=-1.05,
+						 ymax=1.05,
+						 samples=50,
+						 xlabel={$s$},
+						 ylabel={$\phi(s)$},
+						 ylabel shift = -10 pt]
+				  \addplot[royalblue,  ultra thick, domain=0:1] {x};
+				  \addplot[scarlet, ultra thick, domain=0:1] {x^2};
+				  \addplot[black,  ultra thick, domain=0:1] {x^3};
+				  \addplot[metropolisorange,  ultra thick, domain=0:1] {x^4};
+				  \addplot[shamrockgreen,  ultra thick, domain=0:1] {x^5};
+				  \addplot[deeppink,  ultra thick, domain=0:1] {x^6};
+				  \addplot[burple,  ultra thick, domain=0:1] {1};
+				  \draw[ultra thin] (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0) -- (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0);
+			 \end{axis}
+		 \end{tikzpicture}
+	 \end{center}
+	#+end_export
+*** Fourier                                                           :BMCOL:
+	:PROPERTIES:
+	:BEAMER_col: 0.32
+	:END:
+	 #+begin_export latex
+	 \begin{center}
+		 \begin{tikzpicture}[scale=0.48]
+			 \begin{axis}[
+						 title={Fourier bases},
+						 xmin=0,
+						 xmax=1,
+						 ymin=-1.05,
+						 ymax=1.05,
+						 samples=50,
+						 xlabel={$s$}]
+				 \addplot[royalblue, ultra thick, domain=0:1] {sin(deg(pi * x))};
+				 \addplot[scarlet, ultra thick, domain=0:1] {cos(deg(pi * x))};
+				 \addplot[black,  ultra thick, domain=0:1] {sin(deg(2.0 * pi * x))};
+				 \addplot[metropolisorange,  ultra thick, domain=0:1] {cos(deg(2.0 * pi * x)))};
+				 \addplot[shamrockgreen,  ultra thick, domain=0:1] {sin(deg(3.0 * pi * x))};
+				 \addplot[deeppink,  ultra thick, domain=0:1] {cos(deg(3.0 * pi * x)))};
+				 \addplot[burple,  ultra thick, domain=0:1] {1};
+
+				 \draw[ultra thin] (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0) -- (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0);
+			 \end{axis}
+		 \end{tikzpicture}
+	 \end{center}
+	#+end_export
+*** BSplines                                                          :BMCOL:
+	:PROPERTIES:
+	:BEAMER_col: 0.32
+	:END:
+	 #+begin_export latex
+	 \begin{center}
+		 \begin{tikzpicture}[scale=0.48]
+			 \begin{axis}[
+						 title={B-splines},
+						 xmin=0,
+						 xmax=1,
+						 ymin=-1.05,
+						 ymax=1.05,
+						 samples=50,
+						 xlabel={$s$}]
+					 % Taken from https://pages.mtu.edu/~shene/COURSES/cs3621/NOTES/spline/B-spline/bspline-ex-1.html
+					 % N02
+					 \addplot[royalblue, ultra thick, domain=0:0.3] {(1 - (10/3)*x)^2 };
+
+					 % N12
+					 \addplot[scarlet, ultra thick, domain=0:0.3] {(20/3)*(x - (8/3)*x^2)  };
+					 \addplot[scarlet, ultra thick, domain=0.3:0.5] {2.5*(1.0 - 2*x)^2};
+
+					 % N22
+					 \addplot[black, ultra thick, domain=0:0.3] {(20/3)*x^2  };
+					 \addplot[black, ultra thick, domain=0.3:0.5] {-3.75 + 25*x - 35*x^2};
+
+					 % N32
+					 \addplot[metropolisorange,  ultra thick, domain=0.3:0.5] {(5*x - 1.5)^2};
+					 \addplot[metropolisorange,  ultra thick, domain=0.5:0.6] {(6 - 10 * x)^2};
+
+					 % N42
+					 \addplot[shamrockgreen,  ultra thick, domain=0.5:0.6] {20 * (-2 + 7*x - 6*x^2) };
+					 \addplot[shamrockgreen,  ultra thick, domain=0.6:1] {5*(1 - x)^2};
+
+					 % N52
+					 \addplot[deeppink,  ultra thick, domain=0.5:0.6] {20*x^2 - 20*x + 5 };
+					 \addplot[deeppink,  ultra thick, domain=0.6:1] {-11.25*x^2 + 17.5*x - 6.25};
+
+					 % N52
+					 \addplot[burple,  ultra thick, domain=0.6:1] {6.25*x^2 - 7.5*x + 2.25};
+
+					 \draw[ultra thin] (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0) -- (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0);
+			 \end{axis}
+		 \end{tikzpicture}
+	 \end{center}
+	#+end_export
+** Representation
+  - See[[http://jsxgraph.uni-bayreuth.de/wiki/index.php/B-splines][ this link]] (B-splines) and [[https://bl.ocks.org/jinroh/7524988][this]] link + [[https://www.youtube.com/watch?v=spUNpyF58BY][this video]] for a visual understanding of the different bases functions.
+** Fitness function
+*** What's the fitness?
+	# Look at https://raw.githubusercontent.com/dfeich/org-babel-examples/master/beamer/beamer-example.org
+	# for nice animations. PDF at https://github.com/dfeich/org-babel-examples/blob/master/beamer/beamer-example.pdf
+	- <2-> Measure time at \( x(t) = x_B \)
+***                                                                   :BMCOL:
+	:PROPERTIES:
+	:BEAMER_col: 0.3
+	:END:
+	#+begin_export latex
+	\begin{center}
+		\begin{tikzpicture}[scale=0.48]
+		\begin{axis}[
+			grid=major, % Display a grid
+			grid style={dashed,gray!30}, % Set the style
+			xlabel=$x$, % Set the labels
+			% ylabel=$y$,
+			ymin=-1.05,
+			ymax=0.05
+			]
+			\node at (axis cs:0,0) [left] (a) {$A$};
+			\node at (axis cs:1, -1) [right] (b) {$B$};
+			% \draw [black, fill=black] (axis cs:0, 0) circle [radius=0.01];
+			% \draw [black, fill=black] (axis cs:1,-1) circle [radius=0.01];
+			\addplot[line width=2pt, metropolisorange, mark=none]
+			% add a plot from table; you select the columns by using the actual name in
+			% the .csv file (on top)
+			table[col sep=comma] {data_from_optex/first_spline_profile.csv};
+			\addplot[only marks, mark=*]
+			table[col sep=comma] {data_from_optex/first_spline_time.csv};
+		\end{axis}
+		\end{tikzpicture}
+	\end{center}
+	#+end_export
+	- <2->\( f = \SI{0.638}{\s}\)
+***                                                                   :BMCOL:
+	:PROPERTIES:
+	:BEAMER_col: 0.3
+	:END:
+	#+begin_export latex
+	\begin{center}
+		\begin{tikzpicture}[scale=0.48]
+		\begin{axis}[
+			grid=major, % Display a grid
+			grid style={dashed,gray!30}, % Set the style
+			xlabel=$x$, % Set the labels
+			ymin=-1.05,
+			ymax=0.05
+			]
+			\node at (axis cs:0,0) [left] (a) {$A$};
+			\node at (axis cs:1, -1) [right] (b) {$B$};
+			% \draw [black, fill=black] (axis cs:0, 0) circle [radius=0.01];
+			% \draw [black, fill=black] (axis cs:1,-1) circle [radius=0.01];
+			\addplot[line width=2pt, royalblue, mark=none]
+			% add a plot from table; you select the columns by using the actual name in
+			% the .csv file (on top)
+			table[col sep=comma] {data_from_optex/second_spline_profile.csv};
+			\addplot[only marks, mark=*]
+			table[col sep=comma] {data_from_optex/second_spline_time.csv};
+		\end{axis}
+		\end{tikzpicture}
+	\end{center}
+	#+end_export
+
+	- <2->\( f = \SI{0.713}{\s}\)
+***                                                                   :BMCOL:
+	:PROPERTIES:
+	:BEAMER_col: 0.3
+	:END:
+	#+begin_export latex
+	\begin{center}
+		\begin{tikzpicture}[scale=0.48]
+		\begin{axis}[
+			grid=major, % Display a grid
+			grid style={dashed,gray!30}, % Set the style
+			xlabel=$x$, % Set the labels
+			ymin=-1.05,
+			ymax=0.05
+			]
+			\node at (axis cs:0,0) [left] (a) {$A$};
+			\node at (axis cs:1, -1) [right] (b) {$B$};
+			% \draw [black, fill=black] (axis cs:0, 0) circle [radius=0.01];
+			% \draw [black, fill=black] (axis cs:1,-1) circle [radius=0.01];
+			\addplot[line width=2pt, scarlet, mark=none]
+			% add a plot from table; you select the columns by using the actual name in
+			% the .csv file (on top)
+			table[col sep=comma] {data_from_optex/optimal_spline_profile.csv};
+			\addplot[only marks, mark=*]
+			table[col sep=comma] {data_from_optex/optimal_spline_time.csv};
+		\end{axis}
+		\end{tikzpicture}
+	\end{center}
+	#+end_export
+	- <2->\( f = \SI{0.585}{\s}\)
+** Constraints and penalties
+*** Is unconstrained optimization a good idea?
+	- <2-> *NO*! We penalize /bad/ solutions.
+***                                                                   :BMCOL:
+	:PROPERTIES:
+	:BEAMER_col: 0.5
+	:END:
+	#+begin_export latex
+	\begin{center}
+		\begin{tikzpicture}[scale=0.65]
+		\begin{axis}[
+			grid=major, % Display a grid
+			grid style={dashed,gray!30}, % Set the style
+			xlabel=$x$, % Set the labels
+			ylabel=$y$,
+			ymin=-2.2,
+			ymax=0.2
+			]
+			\node at (axis cs:0,0) [left] (a) {$A$};
+			\node at (axis cs:1, -1) [right] (b) {$B$};
+			% Different radii because its uneven
+			\draw [black, fill=black] (axis cs:0, 0) circle [x radius=0.02, y radius=0.04];
+			\draw [black, fill=black] (axis cs:1,-1) circle [x radius=0.02, y radius=0.04];
+			\addplot[line width=2pt, scarlet, mark=none]
+			% add a plot from table; you select the columns by using the actual name in
+			% the .csv file (on top)
+			table[col sep=comma] {data_from_optex/positive_slope_spline_profile.csv};
+		\end{axis}
+		\end{tikzpicture}
+	\end{center}
+	#+end_export
+ 	- <2-> Positive slope : simulation /fails/
+***                                                                   :BMCOL:
+	:PROPERTIES:
+	:BEAMER_col: 0.5
+	:END:
+	#+begin_export latex
+	\begin{center}
+		\begin{tikzpicture}[scale=0.65]
+		\begin{axis}[
+			grid=major, % Display a grid
+			grid style={dashed,gray!30}, % Set the style
+			xlabel=$x$, % Set the labels
+			ylabel=$y$,
+			ymin=-2.2,
+			ymax=0.2
+			]
+			\node at (axis cs:0,0) [left] (a) {$A$};
+			\node at (axis cs:1, -1) [right] (b) {$B$};
+			\draw [black, fill=black] (axis cs:0, 0) circle [x radius=0.02, y radius=0.04];
+			\draw [black, fill=black] (axis cs:1,-1) circle [x radius=0.02, y radius=0.04];
+			\addplot[line width=2pt, royalblue, mark=none]
+			% add a plot from table; you select the columns by using the actual name in
+			% the .csv file (on top)
+			table[col sep=comma] {data_from_optex/third_spline_profile.csv};
+			\only<2->{\draw[fill=metropolisorange, fill opacity=0.2] (axis cs:0, 0) rectangle (axis cs:1,-1.3)};
+		\end{axis}
+		\end{tikzpicture}
+	\end{center}
+	#+end_export
+ 	- <2-> Need realistic bounds on coefficients!
+** Results
+	[[file:~/code/optex/brachistochrone.mp4][Brachistochrone optimization]]
+** Additional discussion
+   Think about how these choices affect the optimization campaign?
+*** Population size / number of generations
+*** Number of spline parameters (aka the dimensionality of the problem)?
+*** Penalization coefficients?
+*** Optimize "part" of the problem?
+*** Error tolerance of ODE solver?
+** Aliters
+*** Johann's solution                                         :B_block:BMCOL:
+	:PROPERTIES:
+	:BEAMER_col: 0.4
+	:BEAMER_env: block
+	:END:
+	- Geometrical
+	- Energy conservation
+	- Shady (af).
+*** Jakob Bernoulli's solution                                :B_block:BMCOL:
+	:PROPERTIES:
+	:BEAMER_col: 0.6
+	:BEAMER_env: block
+	:END:
+	- Snell's law!
+	- Led eventually to calculus of variations
+*** Isaac Newton's solution                                         :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
+	- Minimal resistance problem
+*** Calculus of variations / optimal control theory
+
+	-  \( y^*  = \mathop{\mathrm{arg\,min}_y} L[y] \mathrel{\mathop:}=
+       \displaystyle\int_{x_A}^{x_B} \dfrac{\sqrt{1 + (y'(x))^2}}{\sqrt{y(x)}}
+      dx\)
+*** The optimal solution is a cycloid!
+** More history[fn:5]
+  \footnotesize
+  - Johann Bernoulli allowed six months for other solutions (apart from his and
+    Jakob's)
+  - At the request of Leibniz, the time was publicly extended for a year and a
+    half.
+  - At 4 p.m. on 29 January 1697 when he arrived home from the Royal Mint,
+	Isaac Newton found the challenge in a letter from Johann Bernoulli.
+  - Newton stayed up all night to solve it and mailed the solution anonymously
+	by the next post
+  - Upon reading the solution, Bernoulli recognized its author, exclaiming that
+    he "recognizes a lion from his claw mark"
+  - Johann had taken two weeks to solve the same problem
+  - Newton also wrote, "I do not love to be dunned [pestered] and teased by
+	foreigners about mathematical things..."
+  - In the end, five mathematicians responded with solutions: Newton,
+    Bernoulli(s), Leibniz, Tschirnhaus and l'Hôpital.
+** Dido's isoperimetric problem[fn:6]
+*** Constraints in the problem definition
+	What is the closed curve which has the maximum area for a given perimeter?
+
+	 #+begin_export latex
+	 \begin{center}
+		 \begin{tikzpicture}[scale=0.65]
+		 \begin{axis}[axis equal,
+			 grid=major, % Display a grid
+			 grid style={dashed,gray!30}, % Set the style
+			 xlabel=$x$, % Set the labels
+			 ylabel=$f(x)$,
+			 xmin=0,
+			 xmax=1,
+			 ymin=0,
+			 ymax=0.6,
+			 samples=100]
+			 \addplot[royalblue,  line width=3pt, domain=0:1] {(0.25-(x-0.5)^2)^0.5};
+
+			 \addplot[metropolisorange,  line width=3pt, domain=0:0.5] {2.8*(x-1.5*x^2)};
+			 \addplot[metropolisorange,  line width=3pt, domain=0.5:1] {1.4*(1-x)^2};
+
+			 \addplot[black,  line width=3pt, domain=0.0:0.5] {1.4*x^2};
+			 \addplot[black,  line width=3pt, domain=0.5:1.0] {2.8*(-0.5-1.5*x^2+2*x)};
+
+		 \end{axis}
+		 \end{tikzpicture}
+	 \end{center}
+	 #+end_export
+** Results
+   - Constraint satsifaction by pre-processing and not by repair
+   - [[file:~/code/optex/isoperimetric.mp4][Isoperimetric curve optimization]]
+
 * Comparing CMA against GA
 ** CMAes vs GA--setup
 *** Optimization on smooth functions
@@ -1464,6 +1956,9 @@
 	  - Waits for shroom at 0.40
 	  - Waits for bullet at 0.45, 0.49
 * Footnotes
+[fn:6] [[https://mathematicalgarden.wordpress.com/2008/12/21/the-problem-of-dido/][Mathematical Garden]]
+
+[fn:5]  [[https://en.wikipedia.org/wiki/Brachistochrone_curve][Brachistochrone curve wiki]]
 
 [fn:3][[https://upload.wikimedia.org/wikipedia/commons/2/25/The_Normal_Distribution.svg][ Wikimedia Commons]]
 
