@@ -1,4 +1,4 @@
-% Created 2020-03-08 Sun 11:32
+% Created 2020-03-12 Thu 16:26
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation]{beamer}
 \usepackage[utf8]{inputenc}
@@ -58,8 +58,8 @@
 colormap={whitered}{color(0cm)=(white); rgb255(1cm)=(235,129,27)}
 }
 \section{Some ``realistic'' examples}
-\label{sec:org7f11376}
-\begin{frame}[label={sec:org83c0d52}]{Brachistochrone problem}
+\label{sec:org55be177}
+\begin{frame}[label={sec:orge55e1ac}]{Brachistochrone problem}
 \begin{columns}
 \begin{column}{0.5\columnwidth}
 \begin{figure}[htbp]
@@ -94,7 +94,7 @@ colormap={whitered}{color(0cm)=(white); rgb255(1cm)=(235,129,27)}
 \end{column}
 \end{columns}
 \end{frame}
-\begin{frame}[label={sec:org57f05c8}]{Brachistochrone problem}
+\begin{frame}[label={sec:org3acb4ea}]{Brachistochrone problem}
 \begin{columns}
 \begin{column}{0.35\columnwidth}
 \begin{center}
@@ -116,7 +116,7 @@ point acted on only by gravity, which starts at A and reaches B in the shortest 
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgb3f2a40}]{Brachistochrone problem : more formally}
+\begin{frame}[label={sec:org1291853}]{Brachistochrone problem : more formally}
 \begin{center}
 	\begin{tikzpicture}[baseline, scale=0.8]
 	\draw [-latex] (-0.5, 0) -- (4, 0) node [right] {$x$};
@@ -150,7 +150,7 @@ Then \(t \mathrel{\mathop:}= f^{-1}(x, y, y', y''')\)
 \end{block}
 \end{definition}
 \end{frame}
-\begin{frame}[label={sec:org27c790c}]{Requirements}
+\begin{frame}[label={sec:orgdcd5c8d}]{Requirements}
 \begin{alertblock}{Simulation}
 \begin{itemize}
 \item \alert{Numerical solution} of non-linear Ordinary Differential Equation (ODE)
@@ -168,7 +168,7 @@ Then \(t \mathrel{\mathop:}= f^{-1}(x, y, y', y''')\)
 \end{itemize}
 \end{alertblock}
 \end{frame}
-\begin{frame}[label={sec:org177970b},fragile]{ODE solver}
+\begin{frame}[label={sec:org81e85da},fragile]{ODE solver}
  \begin{definition}[Ordinary Differential Equation]
 \[ \frac{dy}{dt} = f(t, y, y', \dots, y^{k})\]
 accompanied by \(k\) initial conditions \(\Rightarrow\) solved by \(y(t)\).
@@ -179,13 +179,13 @@ accompanied by \(k\) initial conditions \(\Rightarrow\) solved by \(y(t)\).
 \end{definition}
 \begin{example}[Scipy's ODE solver]
 \begin{itemize}
-\item \texttt{scipy.integrate.odeint} \alert{DEMO}
+\item \texttt{scipy.integrate.solve\_ivp} \alert{DEMO}
 \item many options \texttt{RK23, RK45, BDF,...}
 \item can specify error tolerances \texttt{rtol}, \texttt{atol}
 \end{itemize}
 \end{example}
 \end{frame}
-\begin{frame}[label={sec:org419deaa}]{Representation}
+\begin{frame}[label={sec:org4ae8c51}]{Representation}
 \begin{block}{Function space \(\mathcal{C}^2 \to \mathbb{R}\)?}
 \begin{itemize}
 \item Our optimizer works ONLY with real numbers
@@ -292,12 +292,12 @@ accompanied by \(k\) initial conditions \(\Rightarrow\) solved by \(y(t)\).
 \end{column}
 \end{columns}
 \end{frame}
-\begin{frame}[label={sec:org4a9de18}]{Representation}
+\begin{frame}[label={sec:org3734b08}]{Representation}
 \begin{itemize}
 \item See\href{http://jsxgraph.uni-bayreuth.de/wiki/index.php/B-splines}{ this link} (B-splines) and \href{https://bl.ocks.org/jinroh/7524988}{this} link + \href{https://www.youtube.com/watch?v=spUNpyF58BY}{this video} for a visual understanding of the different bases functions.
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:orge708f11}]{Fitness function}
+\begin{frame}[label={sec:org755cfcf}]{Fitness function}
 \begin{block}{What's the fitness?}
 \begin{itemize}
 \item <2-> Measure time at \(x(t) = x_B\)
@@ -389,7 +389,7 @@ accompanied by \(k\) initial conditions \(\Rightarrow\) solved by \(y(t)\).
 \end{column}
 \end{columns}
 \end{frame}
-\begin{frame}[label={sec:org9e26133}]{Constraints and penalties}
+\begin{frame}[label={sec:org66e9ba2}]{Constraints and penalties}
 \begin{block}{Is unconstrained optimization a good idea?}
 \begin{itemize}
 \item <2-> \alert{NO}! We penalize \emph{bad} solutions.
@@ -452,10 +452,10 @@ accompanied by \(k\) initial conditions \(\Rightarrow\) solved by \(y(t)\).
 \end{column}
 \end{columns}
 \end{frame}
-\begin{frame}[label={sec:org2ec7ed8}]{Results}
+\begin{frame}[label={sec:org848caf1}]{Results}
 \href{file:///Users/tp5/code/optex/brachistochrone.mp4}{Brachistochrone optimization}
 \end{frame}
-\begin{frame}[label={sec:orga92e82c}]{Additional discussion}
+\begin{frame}[label={sec:org3c95edd}]{Additional discussion}
 Think about how these choices affect the optimization campaign?
 \begin{block}{Population size / number of generations}
 \end{block}
@@ -468,7 +468,7 @@ Think about how these choices affect the optimization campaign?
 \begin{block}{Error tolerance of ODE solver?}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:orgbb58c62}]{Aliters}
+\begin{frame}[label={sec:orgfe9cd15}]{Aliters}
 \begin{columns}
 \begin{column}{0.4\columnwidth}
 \begin{block}{Johann's solution}
@@ -503,7 +503,7 @@ Think about how these choices affect the optimization campaign?
 \begin{block}{The optimal solution is a cycloid!}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org5d9c528}]{More history\footnote{\href{https://en.wikipedia.org/wiki/Brachistochrone\_curve}{Brachistochrone curve wiki}}}
+\begin{frame}[label={sec:org489473d}]{More history\footnote{\href{https://en.wikipedia.org/wiki/Brachistochrone\_curve}{Brachistochrone curve wiki}}}
 \footnotesize
 \begin{itemize}
 \item Johann Bernoulli allowed six months for other solutions (apart from his and
@@ -523,7 +523,7 @@ foreigners about mathematical things\ldots{}''
 Bernoulli(s), Leibniz, Tschirnhaus and l'Hôpital.
 \end{itemize}
 \end{frame}
-\begin{frame}[label={sec:org3e91dee}]{Dido's isoperimetric problem\footnote{\href{https://mathematicalgarden.wordpress.com/2008/12/21/the-problem-of-dido/}{Mathematical Garden}}}
+\begin{frame}[label={sec:org32b8140}]{Dido's isoperimetric problem\footnote{\href{https://mathematicalgarden.wordpress.com/2008/12/21/the-problem-of-dido/}{Mathematical Garden}}}
 \begin{block}{Constraints in the problem definition}
 What is the closed curve which has the maximum area for a given perimeter?
 
@@ -552,10 +552,10 @@ What is the closed curve which has the maximum area for a given perimeter?
 \end{center}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org2c8bd42}]{Results}
+\begin{frame}[label={sec:org9416b59}]{Results}
 \begin{itemize}
 \item Constraint satsifaction by pre-processing and not by repair
-\href{file:///Users/tp5/code/optex/isoperimetric.mp4}{Isoperimetric curve optimization}
+\item \href{file:///Users/tp5/code/optex/isoperimetric.mp4}{Isoperimetric curve optimization}
 \end{itemize}
 \end{frame}
 \end{document}

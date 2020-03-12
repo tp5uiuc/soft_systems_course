@@ -169,7 +169,7 @@
 	:PROPERTIES:
 	:BEAMER_env: example
 	:END:
-	- ~scipy.integrate.odeint~ *DEMO*
+	- ~scipy.integrate.solve_ivp~ *DEMO*
 	- many options ~RK23, RK45, BDF,...~
 	- can specify error tolerances ~rtol~, ~atol~
 ** Representation
