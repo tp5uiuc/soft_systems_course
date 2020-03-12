@@ -95,7 +95,7 @@
 	 \sqrt{\frac{1}{\sum_{i=1}^{\mu} w_{i}^{2}}}
 	 \mathbf{C}^{-\frac{1}{2}}\langle\mathbf{z}\rangle_{w} \\
 	 \sigma &\longleftarrow \sigma
-	 e^{\left(\frac{1}{d_{\sigma}}\left(\frac{\left\|p_{\sigma}\right\|}{E\|\mathcal{N}(\mathbf{0},
+	 e^{\left(\frac{c_\sigma}{d_{\sigma}}\left(\frac{\left\|p_{\sigma}\right\|}{E\|\mathcal{N}(\mathbf{0},
 	 \mathbf{I})\|}-1\right)\right)} \tikzmarkend{step} \\
 	 \end{aligned} \]
 
@@ -1131,8 +1131,10 @@
 *** Choice of \( c_\sigma , d_\sigma \)?
 	- Look at the CMA tutorial : [[file:~/Desktop/Masters_Resources/readings/optimization/Hansen/The%20CMA%20evolution%20strategy%20A%20tutorial.pdf][The CMA tutorial]]/[[https://arxiv.org/pdf/1604.00772.pdf][CMA tutorial on Arxiv]]
 	- \( c_\sigma \) is learning rate for cumulation usually set to \( \approx
-      \tfrac{4}{n} \)
-	- \( d_\sigma \) is the damping parameter for step size update \(\approx 1 + \frac{\mu_{\text{cov}}}{\sqrt{n}} \)
+      \dfrac{ \mu^2_{\text{cov}} + 2}{n + \mu^2_{\text{cov}} + 5} \)
+	- \( d_\sigma \) is the damping parameter for step size update
+	\( \approx 1 + 2 \textrm{max} \left( 0, \sqrt{\dfrac{\mu^2_{\text{cov}} -1}{n + 1}} -1 \right) + c_\sigma \)
+	# \(\approx 1 + \frac{\mu_{\text{cov}}}{\sqrt{n}} \)
 	# \[ \scalebox{1.5}{$\tfrac{\mu_{ \text{cov} } + 2 }{ n + 5 + \mu_{ \text{cov} }
 	# }$} \]
 ** Fifth step : Covariance matrix adaptation
@@ -1174,8 +1176,8 @@
 *** Choice of \( c_c, c_{\text{cov}}\)?
 	- Look at the CMA tutorial : [[file:~/Desktop/Masters_Resources/readings/optimization/Hansen/The%20CMA%20evolution%20strategy%20A%20tutorial.pdf][The CMA tutorial]]/[[https://arxiv.org/pdf/1604.00772.pdf][CMA tutorial on Arxiv]]
 	- \( c_c\) is learning rate for path cumulation set to \( \approx
-      \tfrac{4}{n} \)
-	- \( c_{\text{cov}} \approx \tfrac{2 + \mu^2_{\text{cov}}}{n^2} \)
+      \dfrac{4 + \mu^2_{\text{cov}} / n}{n + 4 + 2\mu^2_{\text{cov}}/n} \)
+	- \( c_{\text{cov}} \approx \dfrac{2 + \mu^2_{\text{cov}}}{n^2} \)
 
 ** Terminating CMA
 *** Algorithm should be stopped when CPU-time is wasted. Then we can:
