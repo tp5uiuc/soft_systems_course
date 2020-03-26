@@ -268,11 +268,11 @@
 	\gv{b} \) is a vector in \( \mathcal{Y} \).
 
 ** Affine transformations : Examples
-*** Translations ( \( \bv{M} = \bv{0} \) and \( \gv{b} \neq \gv{0}\) )
+*** Translations ( \( \bv{M} = \bv{I} \) and \( \gv{b} \neq \gv{0}\) )
 	#+CAPTION: Translation of entities, Wikimedia, CC4.0
 	#+ATTR_LATEX: :width 0.4\textwidth
 	[[file:images/translate.pdf]]
-*** Translation *DEMO*
+*** Translation
 ** Linear transformations
 *** Difference b/w linear and affine trans.                         :B_block:
 	:PROPERTIES:
@@ -863,14 +863,15 @@
 	- Gives the exponential map that effects a transformation from the
       axis-angle representation (our case!) to rotation matrices
 	- Basically gives us \( \bv{Q} \) given \( \theta \hat{\gv{e}} \).
-	\[ \mathbf {R} =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \]
+	\[ \mathbf {R}(\theta, \hat{\gv{e}}) =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \]
 	where \( \mathbf{K}\) is the cross product matrix, discussed last class \(
 	\mathbf{K}\gv{v} = \hat{\gv{e}} \times \gv{v} \)
 ** Rotation matrix from Rodrigues formula : structure and intuition
-	\[ \mathbf {R} =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \]
+	\[ \mathbf {R}(\theta, \hat{\gv{e}}) =\mathbf {I} +(\sin \theta )\mathbf {K} +(1-\cos \theta )\mathbf {K} ^{2} \]
    We need \( \bv{R} \) above to satisfy properties of a rotation matrix. Let's verify:
-   - \( \bv{R}(0) = \bv{I} \)
-   - \( \bv{R}(\theta)\bv{R}(\phi) = \bv{R}(\theta+\phi)\)
+   - \( \bv{R}(0, \hat{\gv{e}}) = \bv{I} \)
+   - \( \bv{R}(\theta, \hat{\gv{e}})\bv{R}(\phi, \hat{\gv{e}}) =
+     \bv{R}(\theta+\phi, \hat{\gv{e}}) \)
    - \( \bv{R}\bv{R}^T = \bv{R}^T\bv{R} = \bv{I}\)
    We note that this operator always exists and is unique for given axis-angle
    (hence its form).
