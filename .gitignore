@@ -412,3 +412,6 @@ projects/02_snake/user_submissions/
 
 # Ignore povray data and image folders
 lectures/08_povray/code/test_images/
+
+# Ignore per-semester folders
+SP2020/
