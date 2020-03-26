@@ -4,7 +4,7 @@
 #+OPTIONS:   H:3 num:t toc:nil date:nil ::t |:t ^:{} -:t f:t *:t <:t
 #+LATEX_HEADER: \usepackage{cleveref}
 
-*Issue Date* : March 10, 2019
+*Issue Date* : March 26, 2020
 
 *Teaching Assistant* : Tejaswin Parthasarathy, ~tp5@illinois.edu~
 
@@ -78,6 +78,25 @@
 	 (in position and velocity) position-Verlet scheme, following the details on
 	 the hands-on session on timestepping schemes.
 
+	 \noindent *\textcolor{red}{Errata}* : The numerical scheme for the computation
+	 of the new frames within the time-stepping algorithm in the Royal Society paper
+	 has a sign mistake. Please follow the following equations instead:
+
+	 #+begin_export latex
+	 \begin{eqnarray}
+	  \mathbf{r}_i\left(t+\frac{\delta t}{2}\right)&=& \mathbf{r}_i(t)+\frac{\delta t}{2}\cdot\mathbf{v}_i(t), \hspace{3cm}i=[1,n+1]\label{eq:xupdate1}\\
+	  \mathbf{Q}_i\left(t+\frac{\delta t}{2}\right)&=& \exp{\left[-\frac{\delta t}{2}\boldsymbol{\omega}^i_{\mathcal{L}}(t)\right]}\cdot \mathbf{Q}_i(t),\hspace{2.7cm}i=[1,n]\label{eq:qupdate1}\\
+	  \mathbf{v}_i(t+\delta t)&=& \mathbf{v}_i(t)+\delta t\cdot\frac{d\mathbf{v}_i}{d t}\left(t+\frac{\delta t}{2}\right), \hspace{1.7cm}i=[1,n+1]\\
+	  \boldsymbol{\omega}^i_{\mathcal{L}}(t+\delta t)&=& \boldsymbol{\omega}^i_{\mathcal{L}}(t)+\delta t \cdot \frac{d \boldsymbol{\omega}^i_{\mathcal{L}}}{d t}\left(t+\frac{\delta t}{2}\right), \hspace{2cm}i=[1,n]\label{eq:accupdate}\\
+	  \mathbf{r}_i(t+\delta t)&=& \mathbf{r}_i\left(t+\frac{\delta t}{2}\right)+\frac{\delta t}{2}\cdot\mathbf{v}_i\left(t+\delta t\right)\label{eq:xupdate2}\hspace{1cm}i=[1,n+1]\label{eq:angaccupdate}\\
+	  \mathbf{Q}_i(t+\delta t)&=& \exp{\left[-\frac{\delta t}{2}\boldsymbol{\omega}^i_{\mathcal{L}}\left(t+\delta t\right)\right]}\cdot \mathbf{Q}_i\left(t+\frac{\delta t}{2}\right).\hspace{0.7cm}i=[1,n]\label{eq:qupdate2}
+	 \end{eqnarray}
+	 #+end_export
+
+	 \noindent *\textcolor{red}{Errata}* : The previous sign mistake also propogates in the computation of the
+	 curvature. The correct formula should read:
+	 \[ \hat{\boldsymbol{\kappa}}^{i}_{\mathcal{L}}=-\frac{\log(\mathbf{Q}_{i+1}\mathbf{Q}^T_{i})}{\hat{\mathcal{D}}_i} \]
+
 *** Simplifications to the governing equations
 	- The first simplification performed above involves a crude
       approximation---we simply remove the Lagrangian transport and unsteady
@@ -145,7 +164,7 @@
 
 	Notice that if you change one of these parameters such that \(
 	3E\hat{I}_1/(4\hat{L}^2\hat{A}G)\ll 1 \), you should also recover the
-	results of the Euler-Bernoulli theory (Say by setting \( E = \textcolor{red}{\frac{3}{2}G} = \SI{1e5}{\Pa}
+	results of the Euler-Bernoulli theory (Say by setting \( E = \frac{3}{2}G = \SI{1e5}{\Pa}
 	\) ).
 
 	#+ATTR_LATEX: :width 1\textwidth :thickness 0.01pt
@@ -169,12 +188,13 @@
      acting along the body. The magnitude $A_m$ of this torque is a traveling
      wave propagating head to tail along the filament
 
-	\[ A_m=\beta_m(\hat{s})\cdot\sin\left(\frac{2\pi}{T_m} t +
+	\[ A_m=\beta_m(\hat{s})\cdot\sin\left(\frac{2\pi}{T_m} t -
 											\frac{2\pi}{\lambda_m}
 											\hat{s}\right) \]
 	where $t$ is time, $T_m$ and $\lambda_m$ are,
-	respectively, the activation period and wavelength. In the equation above,
-	the amplitude of the traveling wave is represented by the cubic B-spline \(
+	respectively, the activation period and wavelength. *\textcolor{red}{Notice}* that this is
+	different from the paper, which had a typographical error of a + sign before the second term.
+	In the equation above, the amplitude of the traveling wave is represented by the cubic B-spline \(
 	\beta(\hat{s}) \) characterized by \( N_m \) control points \(
 	(\hat{S}_i,\beta_i) \) with \( i=0,\dots,N_m-1 \), as illustrated in
 	[[ref:fig_spline]]. The first and last control points are fixed so that $(\hat{s}_0,\beta_0)=(0,0)$

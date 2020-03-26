@@ -1,4 +1,4 @@
-% Created 2019-04-25 Thu 12:31
+% Created 2020-03-26 Thu 08:17
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -34,7 +34,7 @@
 \begin{document}
 
 \maketitle
-\textbf{Issue Date} : March 10, 2019
+\textbf{Issue Date} : March 26, 2020
 
 \textbf{Teaching Assistant} : Tejaswin Parthasarathy, \texttt{tp5@illinois.edu}
 
@@ -53,7 +53,7 @@
 \newpage
 
 \section{Guidelines}
-\label{sec:orge5d2764}
+\label{sec:orgf8158c5}
 General advice that pertains to solving the dynamics of an idealized
 slithering snake:
 \begin{enumerate}
@@ -74,9 +74,9 @@ Student Code on academic integrity---plagiarism will not be tolerated!
 \end{enumerate}
 
 \section{A soft snake}
-\label{sec:org4b530fa}
+\label{sec:org72bdb43}
 \subsection{Definition}
-\label{sec:org48ac4b3}
+\label{sec:orge60141a}
 In \texttt{Python}, implement a code for computing the mechanics of soft filaments
 using Cosserat rod theory, mirroring the in-class discussion. Construct a
 model of a slithering snake using this implementation and furthermore
@@ -85,9 +85,9 @@ optimize the gait of the snake for achieving maximal forward speed.
 \textbf{BONUS} : Visualize any/all of your results using the \href{http://www.povray.org/}{PovRay} raytracing
 library or its \texttt{Python} interface---\href{https://github.com/Zulko/vapory}{Vapory}.
 \subsection{Details}
-\label{sec:org83740c5}
+\label{sec:org23cc380}
 \subsubsection{Governing equations}
-\label{sec:org1ac146f}
+\label{sec:org82258bd}
 \textbf{Cosserat rod model}
  The following are the equations that you need to implement in your code.
  Note that these equations are derived \textbf{after} appropriate simplification as
@@ -114,8 +114,25 @@ hands-on session on rotations. Utilize the energy-preserving second-order
 (in position and velocity) position-Verlet scheme, following the details on
 the hands-on session on timestepping schemes.
 
+\noindent \textbf{\textcolor{red}{Errata}} : The numerical scheme for the computation
+of the new frames within the time-stepping algorithm in the Royal Society paper
+has a sign mistake. Please follow the following equations instead:
+
+\begin{eqnarray}
+ \mathbf{r}_i\left(t+\frac{\delta t}{2}\right)&=& \mathbf{r}_i(t)+\frac{\delta t}{2}\cdot\mathbf{v}_i(t), \hspace{3cm}i=[1,n+1]\label{eq:xupdate1}\\
+ \mathbf{Q}_i\left(t+\frac{\delta t}{2}\right)&=& \exp{\left[-\frac{\delta t}{2}\boldsymbol{\omega}^i_{\mathcal{L}}(t)\right]}\cdot \mathbf{Q}_i(t),\hspace{2.7cm}i=[1,n]\label{eq:qupdate1}\\
+ \mathbf{v}_i(t+\delta t)&=& \mathbf{v}_i(t)+\delta t\cdot\frac{d\mathbf{v}_i}{d t}\left(t+\frac{\delta t}{2}\right), \hspace{1.7cm}i=[1,n+1]\\
+ \boldsymbol{\omega}^i_{\mathcal{L}}(t+\delta t)&=& \boldsymbol{\omega}^i_{\mathcal{L}}(t)+\delta t \cdot \frac{d \boldsymbol{\omega}^i_{\mathcal{L}}}{d t}\left(t+\frac{\delta t}{2}\right), \hspace{2cm}i=[1,n]\label{eq:accupdate}\\
+ \mathbf{r}_i(t+\delta t)&=& \mathbf{r}_i\left(t+\frac{\delta t}{2}\right)+\frac{\delta t}{2}\cdot\mathbf{v}_i\left(t+\delta t\right)\label{eq:xupdate2}\hspace{1cm}i=[1,n+1]\label{eq:angaccupdate}\\
+ \mathbf{Q}_i(t+\delta t)&=& \exp{\left[-\frac{\delta t}{2}\boldsymbol{\omega}^i_{\mathcal{L}}\left(t+\delta t\right)\right]}\cdot \mathbf{Q}_i\left(t+\frac{\delta t}{2}\right).\hspace{0.7cm}i=[1,n]\label{eq:qupdate2}
+\end{eqnarray}
+
+\noindent \textbf{\textcolor{red}{Errata}} : The previous sign mistake also propogates in the computation of the
+curvature. The correct formula should read:
+\[ \hat{\boldsymbol{\kappa}}^{i}_{\mathcal{L}}=-\frac{\log(\mathbf{Q}_{i+1}\mathbf{Q}^T_{i})}{\hat{\mathcal{D}}_i} \]
+
 \subsubsection{Simplifications to the governing equations}
-\label{sec:orgb411169}
+\label{sec:org1168e5a}
 \begin{itemize}
 \item The first simplification performed above involves a crude
 approximation---we simply remove the Lagrangian transport and unsteady
@@ -130,7 +147,7 @@ valid in the specific example of slithering snake that we are interested in.
 \item As we will later see, rolling/lateral friction is neglected.
 \end{itemize}
 \subsubsection{Validation}
-\label{sec:org120c7fa}
+\label{sec:orgec84bdc}
 Once you are confident that all your operators (\texttt{Python}  functions) are
 performing the right task, it is prudent to validate your code against
 physical cases with known analytical (or numerical/experimental) solutions.
@@ -191,7 +208,7 @@ Time step \(dt\) & \(\SI{3e-4}{\second}\)\\
 \end{table}
 
 Notice that if you change one of these parameters such that \(3E\hat{I}_1/(4\hat{L}^2\hat{A}G)\ll 1\), you should also recover the
-results of the Euler-Bernoulli theory (Say by setting \(E = \textcolor{red}{\frac{3}{2}G} = \SI{1e5}{\Pa}\) ).
+results of the Euler-Bernoulli theory (Say by setting \(E = \frac{3}{2}G = \SI{1e5}{\Pa}\) ).
 
 \noindent\rule{1\textwidth}{0.01pt}
 \textbf{Initial conditions}: Notice that in this case, the initial
@@ -207,17 +224,18 @@ condition constrains the elemental frame (and its angular velocity) at \(\hat{s}
 location, the node is time invariant---hence its location is fixed, and its
 velocity always \(\mathbf{0}\).
 \subsubsection{Towards a slithering snake}
-\label{sec:orgedb9da9}
+\label{sec:org8fdb03a}
 \textbf{Muscular activity} To model muscular activity, we express it as torques
  acting along the body. The magnitude \(A_m\) of this torque is a traveling
  wave propagating head to tail along the filament
 
-\[ A_m=\beta_m(\hat{s})\cdot\sin\left(\frac{2\pi}{T_m} t +
+\[ A_m=\beta_m(\hat{s})\cdot\sin\left(\frac{2\pi}{T_m} t -
 											\frac{2\pi}{\lambda_m}
 											\hat{s}\right) \]
 where \(t\) is time, \(T_m\) and \(\lambda_m\) are,
-respectively, the activation period and wavelength. In the equation above,
-the amplitude of the traveling wave is represented by the cubic B-spline \(\beta(\hat{s})\) characterized by \(N_m\) control points \((\hat{S}_i,\beta_i)\) with \(i=0,\dots,N_m-1\), as illustrated in
+respectively, the activation period and wavelength. \textbf{\textcolor{red}{Notice}} that this is
+different from the paper, which had a typographical error of a + sign before the second term.
+In the equation above, the amplitude of the traveling wave is represented by the cubic B-spline \(\beta(\hat{s})\) characterized by \(N_m\) control points \((\hat{S}_i,\beta_i)\) with \(i=0,\dots,N_m-1\), as illustrated in
 \cref{fig_spline}. The first and last control points are fixed so that \((\hat{s}_0,\beta_0)=(0,0)\)
 and \((\hat{s}_{N_m-1},\beta_{N_m-1})=(\hat{L},0)\), therefore assuming the
 ends of the deforming body to be free.
@@ -346,7 +364,7 @@ friction coefficients based on the direction of locomotion.
 For this project, you can \textbf{neglect} lateral/rolling friction.
 
 \subsubsection{The slithering snake}
-\label{sec:org52aed0e}
+\label{sec:orgcd2b203}
 With all the components in place, we can assemble them together to model a
 snake. For this case, the muscular activity
 is modeled as an internal torque, calculated as a parametrized B-spline, as mentioned
@@ -373,7 +391,7 @@ can refer to the first link in \cref{sec:references} for more validation cases o
 ask the TA.
 
 \subsubsection{Gait optimization for maximal forward velocity}
-\label{sec:orgf2ace08}
+\label{sec:orgd7a6243}
 We are now (almost) ready to tackle the optimization problem of finding the
 maximal forward velocity for a model snake. The code setup, initial and
 boundary conditions follow from the previous section, including the
@@ -456,7 +474,7 @@ Optimal lateral undulation gait. (a, b, c, d) Instances at different times of a 
 \end{figure}
 
 \subsection{Expected submission}
-\label{sec:org12eef78}
+\label{sec:org725c84e}
 We expect you to submit your code and presentation. In your presentation,
 please try and include all your validation cases, information on your
 optimization campaign (CMAes fitness function, bounds on parameters, time
@@ -464,11 +482,11 @@ interval for optimization etc), performance of CMA on this problem and finally
 the results obtained. Other information such as timing data from your code
 (i.e. time for a single function evaluation) etc. can also be included.
 \section{A soft X}
-\label{sec:orgf6d5f16}
+\label{sec:orga6e53c1}
 {\large \textbf{This section is compulsary for students taking the course for four credit
 hours and is optional for those taking the course for three credit hours}}.
 \subsection{Solve for X}
-\label{sec:org0e81f38}
+\label{sec:org0796714}
 Think of an physical problem/application in which the modeling capabilities
 that you learnt in this course can come in handy, and design, using Cosserat
 rod(s), a setup that can be used to study/solve the problem you have in mind.
@@ -477,14 +495,14 @@ something you are really curious about (a few examples will be given in the
 class, but we will brainstorm with you about potential project ideas and
 their feasibility).
 \subsection{Optimize for X}
-\label{sec:org554c477}
+\label{sec:orgd781179}
 Once you have a preliminary design that partially/fully solves your problem,
 you need to see whether you can do \emph{better}. You are then expected to setup an
 inverse design problem, define what's \emph{better} in your case and use the
 optimization techniques that you have learnt thus far, to \emph{evolve} new
 designs.
 \subsection{Understand X}
-\label{sec:orgf41acd1}
+\label{sec:orgd84cb66}
 After you have arrived at a \emph{good} design, try and understand what makes it
 \emph{good}. While this may not be straightforward in all cases, tracking the designs
 that CMAes evolves can give you some intution as to why your design may be optimal.
@@ -500,7 +518,7 @@ of a slithering snake, found \href{https://royalsocietypublishing.org/doi/full/1
 schemes accompanied by \href{http://www2.math.ethz.ch/education/bachelor/seminars/fs2008/nas/crivelli.pdf}{this link} that compares many other schemes to the same.
 \end{itemize}
 \section{Compass Instructions}
-\label{sec:org4884744}
+\label{sec:org1da4b7b}
 \textbf{Project 2}
 In this project, you will implement a computational soft mechanics code (in Python) and construct a near-realistic model of a slithering snake. You will also hook it up to a stochastic optimization algorithm (CMAes) to find a gait that maximizes the forward speed, under some given conditions.
 
