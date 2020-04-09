@@ -4,11 +4,11 @@
 #+OPTIONS:   H:3 num:t toc:nil date:nil ::t |:t ^:{} -:t f:t *:t <:t
 #+LATEX_HEADER: \usepackage{cleveref}
 
-*Issue Date* : March 26, 2020
+*Issue Date* : March 27, 2020
 
 *Teaching Assistant* : Tejaswin Parthasarathy, ~tp5@illinois.edu~
 
-*Submission Date/Time*: Wednesday 11:59 PM, 01 May, 2019
+*Submission Date/Time*: Wednesday 11:59 PM, 06 May, 2020
 
 *Submission Instructions*:
  - You need to submit both your presentation (as ~.pdf~, ~.ppt[x]~ or ~.key~) and code
@@ -58,7 +58,7 @@
 	 \frac{\partial \mathbf{r}}{\partial t} &=& \mathbf{v}\label{eq:velfinal} \\
 	 \frac{\partial \mathbf{d}_j}{\partial t} &=& (\mathbf{Q}^T\boldsymbol{\omega}_{\mathcal{L}}) \times \mathbf{d}_j,~~~~~j=1,2,3\label{eq:framefinal}\\
 	 dm \cdot \frac{\partial^2 \mathbf{r}}{\partial t ^2} &=& \underbrace{\frac{\partial}{\partial \hat{s}} \left(\frac{\mathbf{Q}^T\hat{\mathbf{S}}\boldsymbol{\sigma}_{\mathcal{L}}}{1}\right)d\hat{s}}_{\text{{shear/stretch} internal force}} +\underbrace{\mathbf{F}\label{eq:linmomentfinal}}_{\text{ext. force}}\\
-	 \frac{d\hat{\mathbf{J}}}{e} \cdot \frac{\partial \boldsymbol{\omega}_{\mathcal{L}}}{\partial t} &=& \underbrace{\frac{\partial}{\partial \hat{s}}\left(\frac{\hat{\mathbf{B}}\hat{\boldsymbol{\kappa}}_{\mathcal{L}}}{1^3}\right)d\hat{s} + \frac{\hat{\boldsymbol{\kappa}}_{\mathcal{L}}\times\hat{\mathbf{B}}\hat{\boldsymbol{\kappa}}_{\mathcal{L}}}{1^3}d\hat{s}}_{\text{{bend/twist} internal couple}}~~~+ \underbrace{\left(\mathbf{Q}\mathbf{t}\times\hat{\mathbf{S}}\boldsymbol{\sigma}_{\mathcal{L}}\right)d\hat{s}}_{\text{{shear/stretch} internal couple}}\nonumber\\
+	 \frac{d\hat{\mathbf{J}}}{1} \cdot \frac{\partial \boldsymbol{\omega}_{\mathcal{L}}}{\partial t} &=& \underbrace{\frac{\partial}{\partial \hat{s}}\left(\frac{\hat{\mathbf{B}}\hat{\boldsymbol{\kappa}}_{\mathcal{L}}}{1^3}\right)d\hat{s} + \frac{\hat{\boldsymbol{\kappa}}_{\mathcal{L}}\times\hat{\mathbf{B}}\hat{\boldsymbol{\kappa}}_{\mathcal{L}}}{1^3}d\hat{s}}_{\text{{bend/twist} internal couple}}~~~+ \underbrace{\left(\mathbf{Q}\mathbf{t}\times\hat{\mathbf{S}}\boldsymbol{\sigma}_{\mathcal{L}}\right)d\hat{s}}_{\text{{shear/stretch} internal couple}}\nonumber\\
 	 &&+ \underbrace{\mathbf{C}_{\mathcal{L}}}_{\text{ext. couple}},\label{eq:angmomentfinal}
 	 \end{eqnarray}
 	 #+end_export
@@ -113,76 +113,88 @@
 	Once you are confident that all your operators (~Python~  functions) are
 	performing the right task, it is prudent to validate your code against
 	physical cases with known analytical (or numerical/experimental) solutions.
-	One such example is the deformation of a cantilever beam under an applied
-	load (and you are free to choose other cases too, if you so wish).
+	The validation will test increasingly complicated physics step-by-step, so
+	make sure that its performed in the same order as shown below:
+**** Beam stretched axially under small deformations
+	 This test-case validates the translational governing equations (1) & (3).
+	 Details will be discussed in class and updated eventually in this PDF.
+**** Pre-stressed beam with residual curvature undergoing deformations in space
+	 This test-case validates the translational + two-dimensional bending
+	 equations. This means that you solve all eq.(1)--(4), but many terms in the
+	 RHS of eq.(4) are identically zero. Details will be discussed in class and
+	 updated eventually in this PDF.
+**** Quasistatic case of a Timoshenko beam
+	 The last recommended case is the deformation of a cantilever beam under an applied
+	 load discussed below (and you are free to choose other cases too, if you so wish : see the
+	 first link in [[ref:sec:references]].).
 
-	In this problem, you clamp one end of the beam $\hat{s}=0$ , while applying a load \( F
- 	\) to the free end of the beam $\hat{s}=\hat{L}$. This is shown in [[ref:p1_fig]] below, taken
- 	from the first link in [[ref:sec:references]]. In this case, analytical solutions dervied from the Timoshenko (and
- 	Euler-Bernoulli) theory exists, which relies on the assumption of small
- 	deflections, so that the horizontal coordinate $x$ along the direction
- 	$\mathbf{k}$ can be approximated by the arc-length $\hat{s}$.
+	 In this problem, you clamp one end of the beam $\hat{s}=0$ , while applying a load \( F
+ 	 \) to the free end of the beam $\hat{s}=\hat{L}$. This is shown in [[ref:p1_fig]] below, taken
+ 	 from the first link in [[ref:sec:references]]. In this case, analytical solutions dervied from the Timoshenko (and
+ 	 Euler-Bernoulli) theory exists, which relies on the assumption of small
+ 	 deflections, so that the horizontal coordinate $x$ along the direction
+ 	 $\mathbf{k}$ can be approximated by the arc-length $\hat{s}$.
 
-    #+NAME: p1_fig
-	#+CAPTION: Validation---Deformation of a cantilever beam
-	#+ATTR_LATEX: :width 0.9\textwidth
-	[[file:images/figure_11.pdf]]
-	Considering the rod has length
- 	$\hat{L}$, constant cross sectional area $\hat{A}$ , area second moment of
- 	inertia about the axis $\mathbf{j}=\mathbf{k}\times\mathbf{i}$ to be
- 	$\hat{I}_1$, Young's and shear moduli $E$ and $G$, the analytical solution is
+     #+NAME: p1_fig
+	 #+CAPTION: Validation---Deformation of a cantilever beam
+	 #+ATTR_LATEX: :width 0.9\textwidth
+	 [[file:images/figure_11.pdf]]
+	 Considering the rod has length
+ 	 $\hat{L}$, constant cross sectional area $\hat{A}$ , area second moment of
+ 	 inertia about the axis $\mathbf{j}=\mathbf{k}\times\mathbf{i}$ to be
+ 	 $\hat{I}_1$, Young's and shear moduli $E$ and $G$, the analytical solution is
 
-	\[ y=-\frac{3F}{4\hat{A}G}\hat{s} -
-	\frac{F\hat{L}}{2E\hat{I}_1}\hat{s}^2 + \frac{F}{6E\hat{I}_1}\hat{s}^3 \]
+	 \[ y=-\frac{3F}{4\hat{A}G}\hat{s} -
+	 \frac{F\hat{L}}{2E\hat{I}_1}\hat{s}^2 + \frac{F}{6E\hat{I}_1}\hat{s}^3 \]
 
-	If the shear modulus $G$ approaches infinity or if the ratio
-	$3E\hat{I}_1/(4\hat{L}^2\hat{A}G)\ll 1$, then the Timoshenko model in the
-	static case reduces to the Euler-Bernoulli approximation, yielding
-	\[ y= - \frac{F\hat{L}}{2E\hat{I}_1}\hat{s}^2 +
-	\frac{F}{6E\hat{I}_1}\hat{s}^3 \]
+	 If the shear modulus $G$ approaches infinity or if the ratio
+	 $3E\hat{I}_1/(4\hat{L}^2\hat{A}G)\ll 1$, then the Timoshenko model in the
+	 static case reduces to the Euler-Bernoulli approximation, yielding
+	 \[ y= - \frac{F\hat{L}}{2E\hat{I}_1}\hat{s}^2 +
+	 \frac{F}{6E\hat{I}_1}\hat{s}^3 \]
 
-	You can then compare your numerical model with these results by carrying out
-	simulations of the cantilever beam shown in [[ref:p1_fig]], with generous number
-	of elements and an appropriate \( dt \). You should recover the results
-	obtained from Timoshenko theory, shown in [[ref:p1_fig]] for these parameters:
+	 You can then compare your numerical model with these results by carrying out
+	 simulations of the cantilever beam shown in [[ref:p1_fig]], with generous number
+	 of elements and an appropriate \( dt \). You should recover the results
+	 obtained from Timoshenko theory, shown in [[ref:p1_fig]] for these parameters:
 
-	#+CAPTION: Parameters for the Timoshenko beam validation
-	#+NAME: timoshenko_params
-	| Parameters                              | Value                               |
-	|-----------------------------------------+-------------------------------------|
-	| Rod density \(\rho\)                    | \( \SI{5e3}{\kg \m^{-3}}\)          |
-	| Young's modulus \( E \)                 | \( \SI{1e6}{\Pa} \)                 |
-	| Shear modulus \( G\)                    | \( \SI{1e4}{\Pa} \)                 |
-	| Downward force \( F \)                  | \( \SI{15}{\N}     \)               |
-	| Rod Length \( L \)                      | \( \SI{3}{\m}     \)                |
-	| Rod radius \( r \)                      | \( \SI{0.25}{\m}     \)             |
-	| Dissipation constant \( \gamma \)       | \( \SI{0.1}{\kg\per\m\per\second}\) |
-	| Simulation time \( T \)                 | \( \SI{5e3}{\second}\)              |
-	| Number of discretization points \( n \) | 100                                 |
-	| Time step \( dt \)                      | \( \SI{3e-4}{\second}\)             |
-	|-----------------------------------------+-------------------------------------|
+	 #+CAPTION: Parameters for the Timoshenko beam validation
+	 #+NAME: timoshenko_params
+	 | Parameters                              | Value                               |
+	 |-----------------------------------------+-------------------------------------|
+	 | Rod density \(\rho\)                    | \( \SI{5e3}{\kg \m^{-3}}\)          |
+	 | Young's modulus \( E \)                 | \( \SI{1e6}{\Pa} \)                 |
+	 | Shear modulus \( G\)                    | \( \SI{1e4}{\Pa} \)                 |
+	 | Downward force \( F \)                  | \( \SI{15}{\N}     \)               |
+	 | Rod Length \( L \)                      | \( \SI{3}{\m}     \)                |
+	 | Rod radius \( r \)                      | \( \SI{0.25}{\m}     \)             |
+	 | Dissipation constant \( \gamma \)       | \( \SI{0.1}{\kg\per\m\per\second}\) |
+	 | Simulation time \( T \)                 | \( \SI{5e3}{\second}\)              |
+	 | Number of discretization points \( n \) | 100                                 |
+	 | Time step \( dt \)                      | \( \SI{3e-4}{\second}\)             |
+	 |-----------------------------------------+-------------------------------------|
 
-	Notice that if you change one of these parameters such that \(
-	3E\hat{I}_1/(4\hat{L}^2\hat{A}G)\ll 1 \), you should also recover the
-	results of the Euler-Bernoulli theory (Say by setting \( E = \frac{3}{2}G = \SI{1e5}{\Pa}
-	\) ).
+	 Notice that if you change one of these parameters such that \(
+	 3E\hat{I}_1/(4\hat{L}^2\hat{A}G)\ll 1 \), you should also recover the
+	 results of the Euler-Bernoulli theory (Say by setting \( E = \frac{3}{2}G = \SI{1e5}{\Pa}
+	 \) ).
 
-	#+ATTR_LATEX: :width 1\textwidth :thickness 0.01pt
-	-----
- 	*Initial conditions*: Notice that in this case, the initial
- 	condition constrains the rod to be straight, with its axis (and hence all
- 	elemental frames) pointing in the \(\mathbf{i} \) direction. Setting the spatial location
- 	of the equispaced nodes/frames initially then, is pretty straightforward. Additionally at the
- 	start, all nodes have translational and angular velocities set to \( \mathbf{0} \), in the
- 	appropriate units.
+	 #+ATTR_LATEX: :width 1\textwidth :thickness 0.01pt
+	 -----
+ 	 *Initial conditions*: Notice that in this case, the initial
+ 	 condition constrains the rod to be straight, with its axis (and hence all
+ 	 elemental frames) pointing in the \(\mathbf{i} \) direction. Setting the spatial location
+ 	 of the equispaced nodes/frames initially then, is pretty straightforward. Additionally at the
+ 	 start, all nodes have translational and angular velocities set to \( \mathbf{0} \), in the
+ 	 appropriate units.
 
-	#+ATTR_LATEX: :width 1\textwidth :thickness 0.01pt
-	-----
- 	*Boundary conditions*: Notice that in this case, the boundary
- 	condition constrains the elemental frame (and its angular velocity) at \(
- 	\hat{s} = 0.0\) to retain its initial configuration. Furthermore at this
- 	location, the node is time invariant---hence its location is fixed, and its
- 	velocity always \( \mathbf{0} \).
+	 #+ATTR_LATEX: :width 1\textwidth :thickness 0.01pt
+	 -----
+ 	 *Boundary conditions*: Notice that in this case, the boundary
+ 	 condition constrains the elemental frame (and its angular velocity) at \(
+ 	 \hat{s} = 0.0\) to retain its initial configuration. Furthermore at this
+ 	 location, the node is time invariant---hence its location is fixed, and its
+ 	 velocity always \( \mathbf{0} \).
 *** Towards a slithering snake
 	*Muscular activity* To model muscular activity, we express it as torques
      acting along the body. The magnitude $A_m$ of this torque is a traveling
@@ -361,7 +373,7 @@
 	the in-class discussions. Once the isotropic friction law is setup using
 	the Amonton--Coloumb law, anisotropy can be included by changing the
 	friction coefficients based on the direction of locomotion.
-    For this project, you can *neglect* lateral/rolling friction.
+    # For this project, you can *neglect* lateral/rolling friction.
 	# The line above is only in the new version
 
 *** The slithering snake
@@ -495,28 +507,28 @@
 
 	#+CAPTION: Parameters for the snake to be optimized for maximal forward velocity
 	#+NAME: tab_opt_snake_params
-	| Parameters                                           | Value                                                       |
-	|------------------------------------------------------+-------------------------------------------------------------|
-	| Rod density \(\rho\)                                 | \( \textcolor{red}{\SI{1e3}{\kg \m^{-3}}} \)                |
-	| Young's modulus \( E \)                              | \( \SI{1e7}{\Pa} \)                                         |
-	| Shear modulus \( G\)                                 | \( 2E/3\;\si{\Pa} \)                                        |
-	| Shear/Stretch matrix \( \mathbf{S} \)                | diag\((4GA/3, 4GA/3, \textcolor{red}{EA}) \si{\N\per\m^2}\) |
-	| Bend/Twist matrix \( \mathbf{B} \)                   | diag\((EI_1, EI_2, GI_3) \si{\N\per\m^2}\)                  |
-	| Rod length \( L \)                                   | \( \SI{1}{\m}     \)                                        |
-	| Rod radius \( r \)                                   | \( \SI{0.025}{\m}     \)                                    |
-	| Muscular activation period \( T_m \)                 | \( \SI{1}{\second}\)                                        |
-	| Dissipation constant \( \gamma \)                    | \( \SI{5}{\kg\per\m\per\second}\)                           |
-	| Acceleration due to gravity normal to ground \( g \) | \SI{9.81}{\m \per \s^2}                                     |
-	| Forward kinetic friction coefficient\( \mu^f_k \)    | \( 1.019368 \)                                              |
-	| Backward kinetic friction coefficient \( \mu^b_k\)   | \(1.5 \cdot  \mu^f_k \)                                     |
-	| Forward static friction coefficient\( \mu^f_s \)     | \(2 \cdot  \mu^f_k     \)                                   |
-	| Backward static friction coefficient \( \mu^b_s\)    | \(1.5 \cdot  \mu^f_s      \)                                |
-	| Friction threshold velocity \( v_{\epsilon}\)        | \SI{1e-8}{\m\per\s}                                         |
-	| Ground stiffness \(k_w \)                            | \SI{1}{\kg \per \s^2}                                       |
-	| Ground viscous dissipation                           | \SI{1e-6}{\kg \per \s}                                      |
-	| Number of discretization points \( n \)              | 50                                                          |
-	| Time step \( dt \)                                   | \( \SI{2.5e-5}{\second}\)                                   |
-	|------------------------------------------------------+-------------------------------------------------------------|
+	| Parameters                                           | Value                                      |
+	|------------------------------------------------------+--------------------------------------------|
+	| Rod density \(\rho\)                                 | \( \SI{1e3}{\kg \m^{-3}} \)                |
+	| Young's modulus \( E \)                              | \( \SI{1e7}{\Pa} \)                        |
+	| Shear modulus \( G\)                                 | \( 2E/3\;\si{\Pa} \)                       |
+	| Shear/Stretch matrix \( \mathbf{S} \)                | diag\((4GA/3, 4GA/3, EA) \si{\N\per\m^2}\) |
+	| Bend/Twist matrix \( \mathbf{B} \)                   | diag\((EI_1, EI_2, GI_3) \si{\N\per\m^2}\) |
+	| Rod length \( L \)                                   | \( \SI{1}{\m}     \)                       |
+	| Rod radius \( r \)                                   | \( \SI{0.025}{\m}     \)                   |
+	| Muscular activation period \( T_m \)                 | \( \SI{1}{\second}\)                       |
+	| Dissipation constant \( \gamma \)                    | \( \SI{5}{\kg\per\m\per\second}\)          |
+	| Acceleration due to gravity normal to ground \( g \) | \SI{9.81}{\m \per \s^2}                    |
+	| Forward kinetic friction coefficient\( \mu^f_k \)    | \( 1.019368 \)                             |
+	| Backward kinetic friction coefficient \( \mu^b_k\)   | \(1.5 \cdot  \mu^f_k \)                    |
+	| Forward static friction coefficient\( \mu^f_s \)     | \(2 \cdot  \mu^f_k     \)                  |
+	| Backward static friction coefficient \( \mu^b_s\)    | \(1.5 \cdot  \mu^f_s      \)               |
+	| Friction threshold velocity \( v_{\epsilon}\)        | \SI{1e-8}{\m\per\s}                        |
+	| Ground stiffness \(k_w \)                            | \SI{1}{\kg \per \s^2}                      |
+	| Ground viscous dissipation                           | \SI{1e-6}{\kg \per \s}                     |
+	| Number of discretization points \( n \)              | 50                                         |
+	| Time step \( dt \)                                   | \( \SI{2.5e-5}{\second}\)                  |
+	|------------------------------------------------------+--------------------------------------------|
 
 	# If rollng friction is included
 	# | Lateral (rolling) kinetic friction coefficient \( \mu^r_k\) | \(2 \cdot  \mu^f_k \)                         |
@@ -572,10 +584,10 @@
   the results obtained. Other information such as timing data from your code
   (i.e. time for a single function evaluation) etc. can also be included.
 * A soft X
-  #+begin_export latex
-  {\large \textbf{This section is compulsary for students taking the course for four credit
-  hours and is optional for those taking the course for three credit hours}}.
-  #+end_export
+  # #+begin_export latex
+  # {\large \textbf{This section is compulsary for students taking the course for four credit
+  # hours and is optional for those taking the course for three credit hours}}.
+  # #+end_export
 ** Solve for X
    Think of an physical problem/application in which the modeling capabilities
    that you learnt in this course can come in handy, and design, using Cosserat
@@ -610,6 +622,7 @@
 In this project, you will implement a computational soft mechanics code (in Python) and construct a near-realistic model of a slithering snake. You will also hook it up to a stochastic optimization algorithm (CMAes) to find a gait that maximizes the forward speed, under some given conditions.
 
 \noindent *Project 3*
-Students taking the course for four credit hours additionally need to﻿﻿ think of a model problem/application which they can solve using the implemented code. You also need to develop an inverse design study to find a better (optimal?) solution that tackles the same problem, and try and determine why the solution is optimal.
+Additionally, you need to think of a model problem/application which can be solved using the implemented code. You also need to develop an inverse design study to find a better (optimal?) solution that tackles the same problem, and try and determine why the solution is optimal.
+# Students taking the course for four credit hours
 
 More information enclosed in the attached files.

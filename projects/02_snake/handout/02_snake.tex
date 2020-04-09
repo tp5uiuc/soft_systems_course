@@ -1,4 +1,4 @@
-% Created 2020-03-26 Thu 08:17
+% Created 2020-03-27 Fri 05:37
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -34,11 +34,11 @@
 \begin{document}
 
 \maketitle
-\textbf{Issue Date} : March 26, 2020
+\textbf{Issue Date} : March 27, 2020
 
 \textbf{Teaching Assistant} : Tejaswin Parthasarathy, \texttt{tp5@illinois.edu}
 
-\textbf{Submission Date/Time}: Wednesday 11:59 PM, 01 May, 2019
+\textbf{Submission Date/Time}: Wednesday 11:59 PM, 06 May, 2020
 
 \textbf{Submission Instructions}:
 \begin{itemize}
@@ -53,7 +53,7 @@
 \newpage
 
 \section{Guidelines}
-\label{sec:orgf8158c5}
+\label{sec:orge3a2e00}
 General advice that pertains to solving the dynamics of an idealized
 slithering snake:
 \begin{enumerate}
@@ -74,9 +74,9 @@ Student Code on academic integrity---plagiarism will not be tolerated!
 \end{enumerate}
 
 \section{A soft snake}
-\label{sec:org72bdb43}
+\label{sec:org0a0b2ff}
 \subsection{Definition}
-\label{sec:orge60141a}
+\label{sec:orgb45289e}
 In \texttt{Python}, implement a code for computing the mechanics of soft filaments
 using Cosserat rod theory, mirroring the in-class discussion. Construct a
 model of a slithering snake using this implementation and furthermore
@@ -85,9 +85,9 @@ optimize the gait of the snake for achieving maximal forward speed.
 \textbf{BONUS} : Visualize any/all of your results using the \href{http://www.povray.org/}{PovRay} raytracing
 library or its \texttt{Python} interface---\href{https://github.com/Zulko/vapory}{Vapory}.
 \subsection{Details}
-\label{sec:org23cc380}
+\label{sec:org8e78a65}
 \subsubsection{Governing equations}
-\label{sec:org82258bd}
+\label{sec:orgaf82ebb}
 \textbf{Cosserat rod model}
  The following are the equations that you need to implement in your code.
  Note that these equations are derived \textbf{after} appropriate simplification as
@@ -96,7 +96,7 @@ library or its \texttt{Python} interface---\href{https://github.com/Zulko/vapory
 \frac{\partial \mathbf{r}}{\partial t} &=& \mathbf{v}\label{eq:velfinal} \\
 \frac{\partial \mathbf{d}_j}{\partial t} &=& (\mathbf{Q}^T\boldsymbol{\omega}_{\mathcal{L}}) \times \mathbf{d}_j,~~~~~j=1,2,3\label{eq:framefinal}\\
 dm \cdot \frac{\partial^2 \mathbf{r}}{\partial t ^2} &=& \underbrace{\frac{\partial}{\partial \hat{s}} \left(\frac{\mathbf{Q}^T\hat{\mathbf{S}}\boldsymbol{\sigma}_{\mathcal{L}}}{1}\right)d\hat{s}}_{\text{{shear/stretch} internal force}} +\underbrace{\mathbf{F}\label{eq:linmomentfinal}}_{\text{ext. force}}\\
-\frac{d\hat{\mathbf{J}}}{e} \cdot \frac{\partial \boldsymbol{\omega}_{\mathcal{L}}}{\partial t} &=& \underbrace{\frac{\partial}{\partial \hat{s}}\left(\frac{\hat{\mathbf{B}}\hat{\boldsymbol{\kappa}}_{\mathcal{L}}}{1^3}\right)d\hat{s} + \frac{\hat{\boldsymbol{\kappa}}_{\mathcal{L}}\times\hat{\mathbf{B}}\hat{\boldsymbol{\kappa}}_{\mathcal{L}}}{1^3}d\hat{s}}_{\text{{bend/twist} internal couple}}~~~+ \underbrace{\left(\mathbf{Q}\mathbf{t}\times\hat{\mathbf{S}}\boldsymbol{\sigma}_{\mathcal{L}}\right)d\hat{s}}_{\text{{shear/stretch} internal couple}}\nonumber\\
+\frac{d\hat{\mathbf{J}}}{1} \cdot \frac{\partial \boldsymbol{\omega}_{\mathcal{L}}}{\partial t} &=& \underbrace{\frac{\partial}{\partial \hat{s}}\left(\frac{\hat{\mathbf{B}}\hat{\boldsymbol{\kappa}}_{\mathcal{L}}}{1^3}\right)d\hat{s} + \frac{\hat{\boldsymbol{\kappa}}_{\mathcal{L}}\times\hat{\mathbf{B}}\hat{\boldsymbol{\kappa}}_{\mathcal{L}}}{1^3}d\hat{s}}_{\text{{bend/twist} internal couple}}~~~+ \underbrace{\left(\mathbf{Q}\mathbf{t}\times\hat{\mathbf{S}}\boldsymbol{\sigma}_{\mathcal{L}}\right)d\hat{s}}_{\text{{shear/stretch} internal couple}}\nonumber\\
 &&+ \underbrace{\mathbf{C}_{\mathcal{L}}}_{\text{ext. couple}},\label{eq:angmomentfinal}
 \end{eqnarray}
 where \(dm=\rho \hat{A} d\hat{s}=\rho A ds\) is the infinitesimal mass
@@ -132,7 +132,7 @@ curvature. The correct formula should read:
 \[ \hat{\boldsymbol{\kappa}}^{i}_{\mathcal{L}}=-\frac{\log(\mathbf{Q}_{i+1}\mathbf{Q}^T_{i})}{\hat{\mathcal{D}}_i} \]
 
 \subsubsection{Simplifications to the governing equations}
-\label{sec:org1168e5a}
+\label{sec:org6a93b43}
 \begin{itemize}
 \item The first simplification performed above involves a crude
 approximation---we simply remove the Lagrangian transport and unsteady
@@ -147,12 +147,28 @@ valid in the specific example of slithering snake that we are interested in.
 \item As we will later see, rolling/lateral friction is neglected.
 \end{itemize}
 \subsubsection{Validation}
-\label{sec:orgec84bdc}
+\label{sec:org5fd23fe}
 Once you are confident that all your operators (\texttt{Python}  functions) are
 performing the right task, it is prudent to validate your code against
 physical cases with known analytical (or numerical/experimental) solutions.
-One such example is the deformation of a cantilever beam under an applied
-load (and you are free to choose other cases too, if you so wish).
+The validation will test increasingly complicated physics step-by-step, so
+make sure that its performed in the same order as shown below:
+\begin{enumerate}
+\item Beam stretched axially under small deformations
+\label{sec:orgf1b8039}
+This test-case validates the translational governing equations (1) \& (3).
+Details will be discussed in class and updated eventually in this PDF.
+\item Pre-stressed beam with residual curvature undergoing deformations in space
+\label{sec:org62fe594}
+This test-case validates the translational + two-dimensional bending
+equations. This means that you solve all eq.(1)--(4), but many terms in the
+RHS of eq.(4) are identically zero. Details will be discussed in class and
+updated eventually in this PDF.
+\item Quasistatic case of a Timoshenko beam
+\label{sec:org77fa449}
+The last recommended case is the deformation of a cantilever beam under an applied
+load discussed below (and you are free to choose other cases too, if you so wish : see the
+first link in \cref{sec:references}.).
 
 In this problem, you clamp one end of the beam \(\hat{s}=0\) , while applying a load \(F\) to the free end of the beam \(\hat{s}=\hat{L}\). This is shown in \cref{p1_fig} below, taken
  from the first link in \cref{sec:references}. In this case, analytical solutions dervied from the Timoshenko (and
@@ -172,13 +188,13 @@ Considering the rod has length
  \(\hat{I}_1\), Young's and shear moduli \(E\) and \(G\), the analytical solution is
 
 \[ y=-\frac{3F}{4\hat{A}G}\hat{s} -
-	\frac{F\hat{L}}{2E\hat{I}_1}\hat{s}^2 + \frac{F}{6E\hat{I}_1}\hat{s}^3 \]
+	 \frac{F\hat{L}}{2E\hat{I}_1}\hat{s}^2 + \frac{F}{6E\hat{I}_1}\hat{s}^3 \]
 
 If the shear modulus \(G\) approaches infinity or if the ratio
 \(3E\hat{I}_1/(4\hat{L}^2\hat{A}G)\ll 1\), then the Timoshenko model in the
 static case reduces to the Euler-Bernoulli approximation, yielding
 \[ y= - \frac{F\hat{L}}{2E\hat{I}_1}\hat{s}^2 +
-	\frac{F}{6E\hat{I}_1}\hat{s}^3 \]
+	 \frac{F}{6E\hat{I}_1}\hat{s}^3 \]
 
 You can then compare your numerical model with these results by carrying out
 simulations of the cantilever beam shown in \cref{p1_fig}, with generous number
@@ -223,8 +239,9 @@ appropriate units.
 condition constrains the elemental frame (and its angular velocity) at \(\hat{s} = 0.0\) to retain its initial configuration. Furthermore at this
 location, the node is time invariant---hence its location is fixed, and its
 velocity always \(\mathbf{0}\).
+\end{enumerate}
 \subsubsection{Towards a slithering snake}
-\label{sec:org8fdb03a}
+\label{sec:org00448cb}
 \textbf{Muscular activity} To model muscular activity, we express it as torques
  acting along the body. The magnitude \(A_m\) of this torque is a traveling
  wave propagating head to tail along the filament
@@ -361,10 +378,9 @@ values close to the same, accounting for interpenetration \(\epsilon\) ).
 the in-class discussions. Once the isotropic friction law is setup using
 the Amonton--Coloumb law, anisotropy can be included by changing the
 friction coefficients based on the direction of locomotion.
-For this project, you can \textbf{neglect} lateral/rolling friction.
 
 \subsubsection{The slithering snake}
-\label{sec:orgcd2b203}
+\label{sec:orgdcb26d1}
 With all the components in place, we can assemble them together to model a
 snake. For this case, the muscular activity
 is modeled as an internal torque, calculated as a parametrized B-spline, as mentioned
@@ -391,7 +407,7 @@ can refer to the first link in \cref{sec:references} for more validation cases o
 ask the TA.
 
 \subsubsection{Gait optimization for maximal forward velocity}
-\label{sec:orgd7a6243}
+\label{sec:orgd44c45f}
 We are now (almost) ready to tackle the optimization problem of finding the
 maximal forward velocity for a model snake. The code setup, initial and
 boundary conditions follow from the previous section, including the
@@ -407,10 +423,10 @@ Parameters for the snake to be optimized for maximal forward velocity}
 \toprule
 Parameters & Value\\
 \midrule
-Rod density \(\rho\) & \(\textcolor{red}{\SI{1e3}{\kg \m^{-3}}}\)\\
+Rod density \(\rho\) & \(\SI{1e3}{\kg \m^{-3}}\)\\
 Young's modulus \(E\) & \(\SI{1e7}{\Pa}\)\\
 Shear modulus \(G\) & \(2E/3\;\si{\Pa}\)\\
-Shear/Stretch matrix \(\mathbf{S}\) & diag\((4GA/3, 4GA/3, \textcolor{red}{EA}) \si{\N\per\m^2}\)\\
+Shear/Stretch matrix \(\mathbf{S}\) & diag\((4GA/3, 4GA/3, EA) \si{\N\per\m^2}\)\\
 Bend/Twist matrix \(\mathbf{B}\) & diag\((EI_1, EI_2, GI_3) \si{\N\per\m^2}\)\\
 Rod length \(L\) & \(\SI{1}{\m}\)\\
 Rod radius \(r\) & \(\SI{0.025}{\m}\)\\
@@ -474,7 +490,7 @@ Optimal lateral undulation gait. (a, b, c, d) Instances at different times of a 
 \end{figure}
 
 \subsection{Expected submission}
-\label{sec:org725c84e}
+\label{sec:org893cc4d}
 We expect you to submit your code and presentation. In your presentation,
 please try and include all your validation cases, information on your
 optimization campaign (CMAes fitness function, bounds on parameters, time
@@ -482,11 +498,9 @@ interval for optimization etc), performance of CMA on this problem and finally
 the results obtained. Other information such as timing data from your code
 (i.e. time for a single function evaluation) etc. can also be included.
 \section{A soft X}
-\label{sec:orga6e53c1}
-{\large \textbf{This section is compulsary for students taking the course for four credit
-hours and is optional for those taking the course for three credit hours}}.
+\label{sec:orgf9fdf95}
 \subsection{Solve for X}
-\label{sec:org0796714}
+\label{sec:org26c9fb9}
 Think of an physical problem/application in which the modeling capabilities
 that you learnt in this course can come in handy, and design, using Cosserat
 rod(s), a setup that can be used to study/solve the problem you have in mind.
@@ -495,14 +509,14 @@ something you are really curious about (a few examples will be given in the
 class, but we will brainstorm with you about potential project ideas and
 their feasibility).
 \subsection{Optimize for X}
-\label{sec:orgd781179}
+\label{sec:org5a45be3}
 Once you have a preliminary design that partially/fully solves your problem,
 you need to see whether you can do \emph{better}. You are then expected to setup an
 inverse design problem, define what's \emph{better} in your case and use the
 optimization techniques that you have learnt thus far, to \emph{evolve} new
 designs.
 \subsection{Understand X}
-\label{sec:orgd84cb66}
+\label{sec:orga9a3b84}
 After you have arrived at a \emph{good} design, try and understand what makes it
 \emph{good}. While this may not be straightforward in all cases, tracking the designs
 that CMAes evolves can give you some intution as to why your design may be optimal.
@@ -518,12 +532,12 @@ of a slithering snake, found \href{https://royalsocietypublishing.org/doi/full/1
 schemes accompanied by \href{http://www2.math.ethz.ch/education/bachelor/seminars/fs2008/nas/crivelli.pdf}{this link} that compares many other schemes to the same.
 \end{itemize}
 \section{Compass Instructions}
-\label{sec:org1da4b7b}
+\label{sec:org0712f8a}
 \textbf{Project 2}
 In this project, you will implement a computational soft mechanics code (in Python) and construct a near-realistic model of a slithering snake. You will also hook it up to a stochastic optimization algorithm (CMAes) to find a gait that maximizes the forward speed, under some given conditions.
 
 \noindent \textbf{Project 3}
-Students taking the course for four credit hours additionally need to﻿﻿ think of a model problem/application which they can solve using the implemented code. You also need to develop an inverse design study to find a better (optimal?) solution that tackles the same problem, and try and determine why the solution is optimal.
+Additionally, you need to think of a model problem/application which can be solved using the implemented code. You also need to develop an inverse design study to find a better (optimal?) solution that tackles the same problem, and try and determine why the solution is optimal.
 
 More information enclosed in the attached files.
 \end{document}
