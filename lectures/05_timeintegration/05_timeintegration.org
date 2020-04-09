@@ -968,10 +968,6 @@
 	- Backward Euler can be stable even when the ODE is not!
 	- *DEMO*
 ** What about Verlet ?
-*** Can it blow up?                                                 :B_block:
-	:PROPERTIES:
-	:BEAMER_env: block
-	:END:
 *** It can!                                                         :B_block:
 	:PROPERTIES:
 	:BEAMER_env: block
@@ -979,7 +975,11 @@
 	:END:
 	 - But only for non-hamiltonian systems
 	 - For hamiltonian systems, it always conserves a positive semi-definite
-       quantity and hence can not blow up
+       quantity and hence should not blow up
+*** Can it blow up?                                                 :B_block:
+	:PROPERTIES:
+	:BEAMER_env: block
+	:END:
 ** Bottomline
    - Stability is another measure of how "good" a time-marching algorithm is
    - For *explicit* schemes, main concern in time-step selection is usually
