@@ -1,72 +1,87 @@
-#!bin/bash
+#!usr/bin/env bash
 
 usage() {
-  cat <<EOM
+	cat <<EOM
     Usage:
-    $(basename $0) <foldername>
-	foldername is the directory containing your .pov files
+    $(basename "$0") <foldername>
+    foldername is the directory containing your .pov files
 EOM
-  exit 0
+	exit 0
 }
-
 
 main() {
-  # set up working variables
-  dir="$1"
-  if [ ! -d "$dir" ]; then
-	printf '%s\n' "${dir} does not exist" >&2
-	# write error message to stderr
-	exit 1
-  fi
+	# set up working variables
+	dir="$1"
+	if [ ! -d "$dir" ]; then
+		printf '%s\n' "${dir} does not exist" >&2
+		# write error message to stderr
+		exit 1
+	fi
 
-  startfolder=$(pwd)
-  scenename=snake
-  scenefolder=scenes
-  scene=./${scenefolder}/${scenename}.inc
-  images=${startfolder}/test_images/
-  res_width=800
-  res_height=450
+	if not hash povray 2>/dev/null; then
+		echo "please install povray!"
+		exit 1
+	fi
 
-  # prepare image folder
-  if [ -d "$images" ];then
-	rm -rf $images;
-  fi
-  mkdir -p $images
+	if not hash ffmpeg 2>/dev/null; then
+		echo "please install ffmpeg!"
+		exit 1
+	fi
 
-  # copy into simulation folder all files needed by povray
-  cp $scene $dir
+	startfolder=$(pwd)
+	scenename=snake
+	scenefolder=scenes
+	scene=./${scenefolder}/${scenename}.inc
+	images=${startfolder}/test_images/
+	res_width=800
+	res_height=450
 
-  # go into simulation folder
-  cd $dir
+	# prepare image folder
+	if [ -d "$images" ]; then
+		rm -rf "${images}"
+	fi
+	mkdir -p "${images}"
 
-  # in all povray files replace the default include file with the appropriate one
-  # sed is installed by default in all nix systems
-  sedstring=s/scenepovray/${scenename}/g
-  sed -i -e ${sedstring} *.pov
+	# copy into simulation folder all files needed by povray
+	cp "${scene}" "${dir}"
 
-  # loop over all povray files and produce images
-  set +f
-  for f in *.pov; do
-	echo "processing ${f} file..."
+	# go into simulation folder
+	cd "${dir}" || {
+		echo "${dir} folder not created, aborting"
+		exit 1
+	}
 
-	# Uses Parameter expansion
-	# Read here if more interested
-	# https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html
-	filenameonly=${f##*/}
-	filenamenoext=${filenameonly%.*}
+	# in all povray files replace the default include file with the appropriate one
+	# sed is installed by default in all nix systems
+	sedstring="s/scenepovray/${scenename}/g"
+	sed -i -e "${sedstring}" *.pov
 
-	# Run povray and move
-	povray -h${res_height}-w${res_width} quality=11 antialias=on ${filenameonly}
-	mv ${filenamenoext}.png $images
+	# loop over all povray files and produce images
+	set +f
+	for f in *.pov; do
+		echo "processing ${f} file..."
 
-  done
+		# Uses Parameter expansion
+		# Read here if more interested
+		# https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html
+		filenameonly=${f##*/}
+		filenamenoext=${filenameonly%.*}
 
-  cd ${images}
+		# Run povray and move
+		povray -h"${res_height}"-w"${res_width}" quality=11 antialias=on "${filenameonly}"
+		mv "${filenamenoext}.png" "${images}"
 
-  ffmpeg -s ${res_width}x${res_height} -pattern_type glob -i '*.png' -vcodec libx264 -framerate 30 -pix_fmt yuv420p snake.mp4
+	done
 
-  # go back to original folder
-  cd -
+	cd "${images}" || {
+		echo "could not cd into ${images}, aborting, please run ffmpeg yourselves"
+		exit 1
+	}
+
+	ffmpeg -s ${res_width}x${res_height} -pattern_type glob -i '*.png' -vcodec libx264 -framerate 30 -pix_fmt yuv420p snake.mp4
+
+	# go back to original folder
+	cd - || return
 }
 
-[ "$#" -ne 1 ] && ( usage && exit 1 ) || main $1
+[ "$#" -ne 1 ] && (usage && exit 1) || main $1
