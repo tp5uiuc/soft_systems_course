@@ -1,6 +1,6 @@
 #+TITLE: Prerequisities
 #+AUTHOR: /Tejaswin Parthasarathy/, Mattia Gazzola
-#+SUBTITLE: ME498: Comp. modeling & optimization
+#+SUBTITLE: ME447: Comp. Design & Dyn. of Soft Syst.
 #+OPTIONS:   H:1 num:nil toc:nil ::t |:t ^:{} -:t f:t *:t <:t
 #+LATEX_HEADER: \usepackage{hyperref}
 #+LATEX_HEADER: \usepackage{csquotes}
@@ -17,6 +17,10 @@ OS is also marked.
 - ~Jupyter~ for installing notebooks. IMPORTANT: The instructions for installing
   ~Jupyter~ are attached at the end of this guide and is OS-agnostic.
 
+* OS-agnostic method #0 (Easiest, definitely works)
+You can use cloud based services to create/modify/access your own ~Jupyter~
+notebooks. The most popular one is [[https://colab.research.google.com/][Google Colaboratory]], for which you need to
+sign into ~Google~.
 * OS-agnostic method #1 (Easiest and definitely works)
 Install your favorite Python IDE (Integrated Development Environment) such as
 ~PyCharm~ or ~Spyder~, to name a few. The list is non-exhaustive and an internet search

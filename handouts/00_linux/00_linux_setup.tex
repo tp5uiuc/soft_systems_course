@@ -1,4 +1,4 @@
-% Created 2020-01-23 Thu 16:06
+% Created 2021-08-25 Wed 11:27
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -25,13 +25,13 @@
 \author{\emph{Tejaswin Parthasarathy}, Mattia Gazzola}
 \date{\today}
 \title{Prerequisities\\\medskip
-\large ME498: Comp. modeling \& optimization}
+\large ME447: Comp. Design \& Dyn. of Soft Syst.}
 \hypersetup{
  pdfauthor={\emph{Tejaswin Parthasarathy}, Mattia Gazzola},
  pdftitle={Prerequisities},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.0.50 (Org mode 9.2)},
+ pdfcreator={Emacs 28.0.50 (Org mode 9.3.6)},
  pdflang={English}}
 \begin{document}
 
@@ -42,7 +42,7 @@ to do the same for different OS distributions here. The recommended way for your
 OS is also marked.
 
 \section*{Dependencies which we will install}
-\label{sec:orgf10cae7}
+\label{sec:org95b54fc}
 \begin{itemize}
 \item A shell runnning \texttt{sh} compliant implementation (\texttt{bash/zsh/fish})
 \item \texttt{Python} 3.x (preferably the latest)
@@ -50,36 +50,41 @@ OS is also marked.
 \texttt{Jupyter} are attached at the end of this guide and is OS-agnostic.
 \end{itemize}
 
+\section*{OS-agnostic method \#0 (Easiest, definitely works)}
+\label{sec:org184ef39}
+You can use cloud based services to create/modify/access your own \texttt{Jupyter}
+notebooks. The most popular one is \href{https://colab.research.google.com/}{Google Colaboratory}, for which you need to
+sign into \texttt{Google}.
 \section*{OS-agnostic method \#1 (Easiest and definitely works)}
-\label{sec:orgcf2bf2d}
+\label{sec:orge52f2f9}
 Install your favorite Python IDE (Integrated Development Environment) such as
 \texttt{PyCharm} or \texttt{Spyder}, to name a few. The list is non-exhaustive and an internet search
 should reveal more.
 \section*{OS-agnostic method \#2 (Easiest and definitely works)}
-\label{sec:org6c3df1d}
+\label{sec:org8c27a09}
 We can load a virtual machine in your environment---it's essentially an 'OS' that
 runs inside your 'OS'.
 \begin{itemize}
 \item Follow the steps \href{https://andreask.cs.illinois.edu/ComputeVirtualMachineImages}{listed here} \footnote{\url{https://andreask.cs.illinois.edu/ComputeVirtualMachineImages}}. Download both:
-\label{sec:org5fedc5a}
+\label{sec:org44c0792}
 \begin{itemize}
 \item VirtualBox
-\label{sec:orgfde6a76}
+\label{sec:org3e0d38c}
 \item ComputeImage
-\label{sec:orgdc8de05}
+\label{sec:org14a894d}
 \end{itemize}
 \item You should have a working debian installation with your favorite
-\label{sec:orgadcc231}
+\label{sec:orgda63405}
 \texttt{shell} and \texttt{python3} already installed
 \end{itemize}
 
 \section*{Ubuntu/Debian (and equivalent distros)}
-\label{sec:orgef710f3}
+\label{sec:orgdecab9f}
 Try any one of the following methods.
 
 \begin{itemize}
 \item Method \#1 (Recommended, Easiest)
-\label{sec:orgf55f4e8}
+\label{sec:org4824317}
 \begin{itemize}
 \item Almost works off the shelf! You have access to the shell from the \texttt{Terminal} application.
 \item \texttt{Python3} can be installed directly using the \texttt{Conda} distribution \footnote{\href{https://www.anaconda.com/download/\#linux}{Conda Install for Linux}}. \href{https://www.anaconda.com/download/\#linux}{Installation of the Anaconda distribution for Linux systems can be found here.}
@@ -93,7 +98,7 @@ conda install -c anaconda numpy scipy matplotlib pandas
 \end{itemize}
 
 \item Method \#2 (Somewhat harder, not recommended)
-\label{sec:org80d926a}
+\label{sec:orgf05a321}
 
 \begin{itemize}
 \item Almost works off the shelf! You have access to the shell from the \texttt{Terminal} application.
@@ -116,7 +121,7 @@ sudo apt-get install spyder3
 \end{itemize}
 
 \item Method \#3 (Recommended if you want more control)
-\label{sec:org0552b3e}
+\label{sec:org42d5371}
 \begin{itemize}
 \item Almost works off the shelf!
 \item To ensure that all packages are up to date, and that you have the latest
@@ -147,12 +152,12 @@ to the \texttt{python} environment.
 \end{itemize}
 
 \item Method \#4 (Not tested and not recommended)
-\label{sec:org8559ca5}
+\label{sec:org1e0bbd4}
 \begin{itemize}
 \item \href{https://www.python.org/downloads/source/}{Download and build directly from the source code.} \footnote{\href{https://www.python.org/}{Python}}
 \end{itemize}
 \item Method \#5 (Good practice for independent external installation of software in Ubuntu)
-\label{sec:org1e266cf}
+\label{sec:org63b5946}
 \begin{itemize}
 \item Use an external package manager, the recommended choice being \href{https://linuxbrew.sh/}{Linuxbrew}. It
 is painful to install, especially if you can't navigate your way
@@ -168,7 +173,7 @@ brew install python3
 \end{itemize}
 
 \section*{Windows 10}
-\label{sec:orgc0d6009}
+\label{sec:org1649046}
 \begin{itemize}
 \item Unfortunately \texttt{Windows} environment uses a different shell interpreter, which
 complicates scripting and development. However you can run a \texttt{Linux} subsystem perfectly within Windows!
@@ -181,7 +186,7 @@ most probably have as Microsoft aggressively updates their products).
 
 \begin{itemize}
 \item Enabling access to \texttt{sh} compliant shell \footnote{\href{https://docs.microsoft.com/en-us/windows/wsl/install-win10}{Install Linux on Windows}}\textsuperscript{,}\,\footnote{\href{https://docs.microsoft.com/en-us/windows/wsl/initialize-distro}{Initialize your distro}}
-\label{sec:org39afe76}
+\label{sec:org4b3dcde}
 \begin{itemize}
 \item Open \texttt{PowerShell} as Administrator and run:
 \end{itemize}
@@ -220,11 +225,11 @@ sudo apt-get upgrade
 \end{itemize}
 
 \item Installing Python
-\label{sec:org688ea31}
+\label{sec:orgb3b2780}
 
 \begin{itemize}
 \item To get a working installation of \texttt{Python} within your \texttt{Linux} subsystem, follow
-the steps listed in \hyperref[sec:org0552b3e]{Method \#3 (Recommended if you want more control)} for the
+the steps listed in \hyperref[sec:org42d5371]{Method \#3 (Recommended if you want more control)} for the
 \texttt{Linux} distros. This will give you everything within your Linux environment.
 \item If you need a \texttt{Python} installation in your Windows environment, you can use
 Anaconda. \href{https://www.anaconda.com/download/\#windows}{Installation of the Anaconda distribution for Windows systems can be found here.}
@@ -243,12 +248,12 @@ didn't test this option out.
 \end{itemize}
 
 \section*{MacOS}
-\label{sec:orgfa7e3be}
+\label{sec:org00af4d8}
 Try any one of the following methods.
 
 \begin{itemize}
 \item Method \#1 (Recommended, Easiest)
-\label{sec:org47ba300}
+\label{sec:org19909df}
 \begin{itemize}
 \item Once again, \texttt{Python3} can be installed directly using the \texttt{Conda} distribution. \href{https://www.anaconda.com/download/\#macos}{Installation of the Anaconda distribution for systems running MacOS can be found here.}
 \item Enjoy using \texttt{Python} from the \texttt{Conda} distribution on the \texttt{Terminal}.
@@ -261,14 +266,14 @@ conda install -c anaconda numpy scipy matplotlib pandas
 \end{itemize}
 
 \item Method \#2
-\label{sec:orgd58bab8}
+\label{sec:org4a5a52d}
 \begin{itemize}
 \item \href{https://www.python.org/downloads/mac-osx/}{Alternatively, download the Python installer}. I do not recommend this
 option.
 \end{itemize}
 
 \item Method \#3 (Use a package manager)
-\label{sec:org63d46c1}
+\label{sec:org155ca14}
 \begin{itemize}
 \item MacOS sorely misses a package manager for installation of binaries. So you
 can install the \texttt{Homebrew} package manager found \href{https://brew.sh/}{here}.
@@ -311,7 +316,7 @@ and \texttt{Python3}, along with \texttt{pip} should be installed.
 \end{itemize}
 
 \section*{Jupyter notebooks}
-\label{sec:orgc90a74c}
+\label{sec:org315c6fd}
 \begin{itemize}
 \item \textbf{Note}: \texttt{Python3} is a prerequisite to install \texttt{Jupyter}. You can find all the
 relevant information in Jupyter's home page \footnote{\url{https://jupyter.org/install}}.
