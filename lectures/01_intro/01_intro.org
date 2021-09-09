@@ -1,6 +1,6 @@
 #+TITLE: Introduction
 #+AUTHOR: /Tejaswin Parthasarathy/, Mattia Gazzola
-#+SUBTITLE: ME498: Comp. modeling & optimization
+#+SUBTITLE: ME447: Comp. Design & Dyn. of Soft Syst
 #+BEAMER_FRAME_LEVEL: 2
 # #+BEAMER_HEADER: \institute[INST]{Institute\\\url{http://www.institute.edu}}
 # #+BEAMER_HEADER: \titlegraphic{\includegraphics[height=1.5cm]{test}}
@@ -117,7 +117,7 @@
    - Free and open-source
    - Object oriented with sensible data structures
    - Interactive[fn:1] (and thus extensible)
-   - Open source packages[fn:2] (214,413 as of January 23, 2020)
+   - Open source packages[fn:2] (323,575 as of August 25, 2021)
    - Widely used as an application/library API[fn:3]
    - $\therefore$ productivity
 
