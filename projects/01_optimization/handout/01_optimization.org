@@ -15,12 +15,12 @@
 	}
 #+end_export
 
-
-*Issue Date* : \today (originally posted on February 19, 2020)
+# (originally posted on February 19, 2020)
+*Issue Date* : \today
 
 *Teaching Assistant* : Tejaswin Parthasarathy, ~tp5@illinois.edu~
 
-*Submission Date/Time*: Friday 11:59 PM, 13 March, 2020
+*Submission Date/Time*: Friday 11:59 PM, 22 October, 2021
 
 *Submission Instructions*:
  - You need to submit both your presentation (as ~.pdf~, ~.ppt[x]~ or ~.key~) and code
