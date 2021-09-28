@@ -1,6 +1,6 @@
 #+TITLE: Covariance Matrix Adaptation in Python
 #+AUTHOR: /Tejaswin Parthasarathy/, Mattia Gazzola
-#+SUBTITLE: ME498: Comp. modeling & optimization
+#+SUBTITLE: ME447: Comp. Design & Dyn. of Soft Syst
 #+BEAMER_FRAME_LEVEL: 2
 # #+BEAMER_HEADER: \institute[INST]{Institute\\\url{http://www.institute.edu}}
 # #+BEAMER_HEADER: \titlegraphic{\includegraphics[height=1.5cm]{test}}
