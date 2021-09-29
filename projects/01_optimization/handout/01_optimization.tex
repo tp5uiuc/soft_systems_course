@@ -1,4 +1,4 @@
-% Created 2021-09-21 Tue 18:34
+% Created 2021-09-29 Wed 10:18
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -64,7 +64,7 @@ slides).
 \end{itemize}
 
 \section{Guidelines}
-\label{sec:orgf8caca7}
+\label{sec:orga0bc678}
 General advice that pertains to all the problems include:
 \begin{enumerate}
 \item Pick sensible representation, fitness function, selection and mutation
@@ -83,14 +83,14 @@ on academic integrity---plagiarism will not be tolerated!
 \end{enumerate}
 
 \section{The Knapsack problem}
-\label{sec:org23ab825}
+\label{sec:org9b79fb8}
 \subsection{Definition}
-\label{sec:orgbe35753}
+\label{sec:orgf0f4f2d}
   Use genetic algorithm and rank-\(\mu\), weighted recombination version of the CMA
 evolutionary strategy discussed in class to find the solution to the \textbf{0/1 variant} of
 the Knapsack problem.
 \subsection{Details}
-\label{sec:org8adf41d}
+\label{sec:orgd2fb5d5}
 More details about the 0/1 Knapsack problem are contained in the lecture slides.
 Alternatively, the \href{https://en.wikipedia.org/wiki/Knapsack\_problem}{Wikipedia} page also has a lot of information about this
 problem. Quoting the introductory text,
@@ -151,13 +151,13 @@ item_weights : Weight of each item, a (n_items, ) numpy array
 \end{minted}
 
 \section{Minima of the parabola}
-\label{sec:org531371d}
+\label{sec:org50731af}
 \subsection{Definition}
-\label{sec:org1cb1152}
+\label{sec:org4209f52}
   Use genetic algorithm and rank-\(\mu\), weighted recombination version of the CMA
 evolutionary strategy discussed in class to find the minima of a simple parabola.
 \subsection{Details}
-\label{sec:orgbd4bf86}
+\label{sec:org596014a}
 The one-dimensional parabola is a continuous, convex, unimodal function. We
 pick the parabola given by the formula
 \begin{equation}
@@ -173,14 +173,14 @@ and compare the performance of these algorithms on this function.
 Furthermore, explore the effect of the parameters (particularly in GA) on the
 performance of the algorithms. Start your search using a randomly initialized population around \(\mathbf{x}_0 = \mathbf{0}\)---the vector of zeros.
 \section{Minima of the Rotated Hyper-Ellipsoid}
-\label{sec:org27d6940}
+\label{sec:orga4a5735}
 \subsection{Definition}
-\label{sec:org1344c1a}
+\label{sec:org01a34e2}
   Use genetic algorithm and rank-\(\mu\), weighted recombination version of the CMA
 evolutionary strategy discussed in class to find the minima of the
 two-dimensional rotated ellispoid.
 \subsection{Details}
-\label{sec:orge64b6d1}
+\label{sec:orgd5f6354}
 The two-dimensional Rotated Hyper-Ellipsoid is a continuous, convex, unimodal
 and non-separable function. We pick the variant that is rotated \(\frac{\pi}{6} \; \si{rad}\) clockwise from the \(x_1\)-axis and shifted along
 both axes, given by the formula below:
@@ -230,15 +230,15 @@ explore the effect of the parameters on the performance of the algorithms.
 Start your search using a randomly initialized population around \(\mathbf{x}_0 = \mathbf{0}\)---the vector of zeros.
 
 \section{Minima of the Rastrigin function}
-\label{sec:org54c362f}
+\label{sec:orgc32b998}
 \subsection{Definition}
-\label{sec:orgd51ea11}
+\label{sec:org576fa90}
   Use the rank-\(\mu\), weighted recombination version of the CMA
 evolutionary strategy discussed in class to find the minima of the shifted
 \emph{Rastrigin} function in two and five dimensions.
 
 \subsection{Details}
-\label{sec:orgffb5715}
+\label{sec:org52953cb}
 The (unshifted) Rastrigin function is shown in \cref{rastr} for the case of two-dimensions.
 
 \begin{figure}[htbp]
@@ -274,7 +274,7 @@ In both cases, consider what role does the population size play in the
 \section{The following resouces may prove useful:}
 \label{sec:references}
 \begin{itemize}
-\item A short tutorial on the genetic algorithm found \href{http://web.cs.ucdavis.edu/\~vemuri/classes/ecs271/Genetic\%2520Algorithms\%2520Short\%2520Tutorial.htm}{here}
+\item A short tutorial on the genetic algorithm found \href{https://www.whitman.edu/Documents/Academics/Mathematics/2014/carrjk.pdf}{here}
 \item The CMA-ES tutorial @ Arxiv, found \href{https://arxiv.org/pdf/1604.00772.pdf}{here}
 \item The CMA site maintained by Niko Hansen, found \href{http://cma.gforge.inria.fr/index.html}{here}
 \item Tutorial on CMA-ES, 2013 by Auger, Anne and Hansen, Nikolaus published in the

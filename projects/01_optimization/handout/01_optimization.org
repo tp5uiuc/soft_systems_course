@@ -262,7 +262,7 @@ fixed-size knapsack and must fill it with the most valuable items. "
 :PROPERTIES:
 :CUSTOM_ID: sec:references
 :END:
-- A short tutorial on the genetic algorithm found [[http://web.cs.ucdavis.edu/~vemuri/classes/ecs271/Genetic%2520Algorithms%2520Short%2520Tutorial.htm][here]]
+- A short tutorial on the genetic algorithm found [[https://www.whitman.edu/Documents/Academics/Mathematics/2014/carrjk.pdf][here]]
 - The CMA-ES tutorial @ Arxiv, found [[https://arxiv.org/pdf/1604.00772.pdf][here]]
 - The CMA site maintained by Niko Hansen, found [[http://cma.gforge.inria.fr/index.html][here]]
 - Tutorial on CMA-ES, 2013 by Auger, Anne and Hansen, Nikolaus published in the
