@@ -213,9 +213,6 @@
 	:BEAMER_env: column
 	:BEAMER_COL: 0.4
 	:END:
-	#+CAPTION: Midpoint method
-	# #+ATTR_LATEX: :width 0.8\textwidth
-	# [[file:images/midpoint_method.png]]
 
 	#+begin_export latex
 	\begin{center}
@@ -402,10 +399,6 @@
 
   *ACTIVITY*
 ** Order of accuracy : Results
-   #+CAPTION: Schemes exhibit different orders of accuracy
-   # #+ATTR_LATEX: :width 0.6\textwidth
-   #  file:code/ooa.pdf
-
 	#+begin_export latex
 	% Need to run the notebook first
 	\begin{center}
