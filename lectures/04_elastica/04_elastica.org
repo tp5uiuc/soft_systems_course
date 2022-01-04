@@ -1,6 +1,6 @@
 #+TITLE: Elastica : Coordinate/Frame transformations
 #+AUTHOR: /Tejaswin Parthasarathy/, Mattia Gazzola
-#+SUBTITLE: ME498: Comp. modeling & optimization
+#+SUBTITLE: ME447: Comp. Design & Dyn. of Soft Syst
 #+BEAMER_FRAME_LEVEL: 2
 # #+BEAMER_HEADER: \institute[INST]{Institute\\\url{http://www.institute.edu}}
 # #+BEAMER_HEADER: \titlegraphic{\includegraphics[height=1.5cm]{test}}
@@ -542,11 +542,11 @@
 		\tdplotsetrotatedcoordsorigin{(Shift)}
 
 		\draw[thick,color=scarlet,tdplot_rotated_coords,->] (0,0,0)
-		-- (1,0,0) node[anchor=south east]{$x’$};
+		-- (1,0,0) node[anchor=south east]{$x'$};
 		\draw[thick,color=shamrockgreen,tdplot_rotated_coords,->] (0,0,0)
-		-- (0,1,0) node[anchor=west]{$y’$};
+		-- (0,1,0) node[anchor=west]{$y'$};
 		\draw[thick,color=royalblue,tdplot_rotated_coords,->] (0,0,0)
-		-- (0,0,1) node[anchor=south east]{$z’$};
+		-- (0,0,1) node[anchor=south east]{$z'$};
 		\end{tikzpicture}
 	 \end{center}
 	 #+end_export
@@ -813,8 +813,6 @@
 	:BEAMER_col: 0.3
 	:END:
 	#+CAPTION: Euler axis-angle
-	# #+ATTR_LATEX: :width 0.45\textwidth
-    # [[file:images/euler_axis.pdf]]
 	#+begin_export latex
 	\tdplotsetmaincoords{60}{125}
 
