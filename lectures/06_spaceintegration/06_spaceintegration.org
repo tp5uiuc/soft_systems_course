@@ -1,6 +1,6 @@
 #+TITLE: Elastica : Spatial discretization
 #+AUTHOR: /Tejaswin Parthasarathy/, Mattia Gazzola
-#+SUBTITLE: ME498: Comp. modeling & optimization
+#+SUBTITLE: ME447: Comp. Design & Dyn. of Soft Syst
 #+BEAMER_FRAME_LEVEL: 2
 # #+BEAMER_HEADER: \institute[INST]{Institute\\\url{http://www.institute.edu}}
 # #+BEAMER_HEADER: \titlegraphic{\includegraphics[height=1.5cm]{test}}
@@ -80,8 +80,6 @@
 	\) while reducing number of function evaluations and robust to numerical errors
 ** Midpoint and Trapezoidal rules
    #+CAPTION: Midpoint and trapezoidal rules
-   # #+ATTR_LATEX: :width 0.8\textwidth
-   # [[file:images/midpoint.jpg]]
 ***                                                                :B_column:
 	:PROPERTIES:
 	:BEAMER_env: column
@@ -498,8 +496,6 @@
 	:BEAMER_COL: 0.5
 	:END:
    #+CAPTION: First derivative approximation
-   # #+ATTR_LATEX: :width 1.0\textwidth
-   # [[file:images/fdiff.jpg]]
 	#+begin_export latex
 	\begin{center}
 		\begin{tikzpicture}[
