@@ -1,0 +1,10 @@
+digraph G {
+	graph [fontname = "Times"];
+	node [fontname =  "Gill Sans"];
+	edge [fontname =  "Gill Sans"];
+	"FOR"->"1"
+	"FOR"->"N"
+	"FOR"->"print"
+	"print"-> "Hi"
+}
+

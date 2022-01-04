@@ -1,0 +1,24 @@
+digraph G {
+	graph [fontname = "Times"];
+	node [fontname =  "Gill Sans"];
+	edge [fontname =  "Gill Sans"];
+	rankdir = LR;
+	splines="line";
+	edge[arrowhead=vee, arrowtail=inv, arrowsize=.7, color=red]
+	subgraph cluster_0 {
+		// node [style=filled,color=white];
+		000; 001; 010; 011; 100; 101; 110; 111;
+		label = "Y = {0,1} x {0,1} x {0,1}" ;
+		color=blue
+	}
+
+	subgraph cluster_1 {
+		node [style=filled, color=lightgray];
+		00;01;10;11;
+		label = "X = {0,1} x {0,1}";
+	}
+000->00; 001->00;
+010->01; 011->01;
+100->10; 101->10;
+110->11; 111->11;
+}

@@ -1,0 +1,9 @@
+digraph G {
+	graph [fontname = "Times"];
+	node [fontname =  "Gill Sans"];
+	edge [fontname =  "Gill Sans"];
+	"AND"->"OR"
+	"OR"-> "x"
+	"OR"-> "y"
+	"AND"-> "z"
+}
