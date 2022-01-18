@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Parthasarathy"
+  given-names: "Tejaswin"
+  orcid: "https://orcid.org/0000-0001-8878-1136"
+- family-names: "Gazzola"
+  given-names: "Mattia"
+  orcid: "https://orcid.org/0000-0003-2129-379X"
+	affiliation: The University of Illinois, Urbana-Champaign
+title: "Soft Systems Design and Dynamics"
+version: 1.0.0
+date-released: 2022-01-18
+url: "https://github.com/tp5uiuc/soft_systems_course"
+license : MIT
