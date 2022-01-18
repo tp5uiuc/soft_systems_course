@@ -9,7 +9,7 @@ authors:
   orcid: "https://orcid.org/0000-0003-2129-379X"
 	affiliation: The University of Illinois, Urbana-Champaign
 title: "Soft Systems Design and Dynamics"
-version: 1.0.0
+version: 1.0
 date-released: 2022-01-18
 url: "https://github.com/tp5uiuc/soft_systems_course"
 license : MIT
